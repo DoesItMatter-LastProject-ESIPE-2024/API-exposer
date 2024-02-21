@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>API DIM</title>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                {% for device_id in devices %}
+                    <li>
+                        <a href="http://{{server_ip}}:{{port}}/doc/{{device_id}}">device:{{device_id}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </body>
+</html>
