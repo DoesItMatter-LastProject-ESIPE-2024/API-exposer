@@ -1,0 +1,97 @@
+paths:
+  /{{nodeId}}/{{endpointId}}/onoff/state:
+    get:
+      tags:
+        - On/Off
+      summary: Find state
+      description: true for on and false for off
+      parameters:
+        - name: nodeId
+          in: path
+          description: id of node
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: endpointId
+          in: path
+          description: id of endpoint
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: boolean
+                    example: true
+        '404':
+          description: Node or Endpoint not found
+    
+  /{{nodeId}}/{{endpointId}}/onoff/set:
+    post:
+      tags:
+        - On/Off
+      summary: Set state
+      description: true for on and false for off
+      parameters:
+        - name: nodeId
+          in: path
+          description: id of node
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: endpointId
+          in: path
+          description: id of endpoint
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: boolean
+                    example: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Node or Endpoint not found
+          
+  /{{nodeId}}/{{endpointId}}/onoff/toogle:
+    post:
+      tags:
+        - On/Off
+      summary: Toogle state
+      parameters:
+        - name: nodeId
+          in: path
+          description: id of node
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: endpointId
+          in: path
+          description: id of endpoint
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Node or Endpoint not found
