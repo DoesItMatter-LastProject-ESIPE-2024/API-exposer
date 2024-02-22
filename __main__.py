@@ -59,12 +59,10 @@ def display_swagger(id):
     cluster_paths = []
 
     swagger_template = environment.get_template("config/swagger.yml")
-    config_string = swagger_template.render(
-        server_ip=f"{server_ip}", paths=cluster_paths)
-
-    print(config_string)
-
-    # api_doc=dynamic_render.ApplicationDocument(None, config_spec=config_string, url_prefix="/api/v0", title="API DIM")
+    config_string = swagger_template.render({
+        "server_ip": server_ip,
+        "paths": cluster_paths
+    })
 
     return api_renderer.from_string(config_spec=config_string)
 
