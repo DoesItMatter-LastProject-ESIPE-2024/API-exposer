@@ -8,16 +8,15 @@ It displays dynamically OpenApi 3.0 with swagger-ui-py (23.9.23)
 =============================================================================
 """
 
-from dynamic_render import register_new_renderer  # render open api dynamic
 import random
 import json
 import os
 
 from waitress import serve  # production server
 from flask import Flask, redirect, render_template, request  # web python server
-from swagger_ui.core import ApplicationDocument  # open api
-from swagger_ui import api_doc
 from jinja2 import Environment, FileSystemLoader, select_autoescape  # config template
+
+from dynamic_render import register_new_renderer  # render open api dynamic
 
 working_dir = os.path.dirname(os.path.abspath(__file__))
 conf_path = os.path.join(working_dir, 'config/swagger.yml')
