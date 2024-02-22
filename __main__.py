@@ -36,12 +36,13 @@ print(app.static_url_path)
 
 @app.route('/')
 def redirect_internal():
+    """Redirects index to html/devices"""
     return redirect("/html/devices", code=302)
 
 
 @app.route('/html/devices')
 def devices_menu():
-    """ Road to display devices id from list and select them """
+    """Route to display devices id from list and select them """
     server_ip = request.headers.get("Host").split(':')[0]
     html_template = environment.get_template("ressources/devices.html")
 
@@ -51,10 +52,11 @@ def devices_menu():
 @app.route('/api/doc/')
 @app.route('/api/doc/<id>')
 def display_swagger(id):
-    """ Road to display the swagger API of a devices """
+    """Route to display the swagger API of a devices """
     server_ip = request.headers.get("Host").split(':')[0]
-    # """ TODO methode to retrieve cluster_path for swagger.yml """
-    cluster_paths = ["A", "B", "C"]
+
+    # cluster_paths = ["A", "B", "C"]
+    cluster_paths = []
 
     swagger_template = environment.get_template("config/swagger.yml")
     config_string = swagger_template.render(
