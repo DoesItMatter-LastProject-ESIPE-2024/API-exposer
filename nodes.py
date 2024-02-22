@@ -1,6 +1,6 @@
 """ 
-===================== devices.py =====================
-contain Devices class for API-EXPOSER
+===================== nodes.py =====================
+contain Nodes class for API-EXPOSER
 """
 import logging
 import asyncio
@@ -17,9 +17,9 @@ from matter_server.client.models.node import MatterNode
 
 class Nodes:
     """ 
-    =============== class devices ===============
+    =============== class nodes ===============
     class to create a client, connect to Matter
-    Fabric and get all devices
+    Fabric and get all nodes
     """
 
     def __init__(self, url: str):
@@ -53,7 +53,7 @@ class Nodes:
                 # start listening
                 await client.start_listening(self.wait_listening)
 
-    def _get_devices(self):
+    def _get_nodes(self):
         Thread(target=asyncio.run, args=[self.wait_listening.wait()]).run()
 
         self.nodes.update(
@@ -61,8 +61,8 @@ class Nodes:
         logging.info(self.nodes)
 
     def run(self):
-        """connect to Serveur and get matter devices list"""
+        """connect to Serveur and get matter nodes list"""
         thread = Thread(target=asyncio.run, args=[self._run_client()])
         thread.start()
-        self._get_devices()
+        self._get_nodes()
         thread.join()
