@@ -24,25 +24,25 @@ class Nodes:
 
     def __init__(self, url: str):
         self.url: str = url
-        self.devices: Dict[int, MatterNode] = {}
+        self.nodes: Dict[int, MatterNode] = {}
         self.client_global: MatterClient | None = None
         self.wait_listening: Event = Event()
 
     def _handle_event(self, event: EventType, node: MatterNode):
         if event == EventType.NODE_ADDED:
-            self.devices[node.node_id] = node
+            self.nodes[node.node_id] = node
             logging.info("node %d added %s", node.node_id, node)
-            logging.info(self.devices)
+            logging.info(self.nodes)
 
         elif event == EventType.NODE_UPDATED:
             logging.info("node %d updated %s", node.node_id, node)
-            self.devices[node.node_id] = node
-            logging.info(self.devices)
+            self.nodes[node.node_id] = node
+            logging.info(self.nodes)
 
         elif event == EventType.NODE_REMOVED:
-            removed = self.devices.pop(node)
+            removed = self.nodes.pop(node)
             logging.info("node %d added %s", node, removed)
-            logging.info(self.devices)
+            logging.info(self.nodes)
 
     async def _run_client(self):
         async with ClientSession() as session:
@@ -56,9 +56,9 @@ class Nodes:
     def _get_devices(self):
         Thread(target=asyncio.run, args=[self.wait_listening.wait()]).run()
 
-        self.devices.update(
+        self.nodes.update(
             {node.node_id: node for node in self.client_global.get_nodes()})
-        logging.info(self.devices)
+        logging.info(self.nodes)
 
     def run(self):
         """connect to Serveur and get matter devices list"""
