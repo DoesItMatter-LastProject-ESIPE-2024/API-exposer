@@ -41,6 +41,7 @@ class Nodes:
         logging.info("node %d added %s", node_id, removed)
 
     def _handle_event(self, event: EventType, *args):
+        """Passes all arguments after event to the specific event handler"""
         match event:
             case EventType.NODE_ADDED:
                 self._handle_node_added(*args)
