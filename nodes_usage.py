@@ -3,7 +3,7 @@
 import logging
 import argparse
 
-from devices import Nodes
+from nodes import Nodes
 
 from const import DEFAULT_SERVER_URL
 
