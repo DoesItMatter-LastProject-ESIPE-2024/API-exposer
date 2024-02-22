@@ -22,7 +22,8 @@ working_dir = os.path.dirname(os.path.abspath(__file__))
 conf_path = os.path.join(working_dir, 'config/swagger.yml')
 static_folder_path = os.path.join(working_dir, 'static')
 
-app = Flask(__name__.split('.')[0], static_folder=static_folder_path)
+name = __name__.split('.', maxsplit=1)[0]
+app = Flask(name, static_folder=static_folder_path)
 
 environment = Environment(
     loader=FileSystemLoader(searchpath="./"),
