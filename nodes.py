@@ -28,21 +28,28 @@ class Nodes:
         self.client_global: MatterClient | None = None
         self.wait_listening: Event = Event()
 
-    def _handle_event(self, event: EventType, node: MatterNode):
-        if event == EventType.NODE_ADDED:
-            self.nodes[node.node_id] = node
-            logging.info("node %d added %s", node.node_id, node)
-            logging.info(self.nodes)
+    def _handle_node_added(self, node: MatterNode):
+        self.nodes[node.node_id] = node
+        logging.info("node %d added %s", node.node_id, node)
 
-        elif event == EventType.NODE_UPDATED:
-            logging.info("node %d updated %s", node.node_id, node)
-            self.nodes[node.node_id] = node
-            logging.info(self.nodes)
+    def _handle_node_updated(self, node: MatterNode):
+        logging.info("node %d updated %s", node.node_id, node)
+        self.nodes[node.node_id] = node
 
-        elif event == EventType.NODE_REMOVED:
-            removed = self.nodes.pop(node)
-            logging.info("node %d added %s", node, removed)
-            logging.info(self.nodes)
+    def _handle_node_removed(self, node_id: int):
+        removed = self.nodes.pop(node_id)
+        logging.info("node %d added %s", node_id, removed)
+
+    def _handle_event(self, event: EventType, *args):
+        match event:
+            case EventType.NODE_ADDED:
+                self._handle_node_added(*args)
+            case EventType.NODE_UPDATED:
+                self._handle_node_updated(*args)
+            case EventType.NODE_REMOVED:
+                self._handle_node_removed(*args)
+            case _:
+                pass
 
     async def _run_client(self):
         async with ClientSession() as session:
