@@ -23,7 +23,7 @@ working_dir = os.path.dirname(os.path.abspath(__file__))
 conf_path = os.path.join(working_dir, 'config/swagger.yml')
 static_folder_path = os.path.join(working_dir, 'static')
 
-app = Flask(__name__, static_folder=static_folder_path)
+app = Flask(__name__.split('.')[0], static_folder=static_folder_path)
 
 environment = Environment(
     loader=FileSystemLoader(searchpath="./"),
@@ -69,11 +69,8 @@ def display_swagger(id):
 
 @app.route('/test')
 def display_random_list():
-    """ TODO """
-    list = []
-    for i in range(0, 5):
-        list.append(random.randint(1, 10))
-    return json.dumps(list)
+    """Returns a list of 5 random number between 1,10 in json format"""
+    return json.dumps([random.randint(1, 10) for _ in range(0, 5)])
 
 
 if __name__ == "__main__":
