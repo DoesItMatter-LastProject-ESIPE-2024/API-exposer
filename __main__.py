@@ -49,7 +49,6 @@ def devices_menu():
     return render_template(html_template, devices=[1, 2, 3], server_ip=f"{server_ip}", port="8080")
 
 
-@app.route('/api/doc/')
 @app.route('/api/doc/<id>')
 def display_swagger(id):
     """Route to display the swagger API of a devices """
