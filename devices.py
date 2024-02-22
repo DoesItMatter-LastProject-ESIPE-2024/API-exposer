@@ -15,12 +15,13 @@ from matter_server.client.client import MatterClient
 from matter_server.client.models.node import MatterNode
 
 
-class Devices:
+class Nodes:
     """ 
     =============== class devices ===============
     class to create a client, connect to Matter
     Fabric and get all devices
     """
+
     def __init__(self, url: str):
         self.url: str = url
         self.devices: Dict[int, MatterNode] = {}
@@ -61,7 +62,7 @@ class Devices:
 
     def run(self):
         """connect to Serveur and get matter devices list"""
-        thread=Thread(target=asyncio.run, args=[self._run_client()])
+        thread = Thread(target=asyncio.run, args=[self._run_client()])
         thread.start()
         self._get_devices()
         thread.join()

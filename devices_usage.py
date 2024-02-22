@@ -3,7 +3,7 @@
 import logging
 import argparse
 
-from devices import Devices
+from devices import Nodes
 
 from const import DEFAULT_SERVER_URL
 
@@ -43,7 +43,8 @@ def main():
     handlers = [logging.FileHandler(args.log_file)] if args.log_file else None
     logging.basicConfig(handlers=handlers, level=args.log_level.upper())
 
-    Devices(args.url).run()
+    Nodes(args.url).run()
+
 
 if __name__ == "__main__":
     main()
