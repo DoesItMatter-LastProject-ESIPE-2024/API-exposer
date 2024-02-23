@@ -48,7 +48,13 @@ def devices_menu():
     server_ip = request.headers.get("Host").split(':')[0]
     html_template = environment.get_template("dynamic/devices.html")
 
-    return render_template(html_template, devices=[1, 2, 3], server_ip=f"{server_ip}", port="8080", swagger_path=SWAGGER_PATH)
+    return render_template(
+        html_template,
+        devices=[1, 2, 3],
+        server_ip=f"{server_ip}",
+        port="8080",
+        swagger_path=SWAGGER_PATH
+    )
 
 
 @app.route(f'/{SWAGGER_PATH}/<id>')
