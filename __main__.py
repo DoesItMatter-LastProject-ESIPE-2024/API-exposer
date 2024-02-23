@@ -21,7 +21,6 @@ from dynamic_render import register_new_renderer  # render open api dynamic
 
 def main():
     working_dir = os.path.dirname(os.path.abspath(__file__))
-    conf_path = os.path.join(working_dir, 'config/swagger.yml')
     static_folder_path = os.path.join(working_dir, 'static')
 
     name = __name__.split('.', maxsplit=1)[0]
@@ -33,7 +32,6 @@ def main():
     )
 
     api_renderer = register_new_renderer(app, "/swagger/blueprint")
-    print(app.static_url_path)
 
     SWAGGER_PATH = 'html/swagger'
 
@@ -67,7 +65,7 @@ def main():
         server_ip = request.headers.get("Host").split(':')[0]
 
         # cluster_paths = ["A", "B", "C"]
-        cluster_paths = []
+        cluster_paths = ""
 
         swagger_template = environment.get_template("config/swagger.yml")
         return swagger_template.render({
