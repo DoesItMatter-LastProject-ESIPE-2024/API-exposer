@@ -138,6 +138,10 @@ async def main():
         """Returns a json list of 5 random number between 1,10 in json format"""
         return list(randint(1, 10) for _ in range(0, 5))
 
+    @app.get('/api/v0/{node_id}/{endpoint_id}/onoff/state')
+    def on_off_state(node_id: int, endpoint_id: int):
+        return str(node_id) + " " + str(endpoint_id)
+
     @app.get('/on')
     async def on():
         stringue = ""
