@@ -1,5 +1,6 @@
 """Script entry point to run the POC."""
 
+import asyncio
 import logging
 import argparse
 
@@ -35,7 +36,7 @@ parser.add_argument(
 )
 
 
-def main():
+async def main():
     """Run main execution."""
     args = parser.parse_args()
 
@@ -43,8 +44,10 @@ def main():
     handlers = [logging.FileHandler(args.log_file)] if args.log_file else None
     logging.basicConfig(handlers=handlers, level=args.log_level.upper())
 
-    Nodes(args.url).run()
+    nodes_client = Nodes(args.url)
+    await nodes_client.start()
+    await nodes_client.wait_stop()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
