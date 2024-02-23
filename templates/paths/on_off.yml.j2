@@ -1,0 +1,51 @@
+paths:
+  /{{node_id}}/{{endpoint_id}}/onoff/state:
+    get:
+      tags:
+        - On/Off
+      summary: Find state
+      description: true for on and false for off
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: boolean
+                    example: true
+        '404':
+          description: Node or Endpoint not found
+          
+    post:
+      tags:
+        - On/Off
+      summary: Set state
+      description: true for on and false for off
+      requestBody:
+        content:
+          application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: boolean
+                    example: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Node or Endpoint not found
+          
+  /{{node_id}}/{{endpoint_id}}/onoff/toogle:
+    post:
+      tags:
+        - On/Off
+      summary: Toogle state
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Node or Endpoint not found
