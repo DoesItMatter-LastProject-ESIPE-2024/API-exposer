@@ -1,5 +1,4 @@
 """ 
-TODO
 ========================= Matter API python server =========================
 The goal here is to make a ready for use python server in order to display 
 Matter IOT devices API from a cluster/API converter.
@@ -14,6 +13,8 @@ from argparse import ArgumentParser
 from asyncio import run
 import logging
 from typing import Optional
+from random import randint
+
 from uvicorn import Server, Config
 from fastapi.applications import FastAPI
 from fastapi.requests import Request
@@ -25,10 +26,14 @@ from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
 from nodes import Nodes
+from chip.clusters.Objects import OnOff
+from chip.clusters.ClusterObjects import ClusterCommand, ClusterObject
+
 from convertor import render_node
 from const import DEFAULT_SERVER_URL
 
 SWAGGER_PATH = 'html/swagger'
+
 
 async def main():
     """The main function of the server"""
@@ -54,7 +59,7 @@ async def main():
         default=None,
         help='Log file to write to (optional).',
     )
-    
+
     args = parser.parse_args()
 
     # configure logging
@@ -128,9 +133,31 @@ async def main():
             }
         )
 
+    @app.get('/test')
+    def display_random_list():
+        """Returns a json list of 5 random number between 1,10 in json format"""
+        return list(randint(1, 10) for _ in range(0, 5))
+
+    @app.get('/on')
+    async def on():
+        stringue = ""
+        for node in nodes.values():
+            endpoints = node.endpoints.values()
+            for endpoint in endpoints:
+                clusters = endpoint.clusters.values()
+                for cluster in clusters:
+                    match cluster:
+                        case OnOff():
+                            stringue += "coucou\n"
+                            await create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
+                        case _:
+                            stringue += "none\n"
+        return stringue
+
     config = Config(app, host='0.0.0.0', port=8080, log_level='info')
     server = Server(config)
     await server.serve()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     run(main())
