@@ -1,17 +1,15 @@
 """Convert matter objects into yaml"""
 
-from dataclasses import dataclass
-import logging
-from threading import Thread
-from time import sleep
-from typing import Dict
+import asyncio
 
-from chip.clusters.ClusterObjects import Cluster
 from chip.clusters.Objects import OnOff
-from convertor import node_to_template_names, _render_cluster
 from const import DEFAULT_SERVER_URL
+from convertor import render_node, _render_cluster
 from nodes import Nodes
 
+from chip.clusters.ClusterObjects import Cluster
+from typing import Dict
+from dataclasses import dataclass
 
 @dataclass
 class Endpoint:
@@ -25,27 +23,20 @@ class Node:
     node_id: int
     endpoints: Dict[int, Endpoint]
 
-
-if __name__ == '__main__':
-    # Execute when the module is not initialized from an import statement.
-    # templateNames = node_to_template_names(
-    #     Node(0, {0: Endpoint({0: OnOff()})}))
-    # print(templateNames)
-    # print(_render_cluster(OnOff(), **{'node_id':0,'endpoint_id':0}))
-
+async def main():
+    """TODO"""
     nodes = Nodes(DEFAULT_SERVER_URL)
-    Thread(target=nodes.run).start()
-
-    # wait for nodes to be avaible
-    # nodes._get_nodes()
-    sleep(5)
-
-    print("hello")
+    await nodes.start()
 
     nodes_dict = nodes.nodes
 
-    print(nodes_dict)
+    for node in nodes_dict.values():
+        print(render_node(node))
+    
+    # print(_render_cluster(OnOff(), node_id=0, endpoint_id=0))
+    # print(render_node(Node(0, {0: Endpoint({})}), node_id=0, endpoint_id=0))
 
-    for id, node in nodes_dict.items():
-        print(id)
-        print(node_to_template_names(node))
+
+if __name__ == '__main__':
+    # Execute when the module is not initialized from an import statement.
+    asyncio.run(main())
