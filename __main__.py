@@ -15,6 +15,7 @@ import logging
 from typing import Optional
 from random import randint
 
+# web python server
 from uvicorn import Server, Config
 from fastapi.applications import FastAPI
 from fastapi.requests import Request
@@ -23,6 +24,7 @@ from fastapi.responses import Response, RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
+# templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
 from nodes import Nodes
@@ -138,21 +140,38 @@ async def main():
         """Returns a json list of 5 random number between 1,10 in json format"""
         return list(randint(1, 10) for _ in range(0, 5))
 
-    @app.get('/api/v0/{node_id}/{endpoint_id}/onoff/state')
-    def on_off_state(node_id: int, endpoint_id: int):
-        return str(node_id) + " " + str(endpoint_id)
+    @app.route('/api/v0/{node_id}/{endpoint_id}/onoff/state', ['GET', 'POST'])
+    def on_off_state(request: Request, node_id: int, endpoint_id: int):
+        """Get ot set the state of the cluster on off"""
+        on_off_cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
+        if request.method == 'POST':
+            # return redirect(url_for('success',name = user))
+            # request.get_json
+            return {"state": True}  # request.form['state']
+            # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
+        else:  # request.method == 'GET'
+            return {"state": False}
+            # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
 
-    @app.get('/on')
+    @app.post('/api/v0/{node_id}/{endpoint_id}/onoff/toggle')
+    def on_off_toggle(node_id: int, endpoint_id: int):
+        """Switch the state of the cluster on off"""
+        on_off_cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
+        return str(on_off_cluster)
+        # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
+
+    @app.get('/api/v0/on')
     async def on():
         stringue = ""
         for node in nodes.values():
+            stringue += f"node : {node.node_id}; "
             endpoints = node.endpoints.values()
             for endpoint in endpoints:
                 clusters = endpoint.clusters.values()
                 for cluster in clusters:
                     match cluster:
                         case OnOff():
-                            stringue += "coucou\n"
+                            stringue += f"{endpoint.endpoint_id} coucou\n"
                             await create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
                         case _:
                             stringue += "none\n"
