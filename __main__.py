@@ -33,6 +33,8 @@ environment = Environment(
 api_renderer = register_new_renderer(app, "/swagger/blueprint")
 print(app.static_url_path)
 
+SWAGGER_PATH = 'html/swagger'
+
 
 @app.route('/')
 def redirect_internal():
@@ -44,26 +46,30 @@ def redirect_internal():
 def devices_menu():
     """Route to display devices id from list and select them """
     server_ip = request.headers.get("Host").split(':')[0]
-    html_template = environment.get_template("ressources/devices.html")
+    html_template = environment.get_template("dynamic/devices.html")
 
-    return render_template(html_template, devices=[1, 2, 3], server_ip=f"{server_ip}", port="8080")
+    return render_template(html_template, devices=[1, 2, 3], server_ip=f"{server_ip}", port="8080", swagger_path=SWAGGER_PATH)
+
+
+@app.route(f'/{SWAGGER_PATH}/<id>')
+def swagger_ui(node_id: int):
+    """dynamically render a swagger ui with the correct documentation"""
+    return api_renderer.from_string(node_api_documentation(node_id))
 
 
 @app.route('/api/doc/<id>')
-def display_swagger(id):
-    """Route to display the swagger API of a devices """
+def node_api_documentation(node_id: int) -> str:
+    """Returns an OpenAPI documentation in yaml format for a matter node"""
     server_ip = request.headers.get("Host").split(':')[0]
 
     # cluster_paths = ["A", "B", "C"]
     cluster_paths = []
 
     swagger_template = environment.get_template("config/swagger.yml")
-    config_string = swagger_template.render({
+    return swagger_template.render({
         "server_ip": server_ip,
         "paths": cluster_paths
     })
-
-    return api_renderer.from_string(config_spec=config_string)
 
 
 @app.route('/test')
