@@ -10,19 +10,7 @@ tags:
   - name: API DIM
     description: default api test
 paths:
-  "/test":
-    get:
-      produces:
-        -application/json
-      tags:
-      - test
-      summary: should display a random list of 5 number between [0-9]
-      responses:
-        '200':
-          description: OK
-{% for path in paths %}
-{{path}}
-{% endfor %}
+{{paths}}
           
 components: {}
 

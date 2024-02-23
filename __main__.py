@@ -8,18 +8,27 @@ It displays dynamically OpenApi 3.0 with swagger-ui-py (23.9.23)
 =============================================================================
 """
 
+import asyncio
 import random
 import json
 import os
 
 from waitress import serve  # production server
-from flask import Flask, redirect, render_template, request  # web python server
+from flask import Flask, redirect, render_template, render_template_string, request  # web python server
 from jinja2 import Environment, FileSystemLoader, select_autoescape  # config template
 
 from dynamic_render import register_new_renderer  # render open api dynamic
+from convertor import render_node
+from nodes import Nodes
+from const import DEFAULT_SERVER_URL
 
 
-def main():
+async def main():
+    """The main function of the server, """
+    nodes_client = Nodes(DEFAULT_SERVER_URL)
+    await nodes_client.start()
+    nodes = nodes_client.nodes
+
     working_dir = os.path.dirname(os.path.abspath(__file__))
     static_folder_path = os.path.join(working_dir, 'static')
 
@@ -46,26 +55,33 @@ def main():
         server_ip = request.headers.get("Host").split(':')[0]
         html_template = environment.get_template("dynamic/devices.html")
 
+        devices = list(nodes.keys())
+
         return render_template(
             html_template,
-            devices=[1, 2, 3],
+            devices=devices,
             server_ip=f"{server_ip}",
             port="8080",
             swagger_path=SWAGGER_PATH
         )
 
-    @app.route(f'/{SWAGGER_PATH}/<node_id>')
+    @app.route(f'/{SWAGGER_PATH}/<int:node_id>')
     def swagger_ui(node_id: int):
         """Dynamically renders a swagger ui with the correct documentation"""
-        return api_renderer.from_string(node_api_documentation(node_id))
+        doc = node_api_documentation(node_id)
+        if doc == 404:
+            return render_template_string("Error: 404 not found", code=404)
+        return api_renderer.from_string(doc)
 
-    @app.route('/api/doc/<node_id>')
+    @app.route('/api/doc/<int:node_id>')
     def node_api_documentation(node_id: int) -> str:
         """Returns an OpenAPI documentation in yaml format for a matter node"""
         server_ip = request.headers.get("Host").split(':')[0]
 
-        # cluster_paths = ["A", "B", "C"]
-        cluster_paths = ""
+        node = nodes[node_id]
+        if node is None:
+            return 404
+        cluster_paths = render_node(node)
 
         swagger_template = environment.get_template("config/swagger.yml")
         return swagger_template.render({
@@ -82,4 +98,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
