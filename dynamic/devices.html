@@ -9,9 +9,9 @@
 <body>
     <nav>
         <ul>
-            {% for device_id in devices %}
+            {% for node_id in nodes %}
             <li>
-                <a href="http://{{server_ip}}:{{port}}/{{swagger_path}}/{{device_id}}">device:{{device_id}}</a>
+                <a href="http://{{server_ip}}:{{port}}/{{swagger_path}}/{{node_id}}">device:{{node_id}}</a>
             </li>
             {% endfor %}
         </ul>
