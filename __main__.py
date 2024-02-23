@@ -44,7 +44,7 @@ def redirect_internal():
 
 @app.route('/html/devices')
 def devices_menu():
-    """Route to display devices id from list and select them """
+    """Returns a html menu composed of device's id from list"""
     server_ip = request.headers.get("Host").split(':')[0]
     html_template = environment.get_template("dynamic/devices.html")
 
@@ -59,7 +59,7 @@ def devices_menu():
 
 @app.route(f'/{SWAGGER_PATH}/<id>')
 def swagger_ui(node_id: int):
-    """dynamically render a swagger ui with the correct documentation"""
+    """Dynamically renders a swagger ui with the correct documentation"""
     return api_renderer.from_string(node_api_documentation(node_id))
 
 
@@ -80,7 +80,7 @@ def node_api_documentation(node_id: int) -> str:
 
 @app.route('/test')
 def display_random_list():
-    """Returns a list of 5 random number between 1,10 in json format"""
+    """Returns a json list of 5 random number between 1,10 in json format"""
     return json.dumps([random.randint(1, 10) for _ in range(0, 5)])
 
 
