@@ -54,12 +54,12 @@ def main():
             swagger_path=SWAGGER_PATH
         )
 
-    @app.route(f'/{SWAGGER_PATH}/<id>')
+    @app.route(f'/{SWAGGER_PATH}/<node_id>')
     def swagger_ui(node_id: int):
         """Dynamically renders a swagger ui with the correct documentation"""
         return api_renderer.from_string(node_api_documentation(node_id))
 
-    @app.route('/api/doc/<id>')
+    @app.route('/api/doc/<node_id>')
     def node_api_documentation(node_id: int) -> str:
         """Returns an OpenAPI documentation in yaml format for a matter node"""
         server_ip = request.headers.get("Host").split(':')[0]
