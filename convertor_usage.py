@@ -46,6 +46,6 @@ if __name__ == '__main__':
 
     print(nodes_dict)
 
-    for id, node in nodes_dict:
+    for id, node in nodes_dict.items():
         print(id)
         print(node_to_template_names(node))
