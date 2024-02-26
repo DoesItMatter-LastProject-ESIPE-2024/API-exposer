@@ -30,7 +30,6 @@ from const import DEFAULT_SERVER_URL
 
 SWAGGER_PATH = 'html/swagger'
 
-
 async def main():
     """The main function of the server"""
     parser = ArgumentParser()
@@ -55,8 +54,14 @@ async def main():
         default=None,
         help='Log file to write to (optional).',
     )
+    
+    args = parser.parse_args()
 
-    nodes_client = Nodes(DEFAULT_SERVER_URL)
+    # configure logging
+    handlers = [logging.FileHandler(args.log_file)] if args.log_file else None
+    logging.basicConfig(handlers=handlers, level=args.log_level.upper())
+
+    nodes_client = Nodes(args.url)
     await nodes_client.start()
     nodes = nodes_client.nodes
 
