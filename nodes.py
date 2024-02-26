@@ -6,12 +6,14 @@ import logging
 from asyncio import Event, create_task, Task
 
 from typing import Dict, Optional
-from aiohttp import ClientSession
 
+from aiohttp import ClientSession
+from chip.clusters.ClusterObjects import ClusterCommand
 from matter_server.common.models import EventType
 from matter_server.client.client import MatterClient
 from matter_server.client.models.node import MatterNode
-
+from matter_server.common.models import APICommand
+from matter_server.common.helpers.util import dataclass_from_dict, dataclass_to_dict
 
 class Nodes:
     """ 
@@ -82,3 +84,15 @@ class Nodes:
             logging.error("client not started")
             return
         await self._task
+
+    async def send_cluster_command(self, node_id: int, endpoint_id: int, command: ClusterCommand):
+        """Sends a cluster command to an endpoint of a matter node"""
+        payload = dataclass_to_dict(command)
+        return await self._client_global.send_command(
+            APICommand.DEVICE_COMMAND,
+            node_id=node_id,
+            endpoint_id=endpoint_id,
+            cluster_id=command.cluster_id,
+            payload=payload,
+            command_name=command.__class__.__name__
+        )
