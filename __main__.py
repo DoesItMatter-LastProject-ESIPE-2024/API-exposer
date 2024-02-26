@@ -27,10 +27,11 @@ from fastapi.staticfiles import StaticFiles
 # templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
-from nodes import Nodes
 from chip.clusters.Objects import OnOff
 from chip.clusters.ClusterObjects import ClusterCommand, ClusterObject
 
+
+from nodes import Nodes
 from convertor import render_node
 from const import DEFAULT_SERVER_URL
 
@@ -140,7 +141,7 @@ async def main():
         """Returns a json list of 5 random number between 1,10 in json format"""
         return list(randint(1, 10) for _ in range(0, 5))
 
-    @app.route('/api/v0/{node_id}/{endpoint_id}/onoff/state', ['GET', 'POST'])
+    @app.api_route('/api/v0/{node_id}/{endpoint_id}/onoff/state', methods=['GET', 'POST'])
     def on_off_state(request: Request, node_id: int, endpoint_id: int):
         """Get ot set the state of the cluster on off"""
         on_off_cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
@@ -153,6 +154,11 @@ async def main():
             return {"state": False}
             # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
 
+    # @app.get('/api/v0/{node_id}/{endpoint_id}/onoff/state')
+    # def on_off_state(request: Request, node_id: int, endpoint_id: int):
+    #     """Get ot set the state of the cluster on off"""
+    #     return {"state": False}
+
     @app.post('/api/v0/{node_id}/{endpoint_id}/onoff/toggle')
     def on_off_toggle(node_id: int, endpoint_id: int):
         """Switch the state of the cluster on off"""
@@ -162,20 +168,24 @@ async def main():
 
     @app.get('/api/v0/on')
     async def on():
-        stringue = ""
+        string = ""
         for node in nodes.values():
-            stringue += f"node : {node.node_id}; "
+            # string += str(node)
             endpoints = node.endpoints.values()
             for endpoint in endpoints:
+                # string += str(endpoint)
                 clusters = endpoint.clusters.values()
                 for cluster in clusters:
+                    # string += str(cluster.id)
                     match cluster:
                         case OnOff():
-                            stringue += f"{endpoint.endpoint_id} coucou\n"
-                            await create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
+                            string += f"    node_id = {node.node_id} endpoint_id = {endpoint.endpoint_id} onoff    "
+                            # await nodes_client._client_global.send_command(cluster.Commands.On())
+
+                            await nodes_client.send_cluster_command(node.node_id, endpoint.endpoint_id, cluster.Commands.Toggle())
                         case _:
-                            stringue += "none\n"
-        return stringue
+                            string += "other"
+        return string
 
     config = Config(app, host='0.0.0.0', port=8080, log_level='info')
     server = Server(config)
