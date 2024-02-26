@@ -141,51 +141,32 @@ async def main():
         """Returns a json list of 5 random number between 1,10 in json format"""
         return list(randint(1, 10) for _ in range(0, 5))
 
-    @app.api_route('/api/v0/{node_id}/{endpoint_id}/onoff/state', methods=['GET', 'POST'])
-    def on_off_state(request: Request, node_id: int, endpoint_id: int):
-        """Get ot set the state of the cluster on off"""
-        on_off_cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
-        if request.method == 'POST':
-            # return redirect(url_for('success',name = user))
-            # request.get_json
-            return {"state": True}  # request.form['state']
-            # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
-        else:  # request.method == 'GET'
-            return {"state": False}
-            # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
+    @app.get('/api/v0/{node_id}/{endpoint_id}/onoff/state')
+    async def get_on_off_state(request: Request, node_id: int, endpoint_id: int):
+        """Gets the state of the on-off cluster"""
+        return "NOT IMPLEMENTED"
 
-    # @app.get('/api/v0/{node_id}/{endpoint_id}/onoff/state')
-    # def on_off_state(request: Request, node_id: int, endpoint_id: int):
-    #     """Get ot set the state of the cluster on off"""
-    #     return {"state": False}
+    @app.post('/api/v0/{node_id}/{endpoint_id}/onoff/state')
+    async def set_on_off_state(request: Request, node_id: int, endpoint_id: int):
+        """Sets the state of the on-off cluster"""
+        cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
+        state = (await request.json())['state']
+        cmd = cluster.Commands.On() if state else cluster.Commands.Off()
+        return await nodes_client.send_cluster_command(
+            node_id,
+            endpoint_id,
+            cmd
+        )
 
     @app.post('/api/v0/{node_id}/{endpoint_id}/onoff/toggle')
-    def on_off_toggle(node_id: int, endpoint_id: int):
-        """Switch the state of the cluster on off"""
-        on_off_cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
-        return str(on_off_cluster)
-        # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
-
-    @app.get('/api/v0/on')
-    async def on():
-        string = ""
-        for node in nodes.values():
-            # string += str(node)
-            endpoints = node.endpoints.values()
-            for endpoint in endpoints:
-                # string += str(endpoint)
-                clusters = endpoint.clusters.values()
-                for cluster in clusters:
-                    # string += str(cluster.id)
-                    match cluster:
-                        case OnOff():
-                            string += f"    node_id = {node.node_id} endpoint_id = {endpoint.endpoint_id} onoff    "
-                            # await nodes_client._client_global.send_command(cluster.Commands.On())
-
-                            await nodes_client.send_cluster_command(node.node_id, endpoint.endpoint_id, cluster.Commands.Toggle())
-                        case _:
-                            string += "other"
-        return string
+    async def on_off_toggle(node_id: int, endpoint_id: int):
+        """Switches the state of the on-off cluster"""
+        cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
+        return await nodes_client.send_cluster_command(
+            node_id,
+            endpoint_id,
+            cluster.Commands.Toggle()
+        )
 
     config = Config(app, host='0.0.0.0', port=8080, log_level='info')
     server = Server(config)

@@ -38,11 +38,11 @@
         '404':
           description: Node or Endpoint not found
           
-  /v0/{{node_id}}/{{endpoint_id}}/onoff/toogle:
+  /v0/{{node_id}}/{{endpoint_id}}/onoff/toggle:
     post:
       tags:
         - On/Off
-      summary: Toogle state
+      summary: Toggle state
       responses:
         '200':
           description: Successful operation
