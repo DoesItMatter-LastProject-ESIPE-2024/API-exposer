@@ -12,8 +12,7 @@ from argparse import ArgumentParser
 
 from asyncio import run
 import logging
-from typing import Optional
-from random import randint
+from typing import Dict
 
 # web python server
 from uvicorn import Server, Config
@@ -27,9 +26,10 @@ from fastapi.staticfiles import StaticFiles
 # templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
+from chip.clusters import Objects
 from chip.clusters.Objects import OnOff
-from chip.clusters.ClusterObjects import ClusterCommand, ClusterObject
-
+from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObject
+from matter_server.client.models.node import MatterNode, MatterEndpoint
 
 from nodes import Nodes
 from convertor import render_node
@@ -82,11 +82,45 @@ async def main():
         autoescape=select_autoescape()
     )
 
-    def _validate_node_id(node_id: int) -> None:
+    def _client_error(code: int, msg: str):
+        logging.warning(msg)
+        raise HTTPException(code, msg)
+
+    def _bad_request(msg: str):
+        _client_error(400, msg)
+
+    def _not_found(msg: str):
+        _client_error(404, msg)
+
+    def _validate_node_id(node_id: int) -> MatterNode:
         if node_id not in nodes:
-            msg = f'node {node_id} not found'
-            logging.info(msg)
-            raise HTTPException(404, msg)
+            _not_found(f'node {node_id} not found')
+        return nodes[node_id]
+
+    def _validate_endpoint_id(node: MatterNode, endpoint_id: int) -> MatterEndpoint:
+        if endpoint_id not in node.endpoints:
+            _not_found(f'endpoint {endpoint_id} not found')
+        return node.endpoints[endpoint_id]
+
+    def _validate_cluster_name(endpoint: MatterEndpoint, cluster_name: str) -> Cluster:
+        if not hasattr(Objects, cluster_name):
+            _not_found(f'cluster {cluster_name} not found')
+        cluster_class = getattr(Objects, cluster_name)
+
+        if not hasattr(cluster_class, 'id'):
+            _not_found('cluster id not found')
+        cluster_id = cluster_class.id
+
+        if cluster_id not in endpoint.clusters:
+            _not_found(f'cluster {cluster_id} not found in endpoint')
+        return endpoint.clusters[cluster_id]
+
+    def _validate_command_name(cluster: Cluster, command_name: str) -> type[ClusterCommand]:
+        if not hasattr(cluster, 'Commands'):
+            _not_found('cluster does not have commands')
+        if not hasattr(cluster.Commands, command_name):
+            _not_found(f'command {command_name} not found')
+        return getattr(cluster.Commands, command_name)
 
     @app.get('/')
     def redirect():
@@ -120,8 +154,7 @@ async def main():
     @app.get('/api/doc/{node_id}')
     def node_api_documentation(request: Request, node_id: int) -> str:
         """Returns an OpenAPI documentation in yaml format for a matter node"""
-        _validate_node_id(node_id)
-        node = nodes[node_id]
+        node = _validate_node_id(node_id)
         cluster_paths = render_node(node)
 
         content = env.get_template('swagger.yml.j2').render({
@@ -148,10 +181,10 @@ async def main():
         if request.method == 'POST':
             # return redirect(url_for('success',name = user))
             # request.get_json
-            return {"state": True}  # request.form['state']
+            return {'state': True}  # request.form['state']
             # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
         else:  # request.method == 'GET'
-            return {"state": False}
+            return {'state': False}
             # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
 
     # @app.get('/api/v1/{node_id}/{endpoint_id}/onoff/state')
@@ -161,33 +194,42 @@ async def main():
 
     @app.get('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
     def get_attribut(
-        request: Request,
-        node_id: int,
-        endpoint_id: int,
-        cluster_id: int,
-        attribut_id: int):
+            request: Request,
+            node_id: int,
+            endpoint_id: int,
+            cluster_id: int,
+            attribut_id: int):
         """TODO"""
 
     @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
     def set_attribut(
-        request: Request,
-        node_id: int,
-        endpoint_id: int,
-        cluster_id: int,
-        attribut_id: int):
+            request: Request,
+            node_id: int,
+            endpoint_id: int,
+            cluster_id: int,
+            attribut_id: int):
         """TODO"""
 
     @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/command/{command_name}')
-    def do_command(
-        request: Request,
-        node_id: int,
-        endpoint_id: int,
-        cluster_id: int,
-        command_id: int):
+    async def do_command(
+            request: Request,
+            node_id: int,
+            endpoint_id: int,
+            cluster_name: int,
+            command_name: int):
         """Switch the state of the cluster on off"""
-        on_off_cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
-        return str(on_off_cluster)
-        # await asyncio.create_task(nodes_client._client_global.send_command(cluster.Commands.On()))
+        node = _validate_node_id(node_id)
+        endpoint = _validate_endpoint_id(node, endpoint_id)
+        cluster = _validate_cluster_name(endpoint, cluster_name)
+        command_class = _validate_command_name(cluster, command_name)
+
+        command_parameters: Dict[str: any] = await request.json()
+        # if not type(command_parameters) == dict:
+        #     # might not be true
+        #     _bad_request('command parameters must be an object')
+
+        command = command_class(**command_parameters)
+        return await nodes_client.send_cluster_command(node_id, endpoint_id, command)
 
     @app.get('/api/v1/on')
     async def on():
@@ -202,7 +244,8 @@ async def main():
                     # string += str(cluster.id)
                     match cluster:
                         case OnOff():
-                            string += f"    node_id = {node.node_id} endpoint_id = {endpoint.endpoint_id} onoff    "
+                            string += f"    node_id = {node.node_id} endpoint_id = {
+                                endpoint.endpoint_id} onoff    "
                             # await nodes_client._client_global.send_command(cluster.Commands.On())
                             await nodes_client.send_cluster_command(node.node_id, endpoint.endpoint_id, cluster.Commands.Toggle())
                         case _:
