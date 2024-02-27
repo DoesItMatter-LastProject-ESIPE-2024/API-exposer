@@ -1,0 +1,10 @@
+  /v1/{{node_id}}/{{endpoint_id}}/{{cluster_name}}/command/{{command_name}}:
+    post:
+      tags:
+        - {{cluster_name}}
+      summary: Apply command
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Node, Endpoint, Cluster or Attribute not found
