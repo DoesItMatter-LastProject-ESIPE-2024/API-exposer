@@ -290,8 +290,7 @@ async def main():
                     # string += str(cluster.id)
                     match cluster:
                         case OnOff():
-                            string += f"    node_id = {node.node_id} endpoint_id = {
-                                endpoint.endpoint_id} onoff    "
+                            string += f"    node_id = {node.node_id} endpoint_id = {endpoint.endpoint_id} onoff    "
                             # await nodes_client._client_global.send_command(cluster.Commands.On())
                             await nodes_client.send_cluster_command(node.node_id, endpoint.endpoint_id, cluster.Commands.Toggle())
                         case _:
