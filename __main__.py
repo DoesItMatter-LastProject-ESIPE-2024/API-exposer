@@ -12,14 +12,14 @@ from argparse import ArgumentParser
 
 from asyncio import run
 import logging
-from typing import Dict
+from typing import Dict, Any
 
 # web python server
 from uvicorn import Server, Config
 from fastapi.applications import FastAPI
 from fastapi.requests import Request
 from fastapi.exceptions import HTTPException
-from fastapi.responses import Response, RedirectResponse, HTMLResponse
+from fastapi.responses import Response, RedirectResponse, HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
@@ -28,7 +28,7 @@ from jinja2 import Environment, select_autoescape, FileSystemLoader
 
 from chip.clusters import Objects
 from chip.clusters.Objects import OnOff
-from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObject
+from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObject, ClusterObjectFieldDescriptor
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 
 from nodes import Nodes
@@ -122,6 +122,17 @@ async def main():
             _not_found(f'command {command_name} not found')
         return getattr(cluster.Commands, command_name)
 
+    def _validate_attribute_name(cluster: Cluster, attribute_name: str) -> ClusterObjectFieldDescriptor:
+        field = cluster.descriptor.GetFieldByLabel(attribute_name)
+        if field is None:
+            _not_found(f'cluster does not have {attribute_name}')
+        return field
+
+    # def _validate_attribute_name(cluster: Cluster, attribute_name: str) -> Any:
+    #     if not hasattr(cluster, attribute_name):
+    #         _not_found(f'cluster does not have {attribute_name}')
+    #     return getattr(cluster, attribute_name)
+
     @app.get('/')
     def redirect():
         """Redirect user to the good page"""
@@ -193,43 +204,78 @@ async def main():
     #     return {"state": False}
 
     @app.get('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
-    def get_attribut(
+    async def get_attribute(
             request: Request,
             node_id: int,
             endpoint_id: int,
-            cluster_id: int,
-            attribut_id: int):
-        """TODO"""
+            cluster_name: str,
+            attribute_name: str):
+        """Return attribute state in json format"""
+        node = _validate_node_id(node_id)
+        endpoint = _validate_endpoint_id(node, endpoint_id)
+        cluster = _validate_cluster_name(endpoint, cluster_name)
+        attribute_field = _validate_attribute_name(cluster, attribute_name)
+        attribute = await nodes_client.read_cluster_attribute(
+            node_id, endpoint_id, cluster.id, attribute_field.Tag)
+
+        return JSONResponse(content={f'{attribute_name}': attribute})
 
     @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
-    def set_attribut(
+    async def set_attribute(
             request: Request,
             node_id: int,
             endpoint_id: int,
-            cluster_id: int,
-            attribut_id: int):
-        """TODO"""
+            cluster_name: str,
+            attribute_name: str):
+        """Update attribute state"""
+        node = _validate_node_id(node_id)
+        endpoint = _validate_endpoint_id(node, endpoint_id)
+        cluster = _validate_cluster_name(endpoint, cluster_name)
+        attribute_field = _validate_attribute_name(cluster, attribute_name)
+
+        new_state = (await request.json())[attribute_name]
+
+        attribute = await nodes_client.write_cluster_attribute(
+            node_id, endpoint_id, cluster.id, attribute_field.Tag, new_state)
+
+        print(new_state)
+        print(attribute)
+
+        # state = (await request.json())[attribute_name]
+        # cmd = cluster.Commands.On() if state else cluster.Commands.Off()
+        # return await nodes_client.send_cluster_command(
+        #     node_id,
+        #     endpoint_id,
+        #     cmd
+        # )
 
     @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/command/{command_name}')
     async def do_command(
             request: Request,
             node_id: int,
             endpoint_id: int,
-            cluster_name: int,
-            command_name: int):
+            cluster_name: str,
+            command_name: str):
         """Switch the state of the cluster on off"""
         node = _validate_node_id(node_id)
         endpoint = _validate_endpoint_id(node, endpoint_id)
         cluster = _validate_cluster_name(endpoint, cluster_name)
         command_class = _validate_command_name(cluster, command_name)
 
-        command_parameters: Dict[str: any] = await request.json()
-        # if not type(command_parameters) == dict:
-        #     # might not be true
-        #     _bad_request('command parameters must be an object')
-
-        command = command_class(**command_parameters)
-        return await nodes_client.send_cluster_command(node_id, endpoint_id, command)
+        if (await request.body()) == b'':
+            command = command_class()
+        else:
+            command_parameters: Dict[str: Any] = await request.json()
+            # if not type(command_parameters) == dict:
+            #     # might not be true
+            #     _bad_request('command parameters must be an object')
+            command = command_class(**command_parameters)
+        try:
+            print(command)
+            result = await nodes_client.send_cluster_command(node_id, endpoint_id, command)
+            print(result)
+        except Exception as err:
+            _client_error(500, str(err))
 
     @app.get('/api/v1/on')
     async def on():
@@ -244,7 +290,8 @@ async def main():
                     # string += str(cluster.id)
                     match cluster:
                         case OnOff():
-                            string += f"    node_id = {node.node_id} endpoint_id = {endpoint.endpoint_id} onoff    "
+                            string += f"    node_id = {node.node_id} endpoint_id = {
+                                endpoint.endpoint_id} onoff    "
                             # await nodes_client._client_global.send_command(cluster.Commands.On())
                             await nodes_client.send_cluster_command(node.node_id, endpoint.endpoint_id, cluster.Commands.Toggle())
                         case _:
