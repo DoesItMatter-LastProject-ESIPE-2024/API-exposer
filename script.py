@@ -5,7 +5,9 @@ from enum import StrEnum, auto
 import logging
 import re
 from typing import Iterator, List, Optional, Set, Callable, Tuple, TypeVar
+from pandas import DataFrame
 
+import tabula
 from pypdf import PdfReader
 
 import script_const as const
@@ -221,20 +223,30 @@ def _process(lines: Iterator[str]):
     print(*model, sep='\n')
 
 
+def _clean_header(df: DataFrame) -> DataFrame:
+    if any('Unnamed' in col for col in df.columns):
+        new_header = df.iloc[0].to_list()
+        df = df[1:]
+        df.columns = new_header
+    return df
+
+
+def _clean_soft_hyphens(df: DataFrame) -> DataFrame:
+    return df.replace(to_replace=r'[(\u00ad\r),(\n\r)]', value='', regex=True)
+
+
 if __name__ == '__main__':
     pdf_path = './spec.pdf'
     # logging.basicConfig(level=logging.INFO)
     # extract_from_pdf(pdf_path)
-    import tabula
 
-    # dfs = tabula.read_pdf(pdf_path, pages='all', lattice=True, multiple_tables=True)
-    # print('---------------')
-    # print(*dfs, sep='\n---------------\n')
-    # print('---------------')
-    dfs = tabula.read_pdf(pdf_path, pages=66, lattice=True)
-    df = dfs[-1].replace(r' \\r', '', regex=True)
-    print(df)
-    print()
+    dfs = tabula.read_pdf(pdf_path, pages='all', lattice=True)
+    dfs = (_clean_soft_hyphens(_clean_header(df))
+           for df in dfs
+           if not df.empty)
+    dfs = list(dfs)
+    print(*dfs, sep="\n-----------------------------------\n")
+    print(len(dfs))
 
     # with open(pdf_path, 'rb') as file:
     #     reader = PdfReader(file)
