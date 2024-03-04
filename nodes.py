@@ -5,7 +5,7 @@ contain Nodes class for API-EXPOSER
 import logging
 from asyncio import Event, create_task, Task
 
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
 from aiohttp import ClientSession
 from chip.clusters.ClusterObjects import ClusterCommand
@@ -14,6 +14,7 @@ from matter_server.client.client import MatterClient
 from matter_server.client.models.node import MatterNode
 from matter_server.common.models import APICommand
 from matter_server.common.helpers.util import dataclass_from_dict, dataclass_to_dict
+
 
 class Nodes:
     """ 
@@ -31,15 +32,15 @@ class Nodes:
 
     def _handle_node_added(self, node: MatterNode):
         self.nodes[node.node_id] = node
-        logging.info("node %d added %s", node.node_id, node)
+        logging.debug("node %d added %s", node.node_id, node)
 
     def _handle_node_updated(self, node: MatterNode):
-        logging.info("node %d updated %s", node.node_id, node)
+        logging.debug("node %d updated %s", node.node_id, node)
         self.nodes[node.node_id] = node
 
     def _handle_node_removed(self, node_id: int):
         removed = self.nodes.pop(node_id)
-        logging.info("node %d added %s", node_id, removed)
+        logging.debug("node %d added %s", node_id, removed)
 
     def _handle_event(self, event: EventType, *args):
         """Passes all arguments after event to the specific event handler"""
@@ -68,7 +69,7 @@ class Nodes:
             node.node_id: node
             for node in self._client_global.get_nodes()
         })
-        logging.info(self.nodes)
+        logging.debug(self.nodes)
 
     async def start(self):
         """connect to Serveur and get matter nodes list"""
@@ -87,12 +88,23 @@ class Nodes:
 
     async def send_cluster_command(self, node_id: int, endpoint_id: int, command: ClusterCommand):
         """Sends a cluster command to an endpoint of a matter node"""
-        payload = dataclass_to_dict(command)
-        return await self._client_global.send_command(
-            APICommand.DEVICE_COMMAND,
-            node_id=node_id,
-            endpoint_id=endpoint_id,
-            cluster_id=command.cluster_id,
-            payload=payload,
-            command_name=command.__class__.__name__
+        return await self._client_global.send_device_command(
+            node_id,
+            endpoint_id,
+            command,
+        )
+
+    async def read_cluster_attribute(self, node_id: int, endpoint_id: int, cluster_id: int, attribute_id: int) -> Any:
+        """TODO"""
+        return await self._client_global.read_attribute(
+            node_id,
+            f'{endpoint_id}/{cluster_id}/{attribute_id}'
+        )
+
+    async def write_cluster_attribute(self, node_id: int, endpoint_id: int, cluster_id: int, attribute_id: int, value: Any) -> Any:
+        """TODO"""
+        return await self._client_global.write_attribute(
+            node_id,
+            f'{endpoint_id}/{cluster_id}/{attribute_id}',
+            value
         )

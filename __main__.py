@@ -12,24 +12,24 @@ from argparse import ArgumentParser
 
 from asyncio import run
 import logging
-from typing import Optional
-from random import randint
+from typing import Dict, Any
 
 # web python server
 from uvicorn import Server, Config
 from fastapi.applications import FastAPI
 from fastapi.requests import Request
 from fastapi.exceptions import HTTPException
-from fastapi.responses import Response, RedirectResponse, HTMLResponse
+from fastapi.responses import Response, RedirectResponse, HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
 # templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
+from chip.clusters import Objects
 from chip.clusters.Objects import OnOff
-from chip.clusters.ClusterObjects import ClusterCommand, ClusterObject
-
+from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObject, ClusterObjectFieldDescriptor
+from matter_server.client.models.node import MatterNode, MatterEndpoint
 
 from nodes import Nodes
 from convertor import render_node
@@ -82,11 +82,56 @@ async def main():
         autoescape=select_autoescape()
     )
 
-    def _validate_node_id(node_id: int) -> None:
+    def _client_error(code: int, msg: str):
+        logging.warning(msg)
+        raise HTTPException(code, msg)
+
+    def _bad_request(msg: str):
+        _client_error(400, msg)
+
+    def _not_found(msg: str):
+        _client_error(404, msg)
+
+    def _validate_node_id(node_id: int) -> MatterNode:
         if node_id not in nodes:
-            msg = f'node {node_id} not found'
-            logging.info(msg)
-            raise HTTPException(404, msg)
+            _not_found(f'node {node_id} not found')
+        return nodes[node_id]
+
+    def _validate_endpoint_id(node: MatterNode, endpoint_id: int) -> MatterEndpoint:
+        if endpoint_id not in node.endpoints:
+            _not_found(f'endpoint {endpoint_id} not found')
+        return node.endpoints[endpoint_id]
+
+    def _validate_cluster_name(endpoint: MatterEndpoint, cluster_name: str) -> Cluster:
+        if not hasattr(Objects, cluster_name):
+            _not_found(f'cluster {cluster_name} not found')
+        cluster_class = getattr(Objects, cluster_name)
+
+        if not hasattr(cluster_class, 'id'):
+            _not_found('cluster id not found')
+        cluster_id = cluster_class.id
+
+        if cluster_id not in endpoint.clusters:
+            _not_found(f'cluster {cluster_id} not found in endpoint')
+        return endpoint.clusters[cluster_id]
+
+    def _validate_command_name(cluster: Cluster, command_name: str) -> type[ClusterCommand]:
+        if not hasattr(cluster, 'Commands'):
+            _not_found('cluster does not have commands')
+        if not hasattr(cluster.Commands, command_name):
+            _not_found(f'command {command_name} not found')
+        return getattr(cluster.Commands, command_name)
+
+    def _validate_attribute_name(cluster: Cluster, attribute_name: str) -> ClusterObjectFieldDescriptor:
+        field = cluster.descriptor.GetFieldByLabel(attribute_name)
+        if field is None:
+            _not_found(f'cluster does not have {attribute_name}')
+        return field
+
+    # def _validate_attribute_name(cluster: Cluster, attribute_name: str) -> Any:
+    #     if not hasattr(cluster, attribute_name):
+    #         _not_found(f'cluster does not have {attribute_name}')
+    #     return getattr(cluster, attribute_name)
 
     @app.get('/')
     def redirect():
@@ -101,7 +146,7 @@ async def main():
             name='devices.html',
             context={
                 'nodes': list(nodes.keys()),
-                'server_ip': request.client.host,
+                'server_ip': request.url.hostname,
                 'port': 8080,
                 'swagger_path': SWAGGER_PATH
             }
@@ -120,12 +165,11 @@ async def main():
     @app.get('/api/doc/{node_id}')
     def node_api_documentation(request: Request, node_id: int) -> str:
         """Returns an OpenAPI documentation in yaml format for a matter node"""
-        _validate_node_id(node_id)
-        node = nodes[node_id]
+        node = _validate_node_id(node_id)
         cluster_paths = render_node(node)
 
         content = env.get_template('swagger.yml.j2').render({
-            'server_ip': request.client.host,
+            'server_ip': request.url.hostname,
             'paths': cluster_paths
         })
         return Response(
@@ -136,37 +180,68 @@ async def main():
             }
         )
 
-    @app.get('/test')
-    def display_random_list():
-        """Returns a json list of 5 random number between 1,10 in json format"""
-        return list(randint(1, 10) for _ in range(0, 5))
+    @app.get('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
+    async def get_attribute(
+            request: Request,
+            node_id: int,
+            endpoint_id: int,
+            cluster_name: str,
+            attribute_name: str):
+        """Return attribute state in json format"""
+        node = _validate_node_id(node_id)
+        endpoint = _validate_endpoint_id(node, endpoint_id)
+        cluster = _validate_cluster_name(endpoint, cluster_name)
+        attribute_field = _validate_attribute_name(cluster, attribute_name)
+        attribute = await nodes_client.read_cluster_attribute(
+            node_id, endpoint_id, cluster.id, attribute_field.Tag)
+        return JSONResponse(content={f'{attribute_name}': attribute})
 
-    @app.get('/api/v0/{node_id}/{endpoint_id}/onoff/state')
-    async def get_on_off_state(request: Request, node_id: int, endpoint_id: int):
-        """Gets the state of the on-off cluster"""
-        return "NOT IMPLEMENTED"
+    @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
+    async def set_attribute(
+            request: Request,
+            node_id: int,
+            endpoint_id: int,
+            cluster_name: str,
+            attribute_name: str):
+        """Update attribute state"""
+        node = _validate_node_id(node_id)
+        endpoint = _validate_endpoint_id(node, endpoint_id)
+        cluster = _validate_cluster_name(endpoint, cluster_name)
+        attribute_field = _validate_attribute_name(cluster, attribute_name)
 
-    @app.post('/api/v0/{node_id}/{endpoint_id}/onoff/state')
-    async def set_on_off_state(request: Request, node_id: int, endpoint_id: int):
-        """Sets the state of the on-off cluster"""
-        cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
-        state = (await request.json())['state']
-        cmd = cluster.Commands.On() if state else cluster.Commands.Off()
-        return await nodes_client.send_cluster_command(
-            node_id,
-            endpoint_id,
-            cmd
-        )
+        new_state = (await request.json())[attribute_name]
 
-    @app.post('/api/v0/{node_id}/{endpoint_id}/onoff/toggle')
-    async def on_off_toggle(node_id: int, endpoint_id: int):
-        """Switches the state of the on-off cluster"""
-        cluster = nodes[node_id].endpoints[endpoint_id].clusters[OnOff.id]
-        return await nodes_client.send_cluster_command(
-            node_id,
-            endpoint_id,
-            cluster.Commands.Toggle()
-        )
+        attribute = await nodes_client.write_cluster_attribute(
+            node_id, endpoint_id, cluster.id, attribute_field.Tag, new_state)
+        return JSONResponse(content={f'{attribute_name}': attribute})
+
+    @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/command/{command_name}')
+    async def do_command(
+            request: Request,
+            node_id: int,
+            endpoint_id: int,
+            cluster_name: str,
+            command_name: str):
+        """Switch the state of the cluster on off"""
+        node = _validate_node_id(node_id)
+        endpoint = _validate_endpoint_id(node, endpoint_id)
+        cluster = _validate_cluster_name(endpoint, cluster_name)
+        command_class = _validate_command_name(cluster, command_name)
+
+        if (await request.body()) == b'':
+            command = command_class()
+        else:
+            command_parameters: Dict[str: Any] = await request.json()
+            # if not type(command_parameters) == dict:
+            #     # might not be true
+            #     _bad_request('command parameters must be an object')
+            command = command_class(**command_parameters)
+        try:
+            print(command)
+            result = await nodes_client.send_cluster_command(node_id, endpoint_id, command)
+            print(result)
+        except Exception as err:
+            _client_error(500, str(err))
 
     config = Config(app, host='0.0.0.0', port=8080, log_level='info')
     server = Server(config)
