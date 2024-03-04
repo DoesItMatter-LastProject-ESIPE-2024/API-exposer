@@ -12,8 +12,6 @@ from chip.clusters.ClusterObjects import ClusterCommand
 from matter_server.common.models import EventType
 from matter_server.client.client import MatterClient
 from matter_server.client.models.node import MatterNode
-from matter_server.common.models import APICommand
-from matter_server.common.helpers.util import dataclass_from_dict, dataclass_to_dict
 
 
 class Nodes:

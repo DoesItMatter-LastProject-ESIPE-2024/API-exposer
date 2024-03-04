@@ -27,8 +27,7 @@ from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
 from chip.clusters import Objects
-from chip.clusters.Objects import OnOff
-from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObject, ClusterObjectFieldDescriptor
+from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObjectFieldDescriptor
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 
 from nodes import Nodes
