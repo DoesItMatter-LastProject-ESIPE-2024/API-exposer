@@ -146,7 +146,7 @@ async def main():
             name='devices.html',
             context={
                 'nodes': list(nodes.keys()),
-                'server_ip': request.client.host,
+                'server_ip': request.url.hostname,
                 'port': 8080,
                 'swagger_path': SWAGGER_PATH
             }
@@ -169,7 +169,7 @@ async def main():
         cluster_paths = render_node(node)
 
         content = env.get_template('swagger.yml.j2').render({
-            'server_ip': request.client.host,
+            'server_ip': request.url.hostname,
             'paths': cluster_paths
         })
         return Response(
