@@ -1,6 +1,5 @@
 """ 
-===================== nodes.py =====================
-contain Nodes class for API-EXPOSER
+Contains the Nodes class for API-EXPOSER.
 """
 import logging
 from asyncio import Event, create_task, Task
@@ -16,9 +15,9 @@ from matter_server.client.models.node import MatterNode
 
 class Nodes:
     """ 
-    =============== class nodes ===============
-    class to create a client, connect to Matter
-    Fabric and get all nodes
+    A class regrouping the needs for communicating between the REST API and the Cluster API.
+    It depends on python-matter-server to communicate to a Matter Server.
+    Matter Server is an implementation of a matter controller developed by Home Assistant.
     """
 
     def __init__(self, url: str):

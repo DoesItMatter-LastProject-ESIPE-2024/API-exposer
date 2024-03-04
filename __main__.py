@@ -1,12 +1,4 @@
-""" 
-========================= Matter API python server =========================
-The goal here is to make a ready for use python server in order to display 
-Matter IOT devices API from a cluster/API converter.
-This server works on Flask (3.0.2) | jinja (3.1.3) and waitress (3.0.0) for 
-production server. 
-It displays dynamically OpenApi 3.0 with swagger-ui-py (23.9.23)
-=============================================================================
-"""
+"""This is the entry point of the server."""
 
 from argparse import ArgumentParser
 
@@ -186,7 +178,7 @@ async def main():
             endpoint_id: int,
             cluster_name: str,
             attribute_name: str):
-        """Return attribute state in json format"""
+        """Returns an attribute of a node's endpoint in json format"""
         node = _validate_node_id(node_id)
         endpoint = _validate_endpoint_id(node, endpoint_id)
         cluster = _validate_cluster_name(endpoint, cluster_name)
@@ -202,7 +194,7 @@ async def main():
             endpoint_id: int,
             cluster_name: str,
             attribute_name: str):
-        """Update attribute state"""
+        """Updates an attribute of a node's endpoint"""
         node = _validate_node_id(node_id)
         endpoint = _validate_endpoint_id(node, endpoint_id)
         cluster = _validate_cluster_name(endpoint, cluster_name)
@@ -221,7 +213,8 @@ async def main():
             endpoint_id: int,
             cluster_name: str,
             command_name: str):
-        """Switch the state of the cluster on off"""
+        """Sends a matter cluster command to the matter server
+        to execute on the correct node/endpoint."""
         node = _validate_node_id(node_id)
         endpoint = _validate_endpoint_id(node, endpoint_id)
         cluster = _validate_cluster_name(endpoint, cluster_name)

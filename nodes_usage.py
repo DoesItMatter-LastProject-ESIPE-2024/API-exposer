@@ -37,7 +37,7 @@ parser.add_argument(
 
 
 async def main():
-    """Run main execution."""
+    """Runs main execution."""
     args = parser.parse_args()
 
     # configure logging
