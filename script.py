@@ -1,32 +1,24 @@
 """TODO"""
 from __future__ import annotations
 from dataclasses import dataclass, field
-from enum import StrEnum, auto
 import logging
-import re
-from typing import Iterator, List, Optional, Set, Callable, Tuple, TypeVar
+import os
+from typing import Dict, Iterable, List, Optional, Callable, Tuple, TypeVar
+
+from tabula import read_pdf as read_pdf_tables
 from pandas import DataFrame
+from feature import Features
 
-import tabula
-from pypdf import PdfReader
-
-import script_const as const
+from script_const import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
 
 T = TypeVar('T')
-
-
-class _ExtractionState(StrEnum):
-    SEARCH_INFO = auto()
-    SEARCH_FEATURES = auto()
-    SEARCH_ATTRIBUTES = auto()
-    SEARCH_COMMANDS = auto()
 
 
 @dataclass
 class _AttributeExtractionModel:
     id: int
     name: str
-    features: Set[str]
+    conformance: str
 
 
 @dataclass
@@ -44,210 +36,164 @@ class _InfoExtractionModel:
 
 @dataclass
 class _ClusterExtractionModel:
-    info: Optional[_InfoExtractionModel] = None
+    info: List[_InfoExtractionModel] = field(default_factory=list)
     features: List[_FeatureExtractionModel] = field(default_factory=list)
     attributes: List[_AttributeExtractionModel] = field(default_factory=list)
     commands: List[_AttributeExtractionModel] = field(default_factory=list)
 
 
-def extract_from_pdf(pdf_path: str):
+def extract_from_pdf(pdf_path: str) -> Dict[int, Features]:
     """Extracts features' information about clusters from the matter cluster specification pdf"""
-    with open(pdf_path, 'rb') as file:
-        reader = PdfReader(file)
-        lines = (
-            line
-            for page in reader.pages
-            for line in page.extract_text().splitlines()
+    return _convert_to_features(_process(
+        _clean_header(_clean_string(table, regex=True))
+        for table in read_pdf_tables(pdf_path, pages='all', lattice=True)
+        if not table.empty
+    ))
+
+
+def _convert_to_features(clusters: List[_ClusterExtractionModel]) -> Dict[int, Features]:
+    print(*clusters, '\n---------------------------\n')
+    return {}
+
+
+def _process_infos(df: DataFrame) -> List[_InfoExtractionModel]:
+    return [
+        _InfoExtractionModel(int(row.ID, 0), row.Name)
+        for row in df.itertuples()
+        if not row.ID == 'n/a'  # means the cluster is provisional
+    ]
+
+
+def _process_features(df: DataFrame) -> List[_FeatureExtractionModel]:
+    return [
+        _FeatureExtractionModel(
+            int(row.Bit),
+            row.Code,
+            row.Feature)
+        for row in df.itertuples()
+    ]
+
+
+def _process_attributes(df: DataFrame) -> List[_AttributeExtractionModel]:
+    return [
+        _AttributeExtractionModel(
+            int(row.ID, 0),
+            row.Name,
+            row.Conformance)
+        for row in df.itertuples()
+    ]
+
+
+def _process_commands(df: DataFrame) -> List[_AttributeExtractionModel]:
+    # m = re.match(const.ATTRIBUTE_PATTERN, line)
+    # return None if m is None else _FeatureExtractionModel(int(m.group(1), 0), m.group(2), m.group(3))
+    return []
+
+
+def _find_next_info_table(
+        tables: Iterable[DataFrame],
+        table_visitor: Optional[Callable[[DataFrame], None]] = None) -> DataFrame:
+    if table_visitor is None:
+        for table in tables:
+            if table.columns.equals(INFO_HEADER):
+                return table
+    else:
+        for table in tables:
+            if table.columns.equals(INFO_HEADER):
+                return table
+            table_visitor(table)
+    return None
+
+
+def _process_cluster_content(table: DataFrame, result: _ClusterExtractionModel):
+    try:
+        if any('\u00ad' in col for col in table.columns if isinstance(col, str)):
+            logging.warning(
+                'table (%s) has soft hyphens in headers, skipping it', table.columns.to_list())
+        # Sadly python match case cannot support this.
+        # We concatenate the lists because the tables may be on split into multiple tables
+        elif table.columns.equals(FEATURE_HEADER):
+            logging.info('found FEATURES for %s', result.info)
+            result.features = result.features + _process_features(table)
+        elif table.columns.equals(ATTRIBUTE_HEADER):
+            logging.info('found ATTRIBUTES for %s', result.info)
+            result.attributes = result.attributes + _process_attributes(table)
+        elif table.columns.equals(COMMAND_HEADER):
+            logging.info('found ATTRIBUTES for %s', result.info)
+            result.commands = result.commands + _process_commands(table)
+        else:
+            logging.debug('skipping table : %s', table.columns)
+    except Exception as e:
+        print(table)
+        raise e
+
+
+def _process_cluster(
+        info_table: DataFrame,
+        tables: Iterable[DataFrame]) -> Tuple[
+            Optional[_ClusterExtractionModel],
+            Optional[DataFrame]]:
+    """Process a cluster and return the next info table to process or None if tables empty"""
+    result = _ClusterExtractionModel()
+    result.info = _process_infos(info_table)
+    if len(result.info) == 0:
+        return (None, _find_next_info_table(tables))
+
+    return (
+        result,
+        _find_next_info_table(
+            tables,
+            lambda t: _process_cluster_content(t, result)
         )
-        return _process(lines)
+    )
 
 
-def _title(line: str) -> Optional[str]:
-    m = re.match(const.PATTERN_TITLE, line)
-    return None if m is None else m.groups()[-1]
+def _process(tables: Iterable[DataFrame]) -> List[_ClusterExtractionModel]:
+    result = []
+
+    # find first table, info
+    table_info = _find_next_info_table(tables)
+
+    # for each table info process cluster
+    while table_info is not None:
+        cluster, table_info = _process_cluster(table_info, tables)
+        if cluster is not None:
+            result.append(cluster)
+    return result
 
 
-def _state(line: str) -> Optional[_ExtractionState]:
-    title = _title(line)
-    match title:
-        case None:
-            return None
-        case const.INFO_TITLE:
-            return _ExtractionState.SEARCH_INFO
-        case const.FEATURE_TITLE:
-            return _ExtractionState.SEARCH_FEATURES
-        case const.ATTRIBUTE_TITLE:
-            return _ExtractionState.SEARCH_ATTRIBUTES
-        case const.COMMAND_TITLE:
-            return _ExtractionState.SEARCH_COMMANDS
-
-
-def _process_table(
-        header: str,
-        process_table_value: Callable[[str], Optional[T]],
-        lines: Iterator[str]) -> List[T]:
-    # consume until header
-    found_header = False
-    processed: List[T] = []
-    for line in lines:
-        # no title inside a table
-        if _title(line) is not None:
-            return processed
-        if found_header or header == line:
-            found_header = True
-        value = process_table_value(line)
-        if value is None:
-            continue
-        processed.append(value)
-    return processed
-
-
-def _process_info(line: str) -> Optional[_InfoExtractionModel]:
-    m = re.match(const.INFO_PATTERN, line)
-    return None if m is None else _InfoExtractionModel(int(m.group(1), 0), m.group(2))
-
-
-def _process_feature(line: str) -> Optional[_FeatureExtractionModel]:
-    m = re.match(const.FEATURE_PATTERN, line)
-    return None if m is None else _FeatureExtractionModel(int(m.group(1)), m.group(2), m.group(3))
-
-
-def _process_attribute(line: str) -> Optional[_AttributeExtractionModel]:
-    m = re.match(const.ATTRIBUTE_PATTERN, line)
-    return None if m is None else _FeatureExtractionModel(int(m.group(1), 0), m.group(2), m.group(3))
-
-
-def _process_command(line: str) -> Optional[_AttributeExtractionModel]:
-    m = re.match(const.ATTRIBUTE_PATTERN, line)
-    return None if m is None else _FeatureExtractionModel(int(m.group(1), 0), m.group(2), m.group(3))
-
-
-def _process_state(
-        state: _ExtractionState,
-        model: List[_ClusterExtractionModel],
-        current: _ClusterExtractionModel,
-        lines: Iterator[str]) -> Tuple[
-            _ExtractionState,
-            List[_ClusterExtractionModel],
-            _ClusterExtractionModel]:
-    logging.debug('processing state : %s', state)
-    match state:
-        case _ExtractionState.SEARCH_INFO:
-            infos = _process_table(
-                const.INFO_HEADER, _process_info, lines)
-
-            if len(infos) == 0:
-                logging.info('could not found cluster id and name')
-                return (state, model, current)
-            info = infos[0]
-
-            new_model = model
-            if current.info is not None:
-                new_model = [*model, current]
-
-            return (_ExtractionState.SEARCH_FEATURES, new_model, _ClusterExtractionModel(
-                info,
-                current.features,
-                current.attributes,
-                current.commands))
-
-        case _ExtractionState.SEARCH_FEATURES:
-            features = _process_table(
-                const.FEATURE_HEADER, _process_feature, lines)
-
-            if len(features) == 0:
-                logging.info(
-                    'could not found any features for cluster %d %s',
-                    current.info.id,
-                    current.info.name)
-                return (state, model, current)
-
-            return (_ExtractionState.SEARCH_ATTRIBUTES, model, _ClusterExtractionModel(
-                current.info,
-                features,
-                current.attributes,
-                current.commands))
-
-        case _ExtractionState.SEARCH_ATTRIBUTES:
-            attributes = _process_table(
-                const.ATTRIBUTE_HEADER, _process_attribute, lines)
-
-            if len(attributes) == 0:
-                logging.info(
-                    'could not found any attribute for cluster %d %s',
-                    current.info.id,
-                    current.info.name)
-                return (state, model, current)
-
-            return (_ExtractionState.SEARCH_COMMANDS, model, _ClusterExtractionModel(
-                current.info,
-                current.features,
-                attributes,
-                current.commands))
-
-        case _ExtractionState.SEARCH_COMMANDS:
-            commands = _process_table(
-                const.COMMAND_HEADER, _process_command, lines)
-
-            if len(commands) == 0:
-                logging.info(
-                    'could not found any command for cluster %d %s',
-                    current.info.id,
-                    current.info.name)
-                return (state, model, current)
-
-            return (_ExtractionState.SEARCH_INFO, model, _ClusterExtractionModel(
-                current.info,
-                current.features,
-                current.attributes,
-                commands))
-
-
-def _process(lines: Iterator[str]):
-    state = None
-    model: List[_ClusterExtractionModel] = []
-    current = _ClusterExtractionModel()
-    for line in lines:
-        if state is None:
-            state = _state(line)
-            continue
-
-        new_state = _state(line)
-        if new_state is not None:
-            state = new_state
-            continue
-
-        state, model, current = _process_state(state, model, current, lines)
-    if current.info is not None:
-        model.append(current)
-    print(*model, sep='\n')
+def _clean_string(text: str, **options) -> str:
+    result = text
+    for p, r in CLEANING_MAPPING:
+        result = result.replace(p, r, **options)
+    return result
 
 
 def _clean_header(df: DataFrame) -> DataFrame:
     if any('Unnamed' in col for col in df.columns):
-        new_header = df.iloc[0].to_list()
+        new_headers = df.iloc[0].to_list()
         df = df[1:]
-        df.columns = new_header
+        df.columns = new_headers
+
+    # removes soft hyphens in headers
+    df = df.rename(columns=_clean_string)
     return df
-
-
-def _clean_soft_hyphens(df: DataFrame) -> DataFrame:
-    return df.replace(to_replace=r'[(\u00ad\r),(\n\r)]', value='', regex=True)
 
 
 if __name__ == '__main__':
     pdf_path = './spec.pdf'
-    # logging.basicConfig(level=logging.INFO)
-    # extract_from_pdf(pdf_path)
+    logging.basicConfig(level=logging.DEBUG)
+    print(extract_from_pdf(pdf_path))
 
-    dfs = tabula.read_pdf(pdf_path, pages='all', lattice=True)
-    dfs = (_clean_soft_hyphens(_clean_header(df))
-           for df in dfs
-           if not df.empty)
-    dfs = list(dfs)
-    print(*dfs, sep="\n-----------------------------------\n")
-    print(len(dfs))
-
-    # with open(pdf_path, 'rb') as file:
-    #     reader = PdfReader(file)
-    #     print(reader.pages[65].extract_text(extraction_mode='layout'))
+    # dfs = read_pdf_tables(
+    #     pdf_path,
+    #     lattice=True,
+    #     pages='10-50',)
+    # print()
+    # print()
+    # print()
+    # dfs = [_clean_header(_clean_string(df, regex=True)) for df in dfs]
+    # print(
+    #     *dfs,
+    #     sep="\n----------------------------\n"
+    # )

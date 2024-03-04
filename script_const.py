@@ -1,20 +1,24 @@
 """TODO"""
-import re
 
-PATTERN_TITLE = re.compile(r'^(\d+\.)+ (.+)$')
+from os import linesep
+from typing import List, Tuple
+from pandas import Index
 
-INFO_TITLE = 'Cluster ID'
-INFO_HEADER = 'ID Name'
-INFO_PATTERN = re.compile(r'(0x\d+) (.+)')
+CLEANING_MAPPING: List[Tuple[str, str]] = [
+    (f'\xad{linesep}', ''),  # soft hyphens
+    ('\xad\r\n', ''),  # soft hyphens
+    ('\xad\r', ''),  # soft hyphens
+    ('\xad\n', ''),  # soft hyphens
+    (linesep, ' '),
+    ('\r\n', ' '),
+    ('\r', ' '),
+    ('\n', ' ')
+]
 
-FEATURE_TITLE = 'Features'
-FEATURE_HEADER = 'Bit Code Feature Summary'
-FEATURE_PATTERN = re.compile(r'(\d+) (\w+) (\w+)  (.+)')
-
-ATTRIBUTE_TITLE = 'Attributes'
-ATTRIBUTE_HEADER = 'ID Name Type Constraint Quality  Default Access Confor'
-ATTRIBUTE_PATTERN = re.compile(r'(0x\d+) (.+) (.+) (.+) (.+) (.+) (.+) (.+)')
-
-COMMAND_TITLE = 'Commands'
-COMMAND_HEADER = ''
-COMMAND_PATTERN = re.compile(r'(0x\d+) (.+)')
+INFO_HEADER = Index(['ID', 'Name'])
+FEATURE_HEADER = Index(['Bit', 'Code', 'Feature', 'Summary'])
+ATTRIBUTE_HEADER = Index(
+    ['ID', 'Name', 'Type', 'Constraint', 'Quality', 'Default', 'Access', 'Conformance'])
+COMMAND_HEADER = Index(
+    ['ID', 'Name', 'Direction', 'Response', 'Access', 'Conformance'])
+SPECIFIC_COMMAND_HEADER = Index([])
