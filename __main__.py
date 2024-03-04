@@ -130,7 +130,7 @@ async def main():
         attribute_field = validate_attribute_name(cluster, attribute_name)
         attribute = await nodes_client.read_cluster_attribute(
             node_id, endpoint_id, cluster.id, attribute_field.Tag)
-        return JSONResponse(content={f'{attribute_name}': attribute})
+        return JSONResponse(content={attribute_name: attribute})
 
     @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
     async def set_attribute(
@@ -145,11 +145,23 @@ async def main():
         cluster = validate_cluster_name(endpoint, cluster_name)
         attribute_field = validate_attribute_name(cluster, attribute_name)
 
-        new_state = (await request.json())[attribute_name]
+        if (await request.body()) == b'':
+            raise HTTPException(400, "missing POST body")
+        json: Dict[str, any] = await request.json()
+        if not isinstance(json, dict):
+            raise HTTPException(400, "malformed json")
 
-        attribute = await nodes_client.write_cluster_attribute(
-            node_id, endpoint_id, cluster.id, attribute_field.Tag, new_state)
-        return JSONResponse(content={f'{attribute_name}': attribute})
+        attribute_value = json.get(attribute_name, None)
+        if attribute_value is None:
+            raise HTTPException(400, "missing attribute value")
+
+        new_attribute = await nodes_client.write_cluster_attribute(
+            node_id,
+            endpoint_id,
+            cluster.id,
+            attribute_field.Tag,
+            attribute_value)
+        return JSONResponse(content={attribute_name: new_attribute})
 
     @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/command/{command_name}')
     async def do_command(
