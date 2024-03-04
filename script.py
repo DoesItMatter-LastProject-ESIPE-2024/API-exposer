@@ -224,7 +224,18 @@ def _process(lines: Iterator[str]):
 if __name__ == '__main__':
     pdf_path = './spec.pdf'
     # logging.basicConfig(level=logging.INFO)
-    extract_from_pdf(pdf_path)
+    # extract_from_pdf(pdf_path)
+    import tabula
+
+    # dfs = tabula.read_pdf(pdf_path, pages='all', lattice=True, multiple_tables=True)
+    # print('---------------')
+    # print(*dfs, sep='\n---------------\n')
+    # print('---------------')
+    dfs = tabula.read_pdf(pdf_path, pages=66, lattice=True)
+    df = dfs[-1].replace(r' \\r', '', regex=True)
+    print(df)
+    print()
+
     # with open(pdf_path, 'rb') as file:
     #     reader = PdfReader(file)
     #     print(reader.pages[65].extract_text(extraction_mode='layout'))
