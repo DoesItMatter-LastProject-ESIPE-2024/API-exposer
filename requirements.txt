@@ -6,7 +6,3 @@ waitress==3.0.0
 swagger-ui-py==23.9.23
 fastapi==0.109.2
 uvicorn==0.27.1
-# Camelot (pdf reader - extract tables)
-camelot-py==0.11.0
-opencv-python==4.9.0.80
-ghostscript==0.7

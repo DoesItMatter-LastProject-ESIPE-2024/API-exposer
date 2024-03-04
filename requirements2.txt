@@ -1,0 +1,4 @@
+# Camelot (pdf reader - extract tables)
+camelot-py==0.11.0
+opencv-python==4.9.0.80
+ghostscript==0.7
