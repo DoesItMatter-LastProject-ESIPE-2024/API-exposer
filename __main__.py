@@ -1,7 +1,5 @@
 """This is the entry point of the server."""
 
-from argparse import ArgumentParser
-
 from asyncio import run
 import logging
 from typing import Dict, Any
@@ -18,39 +16,18 @@ from fastapi.staticfiles import StaticFiles
 # templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
-from nodes import Nodes
-from convertor import render_node
-from const import DEFAULT_SERVER_URL
-from validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
+from api_exposer.nodes import Nodes
+from api_exposer.convertor import render_node
+from api_exposer.validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
+from api_exposer.args import get_args_parser
 
 SWAGGER_PATH = 'html/swagger'
 
 
 async def main():
     """The main function of the server"""
-    parser = ArgumentParser()
 
-    parser.add_argument(
-        '--server-url',
-        type=str,
-        dest='url',
-        default=DEFAULT_SERVER_URL,
-        help=f'Vendor ID for the Fabric, defaults to {DEFAULT_SERVER_URL}',
-    )
-    parser.add_argument(
-        '--log-level',
-        type=str,
-        default='info',
-        # pylint: disable=line-too-long
-        help='Provide logging level. Example --log-level debug, default=info, possible=(critical, error, warning, info, debug)',
-    )
-    parser.add_argument(
-        '--log-file',
-        type=str,
-        default=None,
-        help='Log file to write to (optional).',
-    )
-
+    parser = get_args_parser()
     args = parser.parse_args()
 
     # configure logging
