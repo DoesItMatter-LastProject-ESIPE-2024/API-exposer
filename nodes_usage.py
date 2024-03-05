@@ -4,7 +4,7 @@ import asyncio
 import logging
 import argparse
 
-from api_exposer.nodes import Nodes
+from api_exposer.my_client import MyClient
 
 from api_exposer.const import DEFAULT_SERVER_URL
 
@@ -44,7 +44,7 @@ async def main():
     handlers = [logging.FileHandler(args.log_file)] if args.log_file else None
     logging.basicConfig(handlers=handlers, level=args.log_level.upper())
 
-    nodes_client = Nodes(args.url)
+    nodes_client = MyClient(args.url)
     await nodes_client.start()
     await nodes_client.wait_stop()
 

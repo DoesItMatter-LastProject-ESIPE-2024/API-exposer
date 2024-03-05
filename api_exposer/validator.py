@@ -7,7 +7,7 @@ from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObjectFieldDescriptor
 from chip.clusters import Objects
 
-from api_exposer.nodes import Nodes as ClientNodes
+from api_exposer.my_client import MyClient as ClientNodes
 
 
 def not_found(msg: str) -> None:

@@ -1,11 +1,12 @@
 """Contains the arguments parser of the API Exposer"""
 
 from argparse import ArgumentParser
+import logging
 
 from api_exposer.const import DEFAULT_SERVER_URL
 
 
-def get_args_parser() -> ArgumentParser:
+def get_argument_parser() -> ArgumentParser:
     """Returns an instance of arguments parser ready-to-use with all arguments already added"""
     parser = ArgumentParser()
 
@@ -31,3 +32,13 @@ def get_args_parser() -> ArgumentParser:
     )
 
     return parser
+
+
+def parse_args() -> any:
+    """Parse all arguments"""
+    args = get_argument_parser().parse_args()
+
+    handlers = [logging.FileHandler(args.log_file)] if args.log_file else None
+    logging.basicConfig(handlers=handlers, level=args.log_level.upper())
+
+    return args

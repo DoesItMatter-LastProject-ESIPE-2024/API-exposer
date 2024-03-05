@@ -16,27 +16,21 @@ from fastapi.staticfiles import StaticFiles
 # templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
-from api_exposer.nodes import Nodes
+from api_exposer.my_client import MyClient
 from api_exposer.convertor import render_node
 from api_exposer.validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
-from api_exposer.args import get_args_parser
+from api_exposer.argument_parser import parse_args
 
 SWAGGER_PATH = 'html/swagger'
 
 
 async def main():
     """The main function of the server"""
+    args = parse_args()
 
-    parser = get_args_parser()
-    args = parser.parse_args()
-
-    # configure logging
-    handlers = [logging.FileHandler(args.log_file)] if args.log_file else None
-    logging.basicConfig(handlers=handlers, level=args.log_level.upper())
-
-    nodes_client = Nodes(args.url)
-    await nodes_client.start()
-    nodes = nodes_client.nodes
+    client = MyClient(args.url)
+    await client.start()
+    nodes = client.nodes
 
     app = FastAPI()
     app.mount('/static', StaticFiles(directory='static'), name='static')
@@ -69,7 +63,7 @@ async def main():
     @app.get(f'/{SWAGGER_PATH}/{{node_id}}')
     def swagger_ui(request: Request, node_id: int):
         """Dynamically renders a swagger ui with the correct documentation"""
-        validate_node_id(nodes_client, node_id)
+        validate_node_id(client, node_id)
         return html_template.TemplateResponse(
             request=request,
             name='swagger.html',
@@ -79,7 +73,7 @@ async def main():
     @app.get('/api/doc/{node_id}')
     def node_api_documentation(request: Request, node_id: int) -> str:
         """Returns an OpenAPI documentation in yaml format for a matter node"""
-        node = validate_node_id(nodes_client, node_id)
+        node = validate_node_id(client, node_id)
         cluster_paths = render_node(node)
 
         content = env.get_template('swagger.yml.j2').render({
@@ -101,11 +95,11 @@ async def main():
             cluster_name: str,
             attribute_name: str):
         """Returns an attribute of a node's endpoint in json format"""
-        node = validate_node_id(nodes_client, node_id)
+        node = validate_node_id(client, node_id)
         endpoint = validate_endpoint_id(node, endpoint_id)
         cluster = validate_cluster_name(endpoint, cluster_name)
         attribute_field = validate_attribute_name(cluster, attribute_name)
-        attribute = await nodes_client.read_cluster_attribute(
+        attribute = await client.read_cluster_attribute(
             node_id, endpoint_id, cluster.id, attribute_field.Tag)
         return JSONResponse(content={attribute_name: attribute})
 
@@ -117,7 +111,7 @@ async def main():
             cluster_name: str,
             attribute_name: str):
         """Updates an attribute of a node's endpoint"""
-        node = validate_node_id(nodes_client, node_id)
+        node = validate_node_id(client, node_id)
         endpoint = validate_endpoint_id(node, endpoint_id)
         cluster = validate_cluster_name(endpoint, cluster_name)
         attribute_field = validate_attribute_name(cluster, attribute_name)
@@ -132,7 +126,7 @@ async def main():
         if attribute_value is None:
             raise HTTPException(400, "missing attribute value")
 
-        new_attribute = await nodes_client.write_cluster_attribute(
+        new_attribute = await client.write_cluster_attribute(
             node_id,
             endpoint_id,
             cluster.id,
@@ -149,7 +143,7 @@ async def main():
             command_name: str):
         """Sends a matter cluster command to the matter server
         to execute on the correct node/endpoint."""
-        node = validate_node_id(nodes_client, node_id)
+        node = validate_node_id(client, node_id)
         endpoint = validate_endpoint_id(node, endpoint_id)
         cluster = validate_cluster_name(endpoint, cluster_name)
         command_class = validate_command_name(cluster, command_name)
@@ -163,7 +157,7 @@ async def main():
             #     _bad_request('command parameters must be an object')
             command = command_class(**command_parameters)
         try:
-            return await nodes_client.send_cluster_command(node_id, endpoint_id, command)
+            return await client.send_cluster_command(node_id, endpoint_id, command)
         except Exception as err:
             logging.warning(
                 'Unexpected error while handling a matter cluster command : %s', str(err))

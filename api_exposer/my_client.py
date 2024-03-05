@@ -13,7 +13,7 @@ from matter_server.client.client import MatterClient
 from matter_server.client.models.node import MatterNode
 
 
-class Nodes:
+class MyClient:
     """ 
     A class regrouping the needs for communicating between the REST API and the Cluster API.
     It depends on python-matter-server to communicate to a Matter Server.

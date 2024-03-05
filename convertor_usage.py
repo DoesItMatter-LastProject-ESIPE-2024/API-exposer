@@ -4,7 +4,7 @@ import asyncio
 
 from api_exposer.const import DEFAULT_SERVER_URL
 from api_exposer.convertor import render_node
-from api_exposer.nodes import Nodes
+from api_exposer.my_client import MyClient
 
 
 async def main():
@@ -13,7 +13,7 @@ async def main():
     to render on the console all the paths
     proposed by all the nodes on a matter fabric.
     """
-    nodes = Nodes(DEFAULT_SERVER_URL)
+    nodes = MyClient(DEFAULT_SERVER_URL)
     await nodes.start()
 
     nodes_dict = nodes.nodes
