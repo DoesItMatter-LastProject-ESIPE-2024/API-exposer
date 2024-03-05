@@ -1,17 +1,51 @@
 from __future__ import annotations
 import logging
+from math import isnan
 from typing import Dict, Iterable, List, Optional, Callable, Tuple
-from camelot import read_pdf
+# from camelot import read_pdf
+from tabula import read_pdf
 from pandas import DataFrame
 
-from cluster_model import AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
-from cluster_header import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
-from feature import Features
+from pdf_parser.cluster_model import AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
+from pdf_parser.cluster_header import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
+from feature import Feature, Features
+
+def _is_conform(conformance: str, feature: FeatureExtractionModel) -> bool:
+    # TODO : Lionia travail un peu stp
+    return True
+
+def _is_writable(attribute: AttributeExtractionModel) -> bool:
+    # TODO : Lionia travail un peu stp
+    return True
+
+def _is_readable(attribute: AttributeExtractionModel) -> bool:
+    # TODO : Lionia travail un peu stp
+    return True
+
+def _cluster_to_features(cluster: ClusterExtractionModel) -> List[Feature]:
+    return [
+        Feature(
+            set(
+                att.name for att in cluster.attributes
+                if _is_writable(att) and _is_conform(att.conformance, feature)),
+            set(
+                att.name for att in cluster.attributes
+                if _is_readable(att) and _is_conform(att.conformance, feature)),
+            set(
+                com.name for com in cluster.commands
+                if _is_conform(com.conformance, feature)),
+            feature.name
+        )
+        for feature in cluster.features
+    ]
 
 
 def _convert_to_features(clusters: List[ClusterExtractionModel]) -> Dict[int, Features]:
-    print(*clusters, '\n---------------------------\n')
-    return {}
+    return {
+        info.id: Features(_cluster_to_features(cluster))
+        for cluster in clusters
+        for info in cluster.info
+    }
 
 
 def _process_infos(df: DataFrame) -> List[InfoExtractionModel]:
@@ -39,6 +73,7 @@ def _process_attributes(df: DataFrame) -> List[AttributeExtractionModel]:
             row.Name,
             row.Conformance)
         for row in df.itertuples()
+        if isinstance(row.ID, str)  # MAY not be a string if not an attribute
     ]
 
 
@@ -122,34 +157,42 @@ def _process(tables: Iterable[DataFrame]) -> List[ClusterExtractionModel]:
 
 def _clean_string(text: str, **options) -> str:
     result = text
-    for p, r in CLEANING_MAPPING:
-        result = result.replace(p, r, **options)
+    try:
+        for p, r in CLEANING_MAPPING:
+            result = result.replace(p, r, **options)
+    except Exception as e:
+        logging.error('error converting %s -> %s', repr(text), repr(result))
+        raise e
     return result
 
-
-def _clean_header(df: DataFrame) -> DataFrame:
+def _reset_header(df: DataFrame) -> DataFrame:
     if any('Unnamed' in col for col in df.columns):
         new_headers = df.iloc[0].to_list()
         df = df[1:]
         df.columns = new_headers
+    return df
+    
 
+def _clean_header(df: DataFrame) -> DataFrame:
     # removes soft hyphens in headers
     df = df.rename(columns=_clean_string)
     return df
 
 
-def _read_pdf_tables(pdf_path: str, pages: str):
-    return [table.df for table in read_pdf(
+def _read_pdf_tables(pdf_path: str, pages: str) -> List[DataFrame]:
+    return (table for table in read_pdf(
         pdf_path,
         pages=pages,
-        line_scale=30
-    )]
+        lattice=True
+    ))
 
 
 def extract_from_pdf(pdf_path: str, pages: str) -> Dict[int, Features]:
     """Extracts feature's informations about clusters from the matter cluster specification pdf"""
+    tables = _read_pdf_tables(pdf_path, pages)
+    tables = (_reset_header(table) for table in tables if not table.empty)
     return _convert_to_features(_process(
         _clean_header(_clean_string(table, regex=True))
-        for table in _read_pdf_tables(pdf_path, pages)
-        if not table.empty
+        for table in tables
+        if all(isinstance(col, str) for col in table.columns)
     ))

@@ -2,21 +2,21 @@ from typing import List
 from dataclasses import dataclass, field
 
 
-@dataclass
+@dataclass(frozen=True)
 class AttributeExtractionModel:
     id: int
     name: str
     conformance: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class FeatureExtractionModel:
     id: int
     code: str
     name: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class InfoExtractionModel:
     id: int
     name: str

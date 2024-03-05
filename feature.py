@@ -1,6 +1,10 @@
+"""TODO"""
+
+
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Optional, Set, Callable, TypeVar
+
 
 type ClusterName = str
 type FeatureId = int
@@ -37,9 +41,16 @@ class Feature:
             self.implemented_commands.union(other.implemented_commands),
             self._merge_name(other.name)
         )
+        
+    def __json__(self) -> any:
+        return {
+            "writables_attributes":list(self.writable_attributes),
+            "readables_attributes":list(self.readable_attributes),
+            "implemented_commands":list(self.implemented_commands)
+        }
 
 
-@dataclass
+@dataclass(frozen=True)
 class Features:
     """Represents all combinaisons of features a cluster can implements"""
     features: List[Feature] = field(default_factory=list)
@@ -55,3 +66,7 @@ class Features:
             lambda f, pos, val: f if not val else f.merge(
                 self._get_features_by_id(pos))
         )
+        
+
+    def __json__(self) -> any:
+        return {f.name : f.__json__() for f in self.features}
