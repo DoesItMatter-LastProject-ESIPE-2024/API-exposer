@@ -1,12 +1,10 @@
 """Convert matter objects into yaml"""
 
 from inspect import isclass, getmembers
-from typing import Optional, List, _SpecialGenericAlias, _GenericAlias
+from typing import Optional, List, _GenericAlias
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterObjectFieldDescriptor, ClusterCommand
-from chip.clusters.Objects import OnOff
-from chip.tlv import uint
 
 
 env = Environment(

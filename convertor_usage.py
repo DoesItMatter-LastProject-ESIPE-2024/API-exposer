@@ -2,31 +2,18 @@
 
 import asyncio
 
-from typing import Dict
-from dataclasses import dataclass
-from chip.clusters.ClusterObjects import Cluster
-
-from const import DEFAULT_SERVER_URL
-from convertor import render_node
-from nodes import Nodes
-
-
-@dataclass
-class Endpoint:
-    """pass"""
-    clusters: Dict[int, Cluster]
-
-
-@dataclass
-class Node:
-    """pass"""
-    node_id: int
-    endpoints: Dict[int, Endpoint]
+from api_exposer.const import DEFAULT_SERVER_URL
+from api_exposer.convertor import render_node
+from api_exposer.my_client import MyClient
 
 
 async def main():
-    """TODO"""
-    nodes = Nodes(DEFAULT_SERVER_URL)
+    """
+    This is an example on how to use the convertor
+    to render on the console all the paths
+    proposed by all the nodes on a matter fabric.
+    """
+    nodes = MyClient(DEFAULT_SERVER_URL)
     await nodes.start()
 
     nodes_dict = nodes.nodes

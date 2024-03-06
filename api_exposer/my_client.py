@@ -1,6 +1,5 @@
 """ 
-===================== nodes.py =====================
-contain Nodes class for API-EXPOSER
+Contains the Nodes class for API-EXPOSER.
 """
 import logging
 from asyncio import Event, create_task, Task
@@ -12,21 +11,19 @@ from chip.clusters.ClusterObjects import ClusterCommand
 from matter_server.common.models import EventType
 from matter_server.client.client import MatterClient
 from matter_server.client.models.node import MatterNode
-from matter_server.common.models import APICommand
-from matter_server.common.helpers.util import dataclass_from_dict, dataclass_to_dict
 
 
-class Nodes:
+class MyClient:
     """ 
-    =============== class nodes ===============
-    class to create a client, connect to Matter
-    Fabric and get all nodes
+    A class regrouping the needs for communicating between the REST API and the Cluster API.
+    It depends on python-matter-server to communicate to a Matter Server.
+    Matter Server is an implementation of a matter controller developed by Home Assistant.
     """
 
     def __init__(self, url: str):
-        self.url: str = url
         self.nodes: Dict[int, MatterNode] = {}
-        self._client_global: Optional[MatterClient] = None
+        self._url: str = url
+        self._client: Optional[MatterClient] = None
         self._wait_listening: Event = Event()
         self._task: Optional[Task] = None
 
@@ -56,18 +53,18 @@ class Nodes:
 
     async def _run_client(self):
         async with ClientSession() as session:
-            async with MatterClient(self.url, session) as client:
-                self._client_global = client
-                self._client_global.subscribe_events(self._handle_event)
+            async with MatterClient(self._url, session) as client:
+                self._client = client
+                self._client.subscribe_events(self._handle_event)
 
                 # start listening
-                await self._client_global.start_listening(self._wait_listening)
+                await self._client.start_listening(self._wait_listening)
 
     async def _get_nodes(self):
         await self._wait_listening.wait()
         self.nodes.update({
             node.node_id: node
-            for node in self._client_global.get_nodes()
+            for node in self._client.get_nodes()
         })
         logging.debug(self.nodes)
 
@@ -88,7 +85,7 @@ class Nodes:
 
     async def send_cluster_command(self, node_id: int, endpoint_id: int, command: ClusterCommand):
         """Sends a cluster command to an endpoint of a matter node"""
-        return await self._client_global.send_device_command(
+        return await self._client.send_device_command(
             node_id,
             endpoint_id,
             command,
@@ -96,14 +93,14 @@ class Nodes:
 
     async def read_cluster_attribute(self, node_id: int, endpoint_id: int, cluster_id: int, attribute_id: int) -> Any:
         """TODO"""
-        return await self._client_global.read_attribute(
+        return await self._client.read_attribute(
             node_id,
             f'{endpoint_id}/{cluster_id}/{attribute_id}'
         )
 
     async def write_cluster_attribute(self, node_id: int, endpoint_id: int, cluster_id: int, attribute_id: int, value: Any) -> Any:
         """TODO"""
-        return await self._client_global.write_attribute(
+        return await self._client.write_attribute(
             node_id,
             f'{endpoint_id}/{cluster_id}/{attribute_id}',
             value
