@@ -1,0 +1,514 @@
+{
+  "3": {},
+  "4": {
+    "GroupNames": {
+      "writable_attributes": [
+        "SceneTransitionTime",
+        "SceneCoun t",
+        "SceneValid",
+        "ExtensionFields",
+        "CurrentGroup",
+        "SceneTableSize",
+        "FabricSceneInfo",
+        "LastConfiguredBy",
+        "SceneGroupID",
+        "SceneID",
+        "NameSupport",
+        "CurrentScene",
+        "SceneName",
+        "RemainingCapacity",
+        "TransitionTime100m s"
+      ],
+      "readable_attributes": [
+        "SceneTransitionTime",
+        "SceneCoun t",
+        "SceneValid",
+        "ExtensionFields",
+        "CurrentGroup",
+        "SceneTableSize",
+        "FabricSceneInfo",
+        "LastConfiguredBy",
+        "SceneGroupID",
+        "SceneID",
+        "NameSupport",
+        "CurrentScene",
+        "SceneName",
+        "RemainingCapacity",
+        "TransitionTime100m s"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "6": {
+    "Lighting": {
+      "writable_attributes": [
+        "Options",
+        "OnOffTransitionTime",
+        "StartUpOnOff",
+        "CurrentFrequency",
+        "StartUpCurrentLevel",
+        "MinLevel",
+        "DefaultMoveRate",
+        "OffWaitTime",
+        "RemainingTime",
+        "MinFrequency",
+        "OnTransitionTime",
+        "OnTime",
+        "OnOff",
+        "GlobalSceneCo ntrol",
+        "OffTransitionTime",
+        "MaxLevel",
+        "OnLevel",
+        "CurrentLevel",
+        "MaxFrequency"
+      ],
+      "readable_attributes": [
+        "Options",
+        "OnOffTransitionTime",
+        "StartUpOnOff",
+        "CurrentFrequency",
+        "StartUpCurrentLevel",
+        "MinLevel",
+        "DefaultMoveRate",
+        "OffWaitTime",
+        "RemainingTime",
+        "MinFrequency",
+        "OnTransitionTime",
+        "OnTime",
+        "OnOff",
+        "GlobalSceneCo ntrol",
+        "OffTransitionTime",
+        "MaxLevel",
+        "OnLevel",
+        "CurrentLevel",
+        "MaxFrequency"
+      ],
+      "implemented_commands": []
+    },
+    "DeadFrontBehaviour": {
+      "writable_attributes": [
+        "Options",
+        "OnOffTransitionTime",
+        "StartUpOnOff",
+        "CurrentFrequency",
+        "StartUpCurrentLevel",
+        "MinLevel",
+        "DefaultMoveRate",
+        "OffWaitTime",
+        "RemainingTime",
+        "MinFrequency",
+        "OnTransitionTime",
+        "OnTime",
+        "OnOff",
+        "GlobalSceneCo ntrol",
+        "OffTransitionTime",
+        "MaxLevel",
+        "OnLevel",
+        "CurrentLevel",
+        "MaxFrequency"
+      ],
+      "readable_attributes": [
+        "Options",
+        "OnOffTransitionTime",
+        "StartUpOnOff",
+        "CurrentFrequency",
+        "StartUpCurrentLevel",
+        "MinLevel",
+        "DefaultMoveRate",
+        "OffWaitTime",
+        "RemainingTime",
+        "MinFrequency",
+        "OnTransitionTime",
+        "OnTime",
+        "OnOff",
+        "GlobalSceneCo ntrol",
+        "OffTransitionTime",
+        "MaxLevel",
+        "OnLevel",
+        "CurrentLevel",
+        "MaxFrequency"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "69": {},
+  "80": {},
+  "1288": {},
+  "1283": {},
+  "59": {},
+  "96": {},
+  "1024": {},
+  "1026": {},
+  "1027": {},
+  "1028": {},
+  "1030": {},
+  "91": {},
+  "92": {},
+  "769": {},
+  "512": {},
+  "513": {},
+  "514": {
+    "MultiSpeed": {
+      "writable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "readable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "implemented_commands": []
+    },
+    "Auto": {
+      "writable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "readable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "implemented_commands": []
+    },
+    "Rocking": {
+      "writable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "readable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "implemented_commands": []
+    },
+    "Wind": {
+      "writable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "readable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "implemented_commands": []
+    },
+    "Step": {
+      "writable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "readable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "implemented_commands": []
+    },
+    "Airflow Direction": {
+      "writable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "readable_attributes": [
+        "SpeedSetting",
+        "SpeedMax",
+        "FanModeSequence",
+        "WindSupport",
+        "PercentCurrent",
+        "RockSetting",
+        "RockSupport",
+        "SpeedCurrent",
+        "FanMode",
+        "AirflowDirection",
+        "PercentSetting",
+        "WindSetting"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "516": {},
+  "257": {},
+  "258": {},
+  "1294": {},
+  "1293": {},
+  "1292": {
+    "ApplicationPlatform": {
+      "writable_attributes": [
+        "CurrentApp",
+        "CatalogList"
+      ],
+      "readable_attributes": [
+        "CurrentApp",
+        "CatalogList"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "1291": {
+    "NameUpdates": {
+      "writable_attributes": [
+        "CurrentOutput",
+        "OutputList"
+      ],
+      "readable_attributes": [
+        "CurrentOutput",
+        "OutputList"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "1284": {
+    "ChannelList": {
+      "writable_attributes": [
+        "Lineup",
+        "ChannelList",
+        "CurrentChannel"
+      ],
+      "readable_attributes": [
+        "Lineup",
+        "ChannelList",
+        "CurrentChannel"
+      ],
+      "implemented_commands": []
+    },
+    "LineupInfo": {
+      "writable_attributes": [
+        "Lineup",
+        "ChannelList",
+        "CurrentChannel"
+      ],
+      "readable_attributes": [
+        "Lineup",
+        "ChannelList",
+        "CurrentChannel"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "1290": {
+    "ContentSearch": {
+      "writable_attributes": [
+        "SupportedStreamingProtocols",
+        "AcceptHeader",
+        "Value",
+        "Name"
+      ],
+      "readable_attributes": [
+        "SupportedStreamingProtocols",
+        "AcceptHeader",
+        "Value",
+        "Name"
+      ],
+      "implemented_commands": []
+    },
+    "URLPlayback": {
+      "writable_attributes": [
+        "SupportedStreamingProtocols",
+        "AcceptHeader",
+        "Value",
+        "Name"
+      ],
+      "readable_attributes": [
+        "SupportedStreamingProtocols",
+        "AcceptHeader",
+        "Value",
+        "Name"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "1289": {
+    "NavigationKeyCodes": {
+      "writable_attributes": [],
+      "readable_attributes": [],
+      "implemented_commands": []
+    },
+    "LocationKeys": {
+      "writable_attributes": [],
+      "readable_attributes": [],
+      "implemented_commands": []
+    },
+    "NumberKeys": {
+      "writable_attributes": [],
+      "readable_attributes": [],
+      "implemented_commands": []
+    }
+  },
+  "1287": {
+    "NameUpdates": {
+      "writable_attributes": [
+        "InputList",
+        "CurrentInput"
+      ],
+      "readable_attributes": [
+        "InputList",
+        "CurrentInput"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "1286": {
+    "AdvancedSeek": {
+      "writable_attributes": [
+        "SampledPosition",
+        "SeekRang eEnd",
+        "PlaybackSpeed",
+        "StartTime",
+        "SeekRang eStart",
+        "CurrentState",
+        "Duration"
+      ],
+      "readable_attributes": [
+        "SampledPosition",
+        "SeekRang eEnd",
+        "PlaybackSpeed",
+        "StartTime",
+        "SeekRang eStart",
+        "CurrentState",
+        "Duration"
+      ],
+      "implemented_commands": []
+    },
+    "VariableSpeed": {
+      "writable_attributes": [
+        "SampledPosition",
+        "SeekRang eEnd",
+        "PlaybackSpeed",
+        "StartTime",
+        "SeekRang eStart",
+        "CurrentState",
+        "Duration"
+      ],
+      "readable_attributes": [
+        "SampledPosition",
+        "SeekRang eEnd",
+        "PlaybackSpeed",
+        "StartTime",
+        "SeekRang eStart",
+        "CurrentState",
+        "Duration"
+      ],
+      "implemented_commands": []
+    }
+  },
+  "1285": {},
+  "84": {},
+  "85": {},
+  "97": {},
+  "86": {},
+  "89": {},
+  "93": {},
+  "81": {},
+  "83": {},
+  "82": {},
+  "87": {}
+}

@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 from pdf_parser.cluster_model import AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
 from pdf_parser.cluster_header import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
-from feature import Feature, Features
+from pdf_parser.feature import Feature, Features
 
 def _is_conform(conformance: str, feature: FeatureExtractionModel) -> bool:
     # TODO : Lionia travail un peu stp

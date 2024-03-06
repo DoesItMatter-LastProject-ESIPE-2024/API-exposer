@@ -44,8 +44,8 @@ class Feature:
         
     def __json__(self) -> any:
         return {
-            "writables_attributes":list(self.writable_attributes),
-            "readables_attributes":list(self.readable_attributes),
+            "writable_attributes":list(self.writable_attributes),
+            "readable_attributes":list(self.readable_attributes),
             "implemented_commands":list(self.implemented_commands)
         }
 
