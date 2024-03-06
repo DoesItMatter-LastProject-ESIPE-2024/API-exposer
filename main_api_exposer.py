@@ -20,6 +20,7 @@ from api_exposer.my_client import MyClient
 from api_exposer.convertor import render_node
 from api_exposer.validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
 from api_exposer.argument_parser import parse_args
+from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER
 
 SWAGGER_PATH = 'html/swagger'
 
@@ -33,11 +34,11 @@ async def main():
     nodes = client.nodes
 
     app = FastAPI()
-    app.mount('/static', StaticFiles(directory='static'), name='static')
-    html_template = Jinja2Templates(directory='dynamic')
+    app.mount('/static', StaticFiles(directory=STATIC_FOLDER), name='static')
+    html_template = Jinja2Templates(directory=SWAGGER_HTML_FOLDER)
 
     env = Environment(
-        loader=FileSystemLoader('config'),
+        loader=FileSystemLoader(SWAGGER_TEMPLATE_FOLDER),
         autoescape=select_autoescape()
     )
 
