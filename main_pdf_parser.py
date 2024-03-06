@@ -11,8 +11,7 @@ if __name__ == '__main__':
         features = extract_from_pdf(
             './res/Matter-1.2-Application-Cluster-Specification.pdf', 'all')
         features = {
-            id: feature.__json__()
+            id: feature.__to_json__()
             for id, feature in features.items()
         }
         dump(features, file, indent=2)
-

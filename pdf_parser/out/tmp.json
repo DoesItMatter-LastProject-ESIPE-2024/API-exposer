@@ -2,58 +2,26 @@
   "3": [],
   "4": [
     {
-      "writable_attributes": [
-        {
-          "id": 1,
-          "name": "SceneID"
-        },
+      "not_writable_attributes": [
         {
           "id": 2,
           "name": "CurrentGroup"
-        },
-        {
-          "id": 7,
-          "name": "FabricSceneInfo"
-        },
-        {
-          "id": 4,
-          "name": "ExtensionFields"
-        },
-        {
-          "id": 6,
-          "name": "SceneTableSize"
-        },
-        {
-          "id": 5,
-          "name": "LastConfiguredBy"
-        },
-        {
-          "id": 0,
-          "name": "SceneGroupID"
-        },
-        {
-          "id": 4,
-          "name": "NameSupport"
-        },
-        {
-          "id": 0,
-          "name": "SceneCoun t"
-        },
-        {
-          "id": 1,
-          "name": "CurrentScene"
         },
         {
           "id": 2,
           "name": "SceneName"
         },
         {
-          "id": 0,
-          "name": "NameSupport"
+          "id": 1,
+          "name": "CurrentScene"
         },
         {
-          "id": 5,
-          "name": "TransitionTime100m s"
+          "id": 7,
+          "name": "FabricSceneInfo"
+        },
+        {
+          "id": 6,
+          "name": "SceneTableSize"
         },
         {
           "id": 3,
@@ -64,112 +32,37 @@
           "name": "RemainingCapacity"
         },
         {
-          "id": 3,
-          "name": "SceneTransitionTime"
-        }
-      ],
-      "readable_attributes": [
-        {
-          "id": 1,
-          "name": "SceneID"
-        },
-        {
-          "id": 2,
-          "name": "CurrentGroup"
-        },
-        {
-          "id": 7,
-          "name": "FabricSceneInfo"
-        },
-        {
-          "id": 4,
-          "name": "ExtensionFields"
-        },
-        {
-          "id": 6,
-          "name": "SceneTableSize"
-        },
-        {
-          "id": 5,
-          "name": "LastConfiguredBy"
-        },
-        {
-          "id": 0,
-          "name": "SceneGroupID"
-        },
-        {
-          "id": 4,
-          "name": "NameSupport"
-        },
-        {
           "id": 0,
           "name": "SceneCoun t"
-        },
-        {
-          "id": 1,
-          "name": "CurrentScene"
-        },
+        }
+      ],
+      "not_readable_attributes": [
         {
           "id": 2,
           "name": "SceneName"
-        },
-        {
-          "id": 0,
-          "name": "NameSupport"
-        },
-        {
-          "id": 5,
-          "name": "TransitionTime100m s"
-        },
-        {
-          "id": 3,
-          "name": "SceneValid"
-        },
-        {
-          "id": 4,
-          "name": "RemainingCapacity"
-        },
-        {
-          "id": 3,
-          "name": "SceneTransitionTime"
         }
       ],
-      "implemented_commands": [],
+      "not_implemented_commands": [
+        {
+          "id": 66,
+          "name": "CopySceneResponse"
+        },
+        {
+          "id": 64,
+          "name": "EnhancedAddScen eResponse"
+        },
+        {
+          "id": 65,
+          "name": "EnhancedViewSceneResponse"
+        }
+      ],
       "name": "GroupNames",
       "id": 0
     }
   ],
   "6": [
     {
-      "writable_attributes": [
-        {
-          "id": 4,
-          "name": "CurrentFrequency"
-        },
-        {
-          "id": 16386,
-          "name": "OffWaitTime"
-        },
-        {
-          "id": 16385,
-          "name": "OnTime"
-        },
-        {
-          "id": 17,
-          "name": "OnLevel"
-        },
-        {
-          "id": 16387,
-          "name": "StartUpOnOff"
-        },
-        {
-          "id": 20,
-          "name": "DefaultMoveRate"
-        },
-        {
-          "id": 16,
-          "name": "OnOffTransitionTime"
-        },
+      "not_writable_attributes": [
         {
           "id": 2,
           "name": "MinLevel"
@@ -179,286 +72,70 @@
           "name": "MaxFrequency"
         },
         {
-          "id": 0,
-          "name": "CurrentLevel"
-        },
-        {
-          "id": 15,
-          "name": "Options"
-        },
-        {
-          "id": 3,
-          "name": "MaxLevel"
-        },
-        {
           "id": 5,
           "name": "MinFrequency"
         },
-        {
-          "id": 19,
-          "name": "OffTransitionTime"
-        },
-        {
-          "id": 18,
-          "name": "OnTransitionTime"
-        },
-        {
-          "id": 16384,
-          "name": "GlobalSceneCo ntrol"
-        },
-        {
-          "id": 1,
-          "name": "RemainingTime"
-        },
-        {
-          "id": 16384,
-          "name": "StartUpCurrentLevel"
-        },
-        {
-          "id": 0,
-          "name": "OnOff"
-        }
-      ],
-      "readable_attributes": [
         {
           "id": 4,
           "name": "CurrentFrequency"
-        },
-        {
-          "id": 16386,
-          "name": "OffWaitTime"
-        },
-        {
-          "id": 16385,
-          "name": "OnTime"
-        },
-        {
-          "id": 17,
-          "name": "OnLevel"
-        },
-        {
-          "id": 16387,
-          "name": "StartUpOnOff"
-        },
-        {
-          "id": 20,
-          "name": "DefaultMoveRate"
-        },
-        {
-          "id": 16,
-          "name": "OnOffTransitionTime"
-        },
-        {
-          "id": 2,
-          "name": "MinLevel"
-        },
-        {
-          "id": 6,
-          "name": "MaxFrequency"
-        },
-        {
-          "id": 0,
-          "name": "CurrentLevel"
-        },
-        {
-          "id": 15,
-          "name": "Options"
-        },
-        {
-          "id": 3,
-          "name": "MaxLevel"
-        },
-        {
-          "id": 5,
-          "name": "MinFrequency"
-        },
-        {
-          "id": 19,
-          "name": "OffTransitionTime"
-        },
-        {
-          "id": 18,
-          "name": "OnTransitionTime"
-        },
-        {
-          "id": 16384,
-          "name": "GlobalSceneCo ntrol"
-        },
-        {
-          "id": 1,
-          "name": "RemainingTime"
-        },
-        {
-          "id": 16384,
-          "name": "StartUpCurrentLevel"
-        },
-        {
-          "id": 0,
-          "name": "OnOff"
         }
       ],
-      "implemented_commands": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
+        {
+          "id": 8,
+          "name": "MoveToClosestFrequency"
+        }
+      ],
       "name": "Lighting",
       "id": 0
     },
     {
-      "writable_attributes": [
-        {
-          "id": 4,
-          "name": "CurrentFrequency"
-        },
-        {
-          "id": 16386,
-          "name": "OffWaitTime"
-        },
-        {
-          "id": 16385,
-          "name": "OnTime"
-        },
-        {
-          "id": 17,
-          "name": "OnLevel"
-        },
-        {
-          "id": 16387,
-          "name": "StartUpOnOff"
-        },
-        {
-          "id": 20,
-          "name": "DefaultMoveRate"
-        },
-        {
-          "id": 16,
-          "name": "OnOffTransitionTime"
-        },
-        {
-          "id": 2,
-          "name": "MinLevel"
-        },
+      "not_writable_attributes": [
         {
           "id": 6,
           "name": "MaxFrequency"
-        },
-        {
-          "id": 0,
-          "name": "CurrentLevel"
-        },
-        {
-          "id": 15,
-          "name": "Options"
-        },
-        {
-          "id": 3,
-          "name": "MaxLevel"
-        },
-        {
-          "id": 5,
-          "name": "MinFrequency"
-        },
-        {
-          "id": 19,
-          "name": "OffTransitionTime"
-        },
-        {
-          "id": 18,
-          "name": "OnTransitionTime"
-        },
-        {
-          "id": 16384,
-          "name": "GlobalSceneCo ntrol"
         },
         {
           "id": 1,
           "name": "RemainingTime"
         },
         {
-          "id": 16384,
-          "name": "StartUpCurrentLevel"
-        },
-        {
-          "id": 0,
-          "name": "OnOff"
-        }
-      ],
-      "readable_attributes": [
-        {
           "id": 4,
           "name": "CurrentFrequency"
-        },
-        {
-          "id": 16386,
-          "name": "OffWaitTime"
-        },
-        {
-          "id": 16385,
-          "name": "OnTime"
-        },
-        {
-          "id": 17,
-          "name": "OnLevel"
-        },
-        {
-          "id": 16387,
-          "name": "StartUpOnOff"
-        },
-        {
-          "id": 20,
-          "name": "DefaultMoveRate"
-        },
-        {
-          "id": 16,
-          "name": "OnOffTransitionTime"
         },
         {
           "id": 2,
           "name": "MinLevel"
         },
         {
-          "id": 6,
-          "name": "MaxFrequency"
-        },
-        {
-          "id": 0,
-          "name": "CurrentLevel"
-        },
-        {
-          "id": 15,
-          "name": "Options"
-        },
-        {
-          "id": 3,
-          "name": "MaxLevel"
-        },
-        {
-          "id": 5,
-          "name": "MinFrequency"
-        },
-        {
-          "id": 19,
-          "name": "OffTransitionTime"
-        },
-        {
-          "id": 18,
-          "name": "OnTransitionTime"
-        },
-        {
           "id": 16384,
           "name": "GlobalSceneCo ntrol"
         },
         {
-          "id": 1,
-          "name": "RemainingTime"
-        },
-        {
-          "id": 16384,
-          "name": "StartUpCurrentLevel"
-        },
-        {
-          "id": 0,
-          "name": "OnOff"
+          "id": 5,
+          "name": "MinFrequency"
         }
       ],
-      "implemented_commands": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
+        {
+          "id": 66,
+          "name": "OnWithTimedOff"
+        },
+        {
+          "id": 8,
+          "name": "MoveToClosestFrequency"
+        },
+        {
+          "id": 64,
+          "name": "OffWithEffect"
+        },
+        {
+          "id": 65,
+          "name": "OnWithRecallGlobalScene"
+        }
+      ],
       "name": "DeadFrontBehaviour",
       "id": 1
     }
@@ -481,119 +158,35 @@
   "513": [],
   "514": [
     {
-      "writable_attributes": [
-        {
-          "id": 6,
-          "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
-          "id": 4,
-          "name": "SpeedMax"
-        },
-        {
-          "id": 9,
-          "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
+      "not_writable_attributes": [
         {
           "id": 7,
           "name": "RockSupport"
         },
         {
-          "id": 11,
-          "name": "AirflowDirection"
-        }
-      ],
-      "readable_attributes": [
-        {
-          "id": 6,
-          "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
-          "id": 4,
-          "name": "SpeedMax"
-        },
-        {
           "id": 9,
           "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
         }
       ],
-      "implemented_commands": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
+        {
+          "id": 0,
+          "name": "Step"
+        }
+      ],
       "name": "MultiSpeed",
       "id": 0
     },
     {
-      "writable_attributes": [
+      "not_writable_attributes": [
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
         {
           "id": 6,
           "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
         },
         {
           "id": 4,
@@ -602,103 +195,23 @@
         {
           "id": 9,
           "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
         }
       ],
-      "readable_attributes": [
-        {
-          "id": 6,
-          "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
-          "id": 4,
-          "name": "SpeedMax"
-        },
-        {
-          "id": 9,
-          "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
           "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
+          "name": "Step"
         }
       ],
-      "implemented_commands": [],
       "name": "Auto",
       "id": 1
     },
     {
-      "writable_attributes": [
+      "not_writable_attributes": [
         {
           "id": 6,
           "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
         },
         {
           "id": 4,
@@ -707,208 +220,52 @@
         {
           "id": 9,
           "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
         }
       ],
-      "readable_attributes": [
-        {
-          "id": 6,
-          "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
-          "id": 4,
-          "name": "SpeedMax"
-        },
-        {
-          "id": 9,
-          "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
           "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
+          "name": "Step"
         }
       ],
-      "implemented_commands": [],
       "name": "Rocking",
       "id": 2
     },
     {
-      "writable_attributes": [
-        {
-          "id": 6,
-          "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
-          "id": 4,
-          "name": "SpeedMax"
-        },
-        {
-          "id": 9,
-          "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
+      "not_writable_attributes": [
         {
           "id": 7,
           "name": "RockSupport"
         },
         {
-          "id": 11,
-          "name": "AirflowDirection"
-        }
-      ],
-      "readable_attributes": [
-        {
           "id": 6,
           "name": "SpeedCurrent"
         },
         {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
           "id": 4,
           "name": "SpeedMax"
-        },
-        {
-          "id": 9,
-          "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
         }
       ],
-      "implemented_commands": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
+        {
+          "id": 0,
+          "name": "Step"
+        }
+      ],
       "name": "Wind",
       "id": 3
     },
     {
-      "writable_attributes": [
+      "not_writable_attributes": [
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
         {
           "id": 6,
           "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
         },
         {
           "id": 4,
@@ -917,103 +274,22 @@
         {
           "id": 9,
           "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
         }
       ],
-      "readable_attributes": [
-        {
-          "id": 6,
-          "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
-          "id": 4,
-          "name": "SpeedMax"
-        },
-        {
-          "id": 9,
-          "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
-        }
-      ],
-      "implemented_commands": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [],
       "name": "Step",
       "id": 4
     },
     {
-      "writable_attributes": [
+      "not_writable_attributes": [
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
         {
           "id": 6,
           "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
         },
         {
           "id": 4,
@@ -1022,91 +298,15 @@
         {
           "id": 9,
           "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
-        {
-          "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
         }
       ],
-      "readable_attributes": [
-        {
-          "id": 6,
-          "name": "SpeedCurrent"
-        },
-        {
-          "id": 3,
-          "name": "PercentCurrent"
-        },
-        {
-          "id": 4,
-          "name": "SpeedMax"
-        },
-        {
-          "id": 9,
-          "name": "WindSupport"
-        },
-        {
-          "id": 2,
-          "name": "PercentSetting"
-        },
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
           "id": 0,
-          "name": "FanMode"
-        },
-        {
-          "id": 1,
-          "name": "FanModeSequence"
-        },
-        {
-          "id": 10,
-          "name": "WindSetting"
-        },
-        {
-          "id": 8,
-          "name": "RockSetting"
-        },
-        {
-          "id": 5,
-          "name": "SpeedSetting"
-        },
-        {
-          "id": 7,
-          "name": "RockSupport"
-        },
-        {
-          "id": 11,
-          "name": "AirflowDirection"
+          "name": "Step"
         }
       ],
-      "implemented_commands": [],
       "name": "Airflow Direction",
       "id": 5
     }
@@ -1118,129 +318,69 @@
   "1293": [],
   "1292": [
     {
-      "writable_attributes": [
-        {
-          "id": 1,
-          "name": "CurrentApp"
-        },
-        {
-          "id": 0,
-          "name": "CatalogList"
-        }
-      ],
-      "readable_attributes": [
-        {
-          "id": 1,
-          "name": "CurrentApp"
-        },
-        {
-          "id": 0,
-          "name": "CatalogList"
-        }
-      ],
-      "implemented_commands": [],
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [],
       "name": "ApplicationPlatform",
       "id": 0
     }
   ],
   "1291": [
     {
-      "writable_attributes": [
-        {
-          "id": 0,
-          "name": "OutputList"
-        },
-        {
-          "id": 1,
-          "name": "CurrentOutput"
-        }
-      ],
-      "readable_attributes": [
-        {
-          "id": 0,
-          "name": "OutputList"
-        },
-        {
-          "id": 1,
-          "name": "CurrentOutput"
-        }
-      ],
-      "implemented_commands": [],
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [],
       "name": "NameUpdates",
       "id": 0
     }
   ],
   "1284": [
     {
-      "writable_attributes": [
-        {
-          "id": 0,
-          "name": "ChannelList"
-        },
+      "not_writable_attributes": [
         {
           "id": 1,
           "name": "Lineup"
-        },
-        {
-          "id": 2,
-          "name": "CurrentChannel"
         }
       ],
-      "readable_attributes": [
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
           "id": 0,
-          "name": "ChannelList"
+          "name": "ChangeChannel"
         },
         {
           "id": 1,
-          "name": "Lineup"
-        },
-        {
-          "id": 2,
-          "name": "CurrentChannel"
+          "name": "ChangeChannelResponse"
         }
       ],
-      "implemented_commands": [],
       "name": "ChannelList",
       "id": 0
     },
     {
-      "writable_attributes": [
+      "not_writable_attributes": [
         {
           "id": 0,
           "name": "ChannelList"
-        },
-        {
-          "id": 1,
-          "name": "Lineup"
-        },
-        {
-          "id": 2,
-          "name": "CurrentChannel"
         }
       ],
-      "readable_attributes": [
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
           "id": 0,
-          "name": "ChannelList"
+          "name": "ChangeChannel"
         },
         {
           "id": 1,
-          "name": "Lineup"
-        },
-        {
-          "id": 2,
-          "name": "CurrentChannel"
+          "name": "ChangeChannelResponse"
         }
       ],
-      "implemented_commands": [],
       "name": "LineupInfo",
       "id": 1
     }
   ],
   "1290": [
     {
-      "writable_attributes": [
+      "not_writable_attributes": [
         {
           "id": 0,
           "name": "AcceptHeader"
@@ -1248,201 +388,101 @@
         {
           "id": 1,
           "name": "SupportedStreamingProtocols"
-        },
-        {
-          "id": 1,
-          "name": "Value"
-        },
-        {
-          "id": 0,
-          "name": "Name"
         }
       ],
-      "readable_attributes": [
-        {
-          "id": 0,
-          "name": "AcceptHeader"
-        },
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
           "id": 1,
-          "name": "SupportedStreamingProtocols"
+          "name": "LaunchURL"
         },
         {
-          "id": 1,
-          "name": "Value"
-        },
-        {
-          "id": 0,
-          "name": "Name"
+          "id": 2,
+          "name": "LauncherResponse"
         }
       ],
-      "implemented_commands": [],
       "name": "ContentSearch",
       "id": 0
     },
     {
-      "writable_attributes": [
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
-          "id": 0,
-          "name": "AcceptHeader"
-        },
-        {
-          "id": 1,
-          "name": "SupportedStreamingProtocols"
-        },
-        {
-          "id": 1,
-          "name": "Value"
+          "id": 2,
+          "name": "LauncherResponse"
         },
         {
           "id": 0,
-          "name": "Name"
+          "name": "LaunchContent"
         }
       ],
-      "readable_attributes": [
-        {
-          "id": 0,
-          "name": "AcceptHeader"
-        },
-        {
-          "id": 1,
-          "name": "SupportedStreamingProtocols"
-        },
-        {
-          "id": 1,
-          "name": "Value"
-        },
-        {
-          "id": 0,
-          "name": "Name"
-        }
-      ],
-      "implemented_commands": [],
       "name": "URLPlayback",
       "id": 1
     }
   ],
   "1289": [
     {
-      "writable_attributes": [],
-      "readable_attributes": [],
-      "implemented_commands": [],
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [],
       "name": "NavigationKeyCodes",
       "id": 0
     },
     {
-      "writable_attributes": [],
-      "readable_attributes": [],
-      "implemented_commands": [],
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [],
       "name": "LocationKeys",
       "id": 1
     },
     {
-      "writable_attributes": [],
-      "readable_attributes": [],
-      "implemented_commands": [],
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [],
       "name": "NumberKeys",
       "id": 2
     }
   ],
   "1287": [
     {
-      "writable_attributes": [
-        {
-          "id": 0,
-          "name": "InputList"
-        },
-        {
-          "id": 1,
-          "name": "CurrentInput"
-        }
-      ],
-      "readable_attributes": [
-        {
-          "id": 0,
-          "name": "InputList"
-        },
-        {
-          "id": 1,
-          "name": "CurrentInput"
-        }
-      ],
-      "implemented_commands": [],
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [],
       "name": "NameUpdates",
       "id": 0
     }
   ],
   "1286": [
     {
-      "writable_attributes": [
-        {
-          "id": 2,
-          "name": "Duration"
-        },
-        {
-          "id": 5,
-          "name": "SeekRang eEnd"
-        },
-        {
-          "id": 3,
-          "name": "SampledPosition"
-        },
-        {
-          "id": 1,
-          "name": "StartTime"
-        },
-        {
-          "id": 0,
-          "name": "CurrentState"
-        },
-        {
-          "id": 4,
-          "name": "PlaybackSpeed"
-        },
+      "not_writable_attributes": [],
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
           "id": 6,
-          "name": "SeekRang eStart"
+          "name": "Rewind"
+        },
+        {
+          "id": 7,
+          "name": "FastForward"
         }
       ],
-      "readable_attributes": [
-        {
-          "id": 2,
-          "name": "Duration"
-        },
-        {
-          "id": 5,
-          "name": "SeekRang eEnd"
-        },
-        {
-          "id": 3,
-          "name": "SampledPosition"
-        },
-        {
-          "id": 1,
-          "name": "StartTime"
-        },
-        {
-          "id": 0,
-          "name": "CurrentState"
-        },
-        {
-          "id": 4,
-          "name": "PlaybackSpeed"
-        },
-        {
-          "id": 6,
-          "name": "SeekRang eStart"
-        }
-      ],
-      "implemented_commands": [],
       "name": "AdvancedSeek",
       "id": 0
     },
     {
-      "writable_attributes": [
+      "not_writable_attributes": [
         {
           "id": 2,
           "name": "Duration"
+        },
+        {
+          "id": 4,
+          "name": "PlaybackSpeed"
+        },
+        {
+          "id": 1,
+          "name": "StartTime"
         },
         {
           "id": 5,
@@ -1453,53 +493,17 @@
           "name": "SampledPosition"
         },
         {
-          "id": 1,
-          "name": "StartTime"
-        },
-        {
-          "id": 0,
-          "name": "CurrentState"
-        },
-        {
-          "id": 4,
-          "name": "PlaybackSpeed"
-        },
-        {
           "id": 6,
           "name": "SeekRang eStart"
         }
       ],
-      "readable_attributes": [
+      "not_readable_attributes": [],
+      "not_implemented_commands": [
         {
-          "id": 2,
-          "name": "Duration"
-        },
-        {
-          "id": 5,
-          "name": "SeekRang eEnd"
-        },
-        {
-          "id": 3,
-          "name": "SampledPosition"
-        },
-        {
-          "id": 1,
-          "name": "StartTime"
-        },
-        {
-          "id": 0,
-          "name": "CurrentState"
-        },
-        {
-          "id": 4,
-          "name": "PlaybackSpeed"
-        },
-        {
-          "id": 6,
-          "name": "SeekRang eStart"
+          "id": 11,
+          "name": "Seek"
         }
       ],
-      "implemented_commands": [],
       "name": "VariableSpeed",
       "id": 1
     }

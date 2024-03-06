@@ -6,24 +6,27 @@ from typing import Dict, Iterable, List, Optional, Callable, Tuple
 from tabula import read_pdf
 from pandas import DataFrame
 
-from pdf_parser.cluster_model import AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
+from pdf_parser.cluster_model import CommandExtractionModel, AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
 from pdf_parser.cluster_header import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
 from pdf_parser.feature import Features, NamedFeature, NamedId, FeatureComponents
 
 
 def _is_conform(conformance: str, feature: FeatureExtractionModel) -> bool:
-    # TODO : Lionia travail un peu stp
-    return True
+    if conformance == 'M':
+        return True
+    if conformance == 'O':
+        return True  # TODO
+
+    conformances = conformance.split('|')
+    return feature.code in conformances
 
 
 def _is_writable(attribute: AttributeExtractionModel) -> bool:
-    # TODO : Lionia travail un peu stp
-    return True
+    return 'W' in attribute.access.split(' ', maxsplit=1)[0]
 
 
 def _is_readable(attribute: AttributeExtractionModel) -> bool:
-    # TODO : Lionia travail un peu stp
-    return True
+    return 'R' in attribute.access.split(' ', maxsplit=1)[0]
 
 
 def _cluster_to_features(cluster: ClusterExtractionModel) -> List[NamedFeature]:
@@ -35,15 +38,15 @@ def _cluster_to_features(cluster: ClusterExtractionModel) -> List[NamedFeature]:
                 not_writable_attributes=set(
                     NamedId.of(att)
                     for att in cluster.attributes
-                    if _is_writable(att) and _is_conform(att.conformance, feature)),
+                    if not _is_writable(att) and not _is_conform(att.conformance, feature)),
                 not_readable_attributes=set(
                     NamedId.of(att)
                     for att in cluster.attributes
-                    if _is_readable(att) and _is_conform(att.conformance, feature)),
+                    if not _is_readable(att) and not _is_conform(att.conformance, feature)),
                 not_implemented_commands=set(
                     NamedId.of(com)
                     for com in cluster.commands
-                    if _is_conform(com.conformance, feature))
+                    if not _is_conform(com.conformance, feature))
             )
         )
         for feature in cluster.features
@@ -81,16 +84,22 @@ def _process_attributes(df: DataFrame) -> List[AttributeExtractionModel]:
         AttributeExtractionModel(
             int(row.ID, 0),
             row.Name,
-            row.Conformance)
+            row.Conformance,
+            row.Access if isinstance(row.Access, str) else '!NoAccess')
         for row in df.itertuples()
         if isinstance(row.ID, str)  # MAY not be a string if not an attribute
     ]
 
 
 def _process_commands(df: DataFrame) -> List[AttributeExtractionModel]:
-    # m = re.match(const.ATTRIBUTE_PATTERN, line)
-    # return None if m is None else _FeatureExtractionModel(int(m.group(1), 0), m.group(2), m.group(3))
-    return []
+    return [
+        CommandExtractionModel(
+            int(row.ID, 0),
+            row.Name,
+            row.Conformance)
+        for row in df.itertuples()
+        if isinstance(row.ID, str)  # MAY not be a string if not an attribute
+    ]
 
 
 def _find_next_info_table(
@@ -110,22 +119,32 @@ def _find_next_info_table(
 
 def _process_cluster_content(table: DataFrame, result: ClusterExtractionModel):
     try:
+        logging.debug('found table :\n----------\n%s\n----------', table)
         if any('\u00ad' in col for col in table.columns if isinstance(col, str)):
             logging.warning(
                 'table (%s) has soft hyphens in headers, skipping it', table.columns.to_list())
         # Sadly python match case cannot support this.
         # We concatenate the lists because the tables may be on split into multiple tables
         elif table.columns.equals(FEATURE_HEADER):
-            logging.info('found FEATURES for %s', result.info)
+            logging.info(
+                'FEATURES %s for %s',
+                table.columns,
+                result.info)
             result.features = result.features + _process_features(table)
         elif table.columns.equals(ATTRIBUTE_HEADER):
-            logging.info('found ATTRIBUTES for %s', result.info)
+            logging.info(
+                'ATTRIBUTES %s for %s',
+                table.columns,
+                result.info)
             result.attributes = result.attributes + _process_attributes(table)
         elif table.columns.equals(COMMAND_HEADER):
-            logging.info('found ATTRIBUTES for %s', result.info)
+            logging.info(
+                'COMMANDS %s for %s',
+                table.columns,
+                result.info)
             result.commands = result.commands + _process_commands(table)
         else:
-            logging.debug('skipping table : %s', table.columns)
+            logging.info('skipping %s', table.columns)
     except Exception as e:
         print(table)
         raise e
