@@ -6,9 +6,11 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterObjectFieldDescriptor, ClusterCommand
 
+from api_exposer.const import SWAGGER_PATHS_TEMPLATE_FOLDER
+
 
 env = Environment(
-    loader=FileSystemLoader("templates/paths"),
+    loader=FileSystemLoader(SWAGGER_PATHS_TEMPLATE_FOLDER),
     autoescape=select_autoescape()
 )
 
