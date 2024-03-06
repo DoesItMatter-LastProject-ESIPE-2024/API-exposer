@@ -49,23 +49,23 @@ class NamedFeature(NamedId):
 @dataclass(frozen=True)
 class FeatureComponents:
     """Groups together the components of one or multiple features"""
-    writable_attributes: Set[NamedId] = field(default_factory=set)
-    readable_attributes: Set[NamedId] = field(default_factory=set)
-    implemented_commands: Set[NamedId] = field(default_factory=set)
+    not_writable_attributes: Set[NamedId] = field(default_factory=set)
+    not_readable_attributes: Set[NamedId] = field(default_factory=set)
+    not_implemented_commands: Set[NamedId] = field(default_factory=set)
 
     def union(self, other: FeatureComponents) -> FeatureComponents:
         """Returns a union of all sets"""
         return FeatureComponents(
-            self.writable_attributes.union(other.writable_attributes),
-            self.readable_attributes.union(other.readable_attributes),
-            self.implemented_commands.union(other.implemented_commands)
+            self.not_writable_attributes.union(other.not_writable_attributes),
+            self.not_readable_attributes.union(other.not_readable_attributes),
+            self.not_implemented_commands.union(other.not_implemented_commands)
         )
 
     def __json__(self) -> any:
         return {
-            'writable_attributes': list(v.__json__() for v in self.writable_attributes),
-            'readable_attributes': list(v.__json__() for v in self.readable_attributes),
-            'implemented_commands': list(v.__json__() for v in self.implemented_commands)
+            'writable_attributes': list(v.__json__() for v in self.not_writable_attributes),
+            'readable_attributes': list(v.__json__() for v in self.not_readable_attributes),
+            'implemented_commands': list(v.__json__() for v in self.not_implemented_commands)
         }
 
 

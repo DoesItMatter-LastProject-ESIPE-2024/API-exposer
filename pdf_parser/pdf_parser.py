@@ -32,15 +32,15 @@ def _cluster_to_features(cluster: ClusterExtractionModel) -> List[NamedFeature]:
             id=feature.id,
             name=feature.name,
             value=FeatureComponents(
-                writable_attributes=set(
+                not_writable_attributes=set(
                     NamedId.of(att)
                     for att in cluster.attributes
                     if _is_writable(att) and _is_conform(att.conformance, feature)),
-                readable_attributes=set(
+                not_readable_attributes=set(
                     NamedId.of(att)
                     for att in cluster.attributes
                     if _is_readable(att) and _is_conform(att.conformance, feature)),
-                implemented_commands=set(
+                not_implemented_commands=set(
                     NamedId.of(com)
                     for com in cluster.commands
                     if _is_conform(com.conformance, feature))
