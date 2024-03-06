@@ -3,12 +3,27 @@
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import List, Optional, Set, Callable, TypeVar
+from typing import List, Set, Callable, TypeVar, NamedTuple
 
 
 type ClusterName = str
 type FeatureId = int
 T = TypeVar('T')
+
+
+@dataclass(frozen=True)
+class NamedId:
+    """TODO"""
+    id: int
+    name: str
+
+    @classmethod
+    def of(cls, value: any) -> NamedId:
+        """Returns a view of the value as a NamedId"""
+        return cls(value.id, value.name)
+
+    def __json__(self):
+        return {'id': self.id, 'name': self.name}
 
 
 def _iterate_bits(number: int, bit_length: int, zero: T, apply: Callable[[T, int, bool], T]) -> T:
@@ -19,54 +34,60 @@ def _iterate_bits(number: int, bit_length: int, zero: T, apply: Callable[[T, int
     return result
 
 
-@dataclass
-class Feature:
+@dataclass(frozen=True)
+class NamedFeature(NamedId):
     """Contains all specific implementation contained by a cluster feature"""
-    writable_attributes: Set[str] = field(default_factory=set)
-    readable_attributes: Set[str] = field(default_factory=set)
-    implemented_commands: Set[str] = field(default_factory=set)
-    name: Optional[str] = None
+    value: FeatureComponents
 
-    def _merge_name(self, other_name: Optional[str]) -> Optional[str]:
-        match (self.name, other_name):
-            case (None, None): return None
-            case (_, None): return self.name
-            case (None, _): return other_name
-            case (_, _): return f'{self.name}|{other_name}'
+    def __json__(self) -> any:
+        v = self.value.__json__()
+        v['name'] = self.name
+        v['id'] = self.id
+        return v
 
-    def merge(self, other: Feature) -> Feature:
-        return Feature(
+
+@dataclass(frozen=True)
+class FeatureComponents:
+    """Groups together the components of one or multiple features"""
+    writable_attributes: Set[NamedId] = field(default_factory=set)
+    readable_attributes: Set[NamedId] = field(default_factory=set)
+    implemented_commands: Set[NamedId] = field(default_factory=set)
+
+    def union(self, other: FeatureComponents) -> FeatureComponents:
+        """Returns a union of all sets"""
+        return FeatureComponents(
             self.writable_attributes.union(other.writable_attributes),
             self.readable_attributes.union(other.readable_attributes),
-            self.implemented_commands.union(other.implemented_commands),
-            self._merge_name(other.name)
+            self.implemented_commands.union(other.implemented_commands)
         )
-        
+
     def __json__(self) -> any:
         return {
-            "writable_attributes":list(self.writable_attributes),
-            "readable_attributes":list(self.readable_attributes),
-            "implemented_commands":list(self.implemented_commands)
+            'writable_attributes': list(v.__json__() for v in self.writable_attributes),
+            'readable_attributes': list(v.__json__() for v in self.readable_attributes),
+            'implemented_commands': list(v.__json__() for v in self.implemented_commands)
         }
 
 
 @dataclass(frozen=True)
 class Features:
     """Represents all combinaisons of features a cluster can implements"""
-    features: List[Feature] = field(default_factory=list)
+    features: List[NamedFeature] = field(default_factory=list)
 
-    def _get_features_by_id(self, feature_id: int) -> Feature:
+    def _get_features_by_id(self, feature_id: int) -> NamedFeature:
         return self.features[feature_id]
 
-    def get_features_by_map(self, feature_map: int) -> Feature:
+    def _union(self, f: FeatureComponents, pos: int, val: bool):
+        return f if not val else f.union(self._get_features_by_id(pos))
+
+    def get_features_by_map(self, feature_map: int) -> FeatureComponents:
+        """Returns the feature components of a specific feature map returned """
         return _iterate_bits(
             feature_map,
             len(self.features),
-            Feature(),
-            lambda f, pos, val: f if not val else f.merge(
-                self._get_features_by_id(pos))
+            FeatureComponents(),
+            self._union
         )
-        
 
     def __json__(self) -> any:
-        return {f.name : f.__json__() for f in self.features}
+        return [f.__json__() for f in self.features]

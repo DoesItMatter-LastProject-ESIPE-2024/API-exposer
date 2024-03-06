@@ -8,33 +8,43 @@ from pandas import DataFrame
 
 from pdf_parser.cluster_model import AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
 from pdf_parser.cluster_header import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
-from pdf_parser.feature import Feature, Features
+from pdf_parser.feature import Features, NamedFeature, NamedId, FeatureComponents
+
 
 def _is_conform(conformance: str, feature: FeatureExtractionModel) -> bool:
     # TODO : Lionia travail un peu stp
     return True
 
+
 def _is_writable(attribute: AttributeExtractionModel) -> bool:
     # TODO : Lionia travail un peu stp
     return True
+
 
 def _is_readable(attribute: AttributeExtractionModel) -> bool:
     # TODO : Lionia travail un peu stp
     return True
 
-def _cluster_to_features(cluster: ClusterExtractionModel) -> List[Feature]:
+
+def _cluster_to_features(cluster: ClusterExtractionModel) -> List[NamedFeature]:
     return [
-        Feature(
-            set(
-                att.name for att in cluster.attributes
-                if _is_writable(att) and _is_conform(att.conformance, feature)),
-            set(
-                att.name for att in cluster.attributes
-                if _is_readable(att) and _is_conform(att.conformance, feature)),
-            set(
-                com.name for com in cluster.commands
-                if _is_conform(com.conformance, feature)),
-            feature.name
+        NamedFeature(
+            id=feature.id,
+            name=feature.name,
+            value=FeatureComponents(
+                writable_attributes=set(
+                    NamedId.of(att)
+                    for att in cluster.attributes
+                    if _is_writable(att) and _is_conform(att.conformance, feature)),
+                readable_attributes=set(
+                    NamedId.of(att)
+                    for att in cluster.attributes
+                    if _is_readable(att) and _is_conform(att.conformance, feature)),
+                implemented_commands=set(
+                    NamedId.of(com)
+                    for com in cluster.commands
+                    if _is_conform(com.conformance, feature))
+            )
         )
         for feature in cluster.features
     ]
@@ -165,13 +175,14 @@ def _clean_string(text: str, **options) -> str:
         raise e
     return result
 
+
 def _reset_header(df: DataFrame) -> DataFrame:
     if any('Unnamed' in col for col in df.columns):
         new_headers = df.iloc[0].to_list()
         df = df[1:]
         df.columns = new_headers
     return df
-    
+
 
 def _clean_header(df: DataFrame) -> DataFrame:
     # removes soft hyphens in headers
