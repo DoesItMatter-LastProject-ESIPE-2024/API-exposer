@@ -1,4 +1,5 @@
   /v1/{{node_id}}/{{endpoint_id}}/{{cluster_name}}/attribute/{{attribute_name}}:
+    {% if is_readable %}
     get:
       tags:
         - endpoint {{endpoint_id}} ({{endpoint_name_list}}) - {{cluster_name}} 
@@ -15,7 +16,8 @@
                     type: {{attribute_type}}
         '404':
           description: Node, Endpoint, Cluster or Attribute not found
-          
+    {% endif %}
+    {% if is_writable %}
     post:
       tags:
         - endpoint {{endpoint_id}} ({{endpoint_name_list}}) - {{cluster_name}} 
@@ -33,3 +35,4 @@
           description: Successful operation
         '404':
           description: Node, Endpoint, Cluster or Attribute not found
+    {% endif %}
