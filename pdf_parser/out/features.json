@@ -7,7 +7,12 @@
           "name": "IdentifyType"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 1,
+          "name": "IdentifyType"
+        }
+      ],
       "not_implemented_commands": [],
       "name": "Query",
       "id": 0
@@ -15,7 +20,12 @@
   ],
   "4": [
     {
-      "not_writable_attributes": [],
+      "not_writable_attributes": [
+        {
+          "id": 0,
+          "name": "NameSupport"
+        }
+      ],
       "not_readable_attributes": [],
       "not_implemented_commands": [],
       "name": "GroupNames",
@@ -27,23 +37,60 @@
     {
       "not_writable_attributes": [
         {
-          "id": 4,
-          "name": "CurrentFrequency"
+          "id": 5,
+          "name": "MinFrequency"
+        },
+        {
+          "id": 1,
+          "name": "RemainingTime"
         },
         {
           "id": 2,
           "name": "MinLevel"
         },
         {
+          "id": 0,
+          "name": "OnOff"
+        },
+        {
+          "id": 4,
+          "name": "CurrentFrequency"
+        },
+        {
+          "id": 0,
+          "name": "CurrentLevel"
+        },
+        {
+          "id": 3,
+          "name": "MaxLevel"
+        },
+        {
           "id": 6,
           "name": "MaxFrequency"
         },
         {
-          "id": 5,
-          "name": "MinFrequency"
+          "id": 16384,
+          "name": "GlobalSceneControl"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 2,
+          "name": "MinLevel"
+        },
+        {
+          "id": 4,
+          "name": "CurrentFrequency"
+        },
+        {
+          "id": 5,
+          "name": "MinFrequency"
+        },
+        {
+          "id": 6,
+          "name": "MaxFrequency"
+        }
+      ],
       "not_implemented_commands": [
         {
           "id": 8,
@@ -56,8 +103,70 @@
     {
       "not_writable_attributes": [
         {
+          "id": 5,
+          "name": "MinFrequency"
+        },
+        {
+          "id": 16387,
+          "name": "StartUpOnOff"
+        },
+        {
+          "id": 16385,
+          "name": "OnTime"
+        },
+        {
+          "id": 1,
+          "name": "RemainingTime"
+        },
+        {
+          "id": 2,
+          "name": "MinLevel"
+        },
+        {
+          "id": 0,
+          "name": "OnOff"
+        },
+        {
+          "id": 4,
+          "name": "CurrentFrequency"
+        },
+        {
+          "id": 16386,
+          "name": "OffWaitTime"
+        },
+        {
+          "id": 0,
+          "name": "CurrentLevel"
+        },
+        {
+          "id": 3,
+          "name": "MaxLevel"
+        },
+        {
           "id": 6,
           "name": "MaxFrequency"
+        },
+        {
+          "id": 16384,
+          "name": "GlobalSceneControl"
+        },
+        {
+          "id": 16384,
+          "name": "StartUpCurrentLevel"
+        }
+      ],
+      "not_readable_attributes": [
+        {
+          "id": 5,
+          "name": "MinFrequency"
+        },
+        {
+          "id": 16387,
+          "name": "StartUpOnOff"
+        },
+        {
+          "id": 16385,
+          "name": "OnTime"
         },
         {
           "id": 1,
@@ -72,24 +181,23 @@
           "name": "CurrentFrequency"
         },
         {
-          "id": 5,
-          "name": "MinFrequency"
+          "id": 16386,
+          "name": "OffWaitTime"
+        },
+        {
+          "id": 6,
+          "name": "MaxFrequency"
         },
         {
           "id": 16384,
           "name": "GlobalSceneControl"
+        },
+        {
+          "id": 16384,
+          "name": "StartUpCurrentLevel"
         }
       ],
-      "not_readable_attributes": [],
       "not_implemented_commands": [
-        {
-          "id": 8,
-          "name": "MoveToClosestFrequency"
-        },
-        {
-          "id": 66,
-          "name": "OnWithTimedOff"
-        },
         {
           "id": 65,
           "name": "OnWithRecallGlobalScene"
@@ -97,6 +205,14 @@
         {
           "id": 64,
           "name": "OffWithEffect"
+        },
+        {
+          "id": 8,
+          "name": "MoveToClosestFrequency"
+        },
+        {
+          "id": 66,
+          "name": "OnWithTimedOff"
         }
       ],
       "name": "DeadFrontBehaviour",
@@ -106,7 +222,24 @@
   "69": [],
   "80": [
     {
-      "not_writable_attributes": [],
+      "not_writable_attributes": [
+        {
+          "id": 2,
+          "name": "SupportedModes"
+        },
+        {
+          "id": 3,
+          "name": "CurrentMode"
+        },
+        {
+          "id": 0,
+          "name": "Summary"
+        },
+        {
+          "id": 1,
+          "name": "StandardNamespace"
+        }
+      ],
       "not_readable_attributes": [],
       "not_implemented_commands": [],
       "name": "OnOff",
@@ -128,6 +261,188 @@
     {
       "not_writable_attributes": [
         {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
+          "id": 16387,
+          "name": "ColorLoopDirection"
+        },
+        {
+          "id": 6,
+          "name": "CompensationText"
+        },
+        {
+          "id": 2,
+          "name": "RemainingTime"
+        },
+        {
+          "id": 16396,
+          "name": "ColorTempPhysicalMaxMireds"
+        },
+        {
+          "id": 37,
+          "name": "Primary5Y"
+        },
+        {
+          "id": 16386,
+          "name": "ColorLoopActive"
+        },
+        {
+          "id": 33,
+          "name": "Primary4Y"
+        },
+        {
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 8,
+          "name": "ColorMode"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
+        },
+        {
+          "id": 16389,
+          "name": "ColorLoopStartEnhancedHue"
+        },
+        {
+          "id": 5,
+          "name": "DriftCompensation"
+        },
+        {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
+          "id": 16395,
+          "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 16385,
+          "name": "EnhancedColorMode"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
+        },
+        {
+          "id": 16,
+          "name": "NumberOfPrimaries"
+        },
+        {
+          "id": 16394,
+          "name": "ColorCapabilities"
+        },
+        {
+          "id": 18,
+          "name": "Primary1Y"
+        },
+        {
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
+        }
+      ],
+      "not_readable_attributes": [
+        {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
           "id": 16387,
           "name": "ColorLoopDirection"
         },
@@ -136,139 +451,114 @@
           "name": "ColorTempPhysicalMaxMireds"
         },
         {
-          "id": 21,
-          "name": "Primary2X"
-        },
-        {
-          "id": 25,
-          "name": "Primary3X"
-        },
-        {
-          "id": 3,
-          "name": "CurrentX"
-        },
-        {
           "id": 37,
           "name": "Primary5Y"
-        },
-        {
-          "id": 16384,
-          "name": "EnhancedCurrentHue"
-        },
-        {
-          "id": 38,
-          "name": "Primary5Intensity"
-        },
-        {
-          "id": 26,
-          "name": "Primary3Y"
-        },
-        {
-          "id": 17,
-          "name": "Primary1X"
-        },
-        {
-          "id": 33,
-          "name": "Primary4Y"
-        },
-        {
-          "id": 16388,
-          "name": "ColorLoopTime"
-        },
-        {
-          "id": 36,
-          "name": "Primary5X"
-        },
-        {
-          "id": 23,
-          "name": "Primary2Intensity"
-        },
-        {
-          "id": 22,
-          "name": "Primary2Y"
-        },
-        {
-          "id": 41,
-          "name": "Primary6Y"
-        },
-        {
-          "id": 42,
-          "name": "Primary6Intensity"
-        },
-        {
-          "id": 19,
-          "name": "Primary1Intensity"
-        },
-        {
-          "id": 32,
-          "name": "Primary4X"
-        },
-        {
-          "id": 34,
-          "name": "Primary4Intensity"
-        },
-        {
-          "id": 27,
-          "name": "Primary3Intensity"
-        },
-        {
-          "id": 16390,
-          "name": "ColorLoopStoredEnhancedHue"
-        },
-        {
-          "id": 4,
-          "name": "CurrentY"
         },
         {
           "id": 16386,
           "name": "ColorLoopActive"
         },
         {
-          "id": 40,
-          "name": "Primary6X"
+          "id": 33,
+          "name": "Primary4Y"
         },
         {
-          "id": 7,
-          "name": "ColorTemperatureMireds"
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
         },
         {
           "id": 16389,
           "name": "ColorLoopStartEnhancedHue"
         },
         {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
           "id": 16395,
           "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
         },
         {
           "id": 18,
           "name": "Primary1Y"
         },
         {
-          "id": 16397,
-          "name": "CoupleColorTempToLevelMinMireds"
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
         }
       ],
-      "not_readable_attributes": [],
       "not_implemented_commands": [
         {
-          "id": 67,
-          "name": "EnhancedMoveToHueAndSaturation"
+          "id": 76,
+          "name": "StepColorTemperature"
         },
         {
-          "id": 64,
-          "name": "EnhancedMoveToHue"
-        },
-        {
-          "id": 68,
-          "name": "ColorLoopSet"
+          "id": 10,
+          "name": "MoveToColorTemperature"
         },
         {
           "id": 65,
           "name": "EnhancedMoveHue"
-        },
-        {
-          "id": 76,
-          "name": "StepColorTemperature"
         },
         {
           "id": 75,
@@ -279,24 +569,32 @@
           "name": "MoveColor"
         },
         {
-          "id": 7,
-          "name": "MoveToColor"
-        },
-        {
-          "id": 10,
-          "name": "MoveToColorTemperature"
-        },
-        {
-          "id": 9,
-          "name": "StepColor"
+          "id": 71,
+          "name": "StopMoveStep"
         },
         {
           "id": 66,
           "name": "EnhancedStepHue"
         },
         {
-          "id": 71,
-          "name": "StopMoveStep"
+          "id": 67,
+          "name": "EnhancedMoveToHueAndSaturation"
+        },
+        {
+          "id": 64,
+          "name": "EnhancedMoveToHue"
+        },
+        {
+          "id": 9,
+          "name": "StepColor"
+        },
+        {
+          "id": 7,
+          "name": "MoveToColor"
+        },
+        {
+          "id": 68,
+          "name": "ColorLoopSet"
         }
       ],
       "name": "Hue/Saturation",
@@ -305,6 +603,192 @@
     {
       "not_writable_attributes": [
         {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
+          "id": 16387,
+          "name": "ColorLoopDirection"
+        },
+        {
+          "id": 6,
+          "name": "CompensationText"
+        },
+        {
+          "id": 2,
+          "name": "RemainingTime"
+        },
+        {
+          "id": 16396,
+          "name": "ColorTempPhysicalMaxMireds"
+        },
+        {
+          "id": 37,
+          "name": "Primary5Y"
+        },
+        {
+          "id": 16386,
+          "name": "ColorLoopActive"
+        },
+        {
+          "id": 33,
+          "name": "Primary4Y"
+        },
+        {
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 8,
+          "name": "ColorMode"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
+        },
+        {
+          "id": 16389,
+          "name": "ColorLoopStartEnhancedHue"
+        },
+        {
+          "id": 5,
+          "name": "DriftCompensation"
+        },
+        {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
+          "id": 16395,
+          "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 16385,
+          "name": "EnhancedColorMode"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
+        },
+        {
+          "id": 16,
+          "name": "NumberOfPrimaries"
+        },
+        {
+          "id": 16394,
+          "name": "ColorCapabilities"
+        },
+        {
+          "id": 18,
+          "name": "Primary1Y"
+        },
+        {
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
+        }
+      ],
+      "not_readable_attributes": [
+        {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
           "id": 16387,
           "name": "ColorLoopDirection"
         },
@@ -313,135 +797,118 @@
           "name": "ColorTempPhysicalMaxMireds"
         },
         {
-          "id": 21,
-          "name": "Primary2X"
-        },
-        {
-          "id": 25,
-          "name": "Primary3X"
-        },
-        {
-          "id": 3,
-          "name": "CurrentX"
-        },
-        {
-          "id": 1,
-          "name": "CurrentSaturation"
-        },
-        {
           "id": 37,
           "name": "Primary5Y"
-        },
-        {
-          "id": 38,
-          "name": "Primary5Intensity"
-        },
-        {
-          "id": 26,
-          "name": "Primary3Y"
-        },
-        {
-          "id": 17,
-          "name": "Primary1X"
-        },
-        {
-          "id": 33,
-          "name": "Primary4Y"
-        },
-        {
-          "id": 16388,
-          "name": "ColorLoopTime"
-        },
-        {
-          "id": 36,
-          "name": "Primary5X"
-        },
-        {
-          "id": 0,
-          "name": "CurrentHue"
-        },
-        {
-          "id": 23,
-          "name": "Primary2Intensity"
-        },
-        {
-          "id": 22,
-          "name": "Primary2Y"
-        },
-        {
-          "id": 41,
-          "name": "Primary6Y"
-        },
-        {
-          "id": 42,
-          "name": "Primary6Intensity"
-        },
-        {
-          "id": 19,
-          "name": "Primary1Intensity"
-        },
-        {
-          "id": 32,
-          "name": "Primary4X"
-        },
-        {
-          "id": 34,
-          "name": "Primary4Intensity"
-        },
-        {
-          "id": 27,
-          "name": "Primary3Intensity"
-        },
-        {
-          "id": 16390,
-          "name": "ColorLoopStoredEnhancedHue"
-        },
-        {
-          "id": 4,
-          "name": "CurrentY"
         },
         {
           "id": 16386,
           "name": "ColorLoopActive"
         },
         {
-          "id": 40,
-          "name": "Primary6X"
+          "id": 33,
+          "name": "Primary4Y"
         },
         {
-          "id": 7,
-          "name": "ColorTemperatureMireds"
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
         },
         {
           "id": 16389,
           "name": "ColorLoopStartEnhancedHue"
         },
         {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
           "id": 16395,
           "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
         },
         {
           "id": 18,
           "name": "Primary1Y"
         },
         {
-          "id": 16397,
-          "name": "CoupleColorTempToLevelMinMireds"
-        }
-      ],
-      "not_readable_attributes": [],
-      "not_implemented_commands": [
-        {
-          "id": 5,
-          "name": "StepSaturation"
-        },
-        {
-          "id": 68,
-          "name": "ColorLoopSet"
+          "id": 3,
+          "name": "CurrentX"
         },
         {
           "id": 0,
-          "name": "MoveToHue"
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
+        }
+      ],
+      "not_implemented_commands": [
+        {
+          "id": 3,
+          "name": "MoveToSaturation"
+        },
+        {
+          "id": 76,
+          "name": "StepColorTemperature"
+        },
+        {
+          "id": 10,
+          "name": "MoveToColorTemperature"
+        },
+        {
+          "id": 6,
+          "name": "MoveToHueAndSaturation"
         },
         {
           "id": 75,
@@ -452,24 +919,16 @@
           "name": "MoveColor"
         },
         {
-          "id": 76,
-          "name": "StepColorTemperature"
-        },
-        {
           "id": 1,
           "name": "MoveHue"
         },
         {
-          "id": 7,
-          "name": "MoveToColor"
+          "id": 71,
+          "name": "StopMoveStep"
         },
         {
-          "id": 4,
-          "name": "MoveSaturation"
-        },
-        {
-          "id": 10,
-          "name": "MoveToColorTemperature"
+          "id": 0,
+          "name": "MoveToHue"
         },
         {
           "id": 2,
@@ -480,16 +939,20 @@
           "name": "StepColor"
         },
         {
-          "id": 3,
-          "name": "MoveToSaturation"
+          "id": 5,
+          "name": "StepSaturation"
         },
         {
-          "id": 71,
-          "name": "StopMoveStep"
+          "id": 7,
+          "name": "MoveToColor"
         },
         {
-          "id": 6,
-          "name": "MoveToHueAndSaturation"
+          "id": 68,
+          "name": "ColorLoopSet"
+        },
+        {
+          "id": 4,
+          "name": "MoveSaturation"
         }
       ],
       "name": "Enhanced Hue",
@@ -498,44 +961,52 @@
     {
       "not_writable_attributes": [
         {
-          "id": 16396,
-          "name": "ColorTempPhysicalMaxMireds"
+          "id": 19,
+          "name": "Primary1Intensity"
         },
         {
-          "id": 21,
-          "name": "Primary2X"
-        },
-        {
-          "id": 25,
-          "name": "Primary3X"
-        },
-        {
-          "id": 3,
-          "name": "CurrentX"
+          "id": 27,
+          "name": "Primary3Intensity"
         },
         {
           "id": 1,
           "name": "CurrentSaturation"
         },
         {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
+          "id": 16387,
+          "name": "ColorLoopDirection"
+        },
+        {
+          "id": 6,
+          "name": "CompensationText"
+        },
+        {
+          "id": 2,
+          "name": "RemainingTime"
+        },
+        {
+          "id": 16396,
+          "name": "ColorTempPhysicalMaxMireds"
+        },
+        {
           "id": 37,
           "name": "Primary5Y"
         },
         {
-          "id": 16384,
-          "name": "EnhancedCurrentHue"
-        },
-        {
-          "id": 38,
-          "name": "Primary5Intensity"
-        },
-        {
-          "id": 26,
-          "name": "Primary3Y"
-        },
-        {
-          "id": 17,
-          "name": "Primary1X"
+          "id": 16386,
+          "name": "ColorLoopActive"
         },
         {
           "id": 33,
@@ -546,48 +1017,40 @@
           "name": "Primary5X"
         },
         {
-          "id": 0,
-          "name": "CurrentHue"
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
         },
         {
-          "id": 23,
-          "name": "Primary2Intensity"
+          "id": 8,
+          "name": "ColorMode"
         },
         {
-          "id": 22,
-          "name": "Primary2Y"
+          "id": 25,
+          "name": "Primary3X"
         },
         {
-          "id": 41,
-          "name": "Primary6Y"
+          "id": 16389,
+          "name": "ColorLoopStartEnhancedHue"
+        },
+        {
+          "id": 5,
+          "name": "DriftCompensation"
         },
         {
           "id": 42,
           "name": "Primary6Intensity"
         },
         {
-          "id": 19,
-          "name": "Primary1Intensity"
-        },
-        {
-          "id": 32,
-          "name": "Primary4X"
-        },
-        {
-          "id": 34,
-          "name": "Primary4Intensity"
-        },
-        {
-          "id": 27,
-          "name": "Primary3Intensity"
-        },
-        {
           "id": 4,
           "name": "CurrentY"
         },
         {
-          "id": 40,
-          "name": "Primary6X"
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
         },
         {
           "id": 7,
@@ -598,35 +1061,196 @@
           "name": "ColorTempPhysicalMinMireds"
         },
         {
+          "id": 16385,
+          "name": "EnhancedColorMode"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
+        },
+        {
+          "id": 16,
+          "name": "NumberOfPrimaries"
+        },
+        {
+          "id": 16394,
+          "name": "ColorCapabilities"
+        },
+        {
           "id": 18,
           "name": "Primary1Y"
         },
         {
-          "id": 16397,
-          "name": "CoupleColorTempToLevelMinMireds"
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16396,
+          "name": "ColorTempPhysicalMaxMireds"
+        },
+        {
+          "id": 37,
+          "name": "Primary5Y"
+        },
+        {
+          "id": 33,
+          "name": "Primary4Y"
+        },
+        {
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
+        },
+        {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
+          "id": 16395,
+          "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
+        },
+        {
+          "id": 18,
+          "name": "Primary1Y"
+        },
+        {
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
+        }
+      ],
       "not_implemented_commands": [
         {
-          "id": 5,
-          "name": "StepSaturation"
+          "id": 3,
+          "name": "MoveToSaturation"
         },
         {
-          "id": 67,
-          "name": "EnhancedMoveToHueAndSaturation"
-        },
-        {
-          "id": 64,
-          "name": "EnhancedMoveToHue"
+          "id": 10,
+          "name": "MoveToColorTemperature"
         },
         {
           "id": 65,
           "name": "EnhancedMoveHue"
         },
         {
-          "id": 0,
-          "name": "MoveToHue"
+          "id": 6,
+          "name": "MoveToHueAndSaturation"
         },
         {
           "id": 75,
@@ -637,24 +1261,28 @@
           "name": "MoveColor"
         },
         {
-          "id": 76,
-          "name": "StepColorTemperature"
-        },
-        {
           "id": 1,
           "name": "MoveHue"
         },
         {
-          "id": 7,
-          "name": "MoveToColor"
+          "id": 71,
+          "name": "StopMoveStep"
         },
         {
-          "id": 4,
-          "name": "MoveSaturation"
+          "id": 0,
+          "name": "MoveToHue"
         },
         {
-          "id": 10,
-          "name": "MoveToColorTemperature"
+          "id": 66,
+          "name": "EnhancedStepHue"
+        },
+        {
+          "id": 67,
+          "name": "EnhancedMoveToHueAndSaturation"
+        },
+        {
+          "id": 64,
+          "name": "EnhancedMoveToHue"
         },
         {
           "id": 2,
@@ -665,20 +1293,20 @@
           "name": "StepColor"
         },
         {
-          "id": 66,
-          "name": "EnhancedStepHue"
+          "id": 5,
+          "name": "StepSaturation"
         },
         {
-          "id": 3,
-          "name": "MoveToSaturation"
+          "id": 7,
+          "name": "MoveToColor"
         },
         {
-          "id": 71,
-          "name": "StopMoveStep"
+          "id": 76,
+          "name": "StepColorTemperature"
         },
         {
-          "id": 6,
-          "name": "MoveToHueAndSaturation"
+          "id": 4,
+          "name": "MoveSaturation"
         }
       ],
       "name": "Color loop",
@@ -687,6 +1315,192 @@
     {
       "not_writable_attributes": [
         {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
+          "id": 16387,
+          "name": "ColorLoopDirection"
+        },
+        {
+          "id": 6,
+          "name": "CompensationText"
+        },
+        {
+          "id": 2,
+          "name": "RemainingTime"
+        },
+        {
+          "id": 16396,
+          "name": "ColorTempPhysicalMaxMireds"
+        },
+        {
+          "id": 37,
+          "name": "Primary5Y"
+        },
+        {
+          "id": 16386,
+          "name": "ColorLoopActive"
+        },
+        {
+          "id": 33,
+          "name": "Primary4Y"
+        },
+        {
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 8,
+          "name": "ColorMode"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
+        },
+        {
+          "id": 16389,
+          "name": "ColorLoopStartEnhancedHue"
+        },
+        {
+          "id": 5,
+          "name": "DriftCompensation"
+        },
+        {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
+          "id": 16395,
+          "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 16385,
+          "name": "EnhancedColorMode"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
+        },
+        {
+          "id": 16,
+          "name": "NumberOfPrimaries"
+        },
+        {
+          "id": 16394,
+          "name": "ColorCapabilities"
+        },
+        {
+          "id": 18,
+          "name": "Primary1Y"
+        },
+        {
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
+        }
+      ],
+      "not_readable_attributes": [
+        {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
           "id": 16387,
           "name": "ColorLoopDirection"
         },
@@ -695,123 +1509,138 @@
           "name": "ColorTempPhysicalMaxMireds"
         },
         {
-          "id": 21,
-          "name": "Primary2X"
-        },
-        {
-          "id": 25,
-          "name": "Primary3X"
-        },
-        {
-          "id": 1,
-          "name": "CurrentSaturation"
-        },
-        {
           "id": 37,
           "name": "Primary5Y"
-        },
-        {
-          "id": 16384,
-          "name": "EnhancedCurrentHue"
-        },
-        {
-          "id": 38,
-          "name": "Primary5Intensity"
-        },
-        {
-          "id": 26,
-          "name": "Primary3Y"
-        },
-        {
-          "id": 17,
-          "name": "Primary1X"
-        },
-        {
-          "id": 33,
-          "name": "Primary4Y"
-        },
-        {
-          "id": 16388,
-          "name": "ColorLoopTime"
-        },
-        {
-          "id": 36,
-          "name": "Primary5X"
-        },
-        {
-          "id": 0,
-          "name": "CurrentHue"
-        },
-        {
-          "id": 23,
-          "name": "Primary2Intensity"
-        },
-        {
-          "id": 22,
-          "name": "Primary2Y"
-        },
-        {
-          "id": 41,
-          "name": "Primary6Y"
-        },
-        {
-          "id": 42,
-          "name": "Primary6Intensity"
-        },
-        {
-          "id": 19,
-          "name": "Primary1Intensity"
-        },
-        {
-          "id": 32,
-          "name": "Primary4X"
-        },
-        {
-          "id": 34,
-          "name": "Primary4Intensity"
-        },
-        {
-          "id": 27,
-          "name": "Primary3Intensity"
-        },
-        {
-          "id": 16390,
-          "name": "ColorLoopStoredEnhancedHue"
         },
         {
           "id": 16386,
           "name": "ColorLoopActive"
         },
         {
-          "id": 40,
-          "name": "Primary6X"
+          "id": 33,
+          "name": "Primary4Y"
         },
         {
-          "id": 7,
-          "name": "ColorTemperatureMireds"
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
         },
         {
           "id": 16389,
           "name": "ColorLoopStartEnhancedHue"
         },
         {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
           "id": 16395,
           "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
         },
         {
           "id": 18,
           "name": "Primary1Y"
         },
         {
-          "id": 16397,
-          "name": "CoupleColorTempToLevelMinMireds"
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
         }
       ],
-      "not_readable_attributes": [],
       "not_implemented_commands": [
         {
-          "id": 5,
-          "name": "StepSaturation"
+          "id": 3,
+          "name": "MoveToSaturation"
+        },
+        {
+          "id": 76,
+          "name": "StepColorTemperature"
+        },
+        {
+          "id": 10,
+          "name": "MoveToColorTemperature"
+        },
+        {
+          "id": 65,
+          "name": "EnhancedMoveHue"
+        },
+        {
+          "id": 6,
+          "name": "MoveToHueAndSaturation"
+        },
+        {
+          "id": 75,
+          "name": "MoveColorTemperature"
+        },
+        {
+          "id": 71,
+          "name": "StopMoveStep"
+        },
+        {
+          "id": 1,
+          "name": "MoveHue"
+        },
+        {
+          "id": 0,
+          "name": "MoveToHue"
+        },
+        {
+          "id": 66,
+          "name": "EnhancedStepHue"
         },
         {
           "id": 67,
@@ -822,56 +1651,20 @@
           "name": "EnhancedMoveToHue"
         },
         {
-          "id": 68,
-          "name": "ColorLoopSet"
-        },
-        {
-          "id": 65,
-          "name": "EnhancedMoveHue"
-        },
-        {
-          "id": 0,
-          "name": "MoveToHue"
-        },
-        {
-          "id": 75,
-          "name": "MoveColorTemperature"
-        },
-        {
-          "id": 76,
-          "name": "StepColorTemperature"
-        },
-        {
-          "id": 1,
-          "name": "MoveHue"
-        },
-        {
-          "id": 4,
-          "name": "MoveSaturation"
-        },
-        {
-          "id": 10,
-          "name": "MoveToColorTemperature"
-        },
-        {
           "id": 2,
           "name": "StepHue"
         },
         {
-          "id": 66,
-          "name": "EnhancedStepHue"
+          "id": 5,
+          "name": "StepSaturation"
         },
         {
-          "id": 3,
-          "name": "MoveToSaturation"
+          "id": 68,
+          "name": "ColorLoopSet"
         },
         {
-          "id": 71,
-          "name": "StopMoveStep"
-        },
-        {
-          "id": 6,
-          "name": "MoveToHueAndSaturation"
+          "id": 4,
+          "name": "MoveSaturation"
         }
       ],
       "name": "XY",
@@ -880,147 +1673,300 @@
     {
       "not_writable_attributes": [
         {
-          "id": 16387,
-          "name": "ColorLoopDirection"
-        },
-        {
-          "id": 21,
-          "name": "Primary2X"
-        },
-        {
-          "id": 37,
-          "name": "Primary5Y"
-        },
-        {
-          "id": 25,
-          "name": "Primary3X"
-        },
-        {
-          "id": 3,
-          "name": "CurrentX"
-        },
-        {
-          "id": 1,
-          "name": "CurrentSaturation"
-        },
-        {
-          "id": 16384,
-          "name": "EnhancedCurrentHue"
-        },
-        {
-          "id": 38,
-          "name": "Primary5Intensity"
-        },
-        {
-          "id": 26,
-          "name": "Primary3Y"
-        },
-        {
-          "id": 17,
-          "name": "Primary1X"
-        },
-        {
-          "id": 33,
-          "name": "Primary4Y"
-        },
-        {
-          "id": 16388,
-          "name": "ColorLoopTime"
-        },
-        {
-          "id": 36,
-          "name": "Primary5X"
-        },
-        {
-          "id": 0,
-          "name": "CurrentHue"
-        },
-        {
-          "id": 23,
-          "name": "Primary2Intensity"
-        },
-        {
-          "id": 22,
-          "name": "Primary2Y"
-        },
-        {
-          "id": 41,
-          "name": "Primary6Y"
-        },
-        {
-          "id": 42,
-          "name": "Primary6Intensity"
-        },
-        {
           "id": 19,
           "name": "Primary1Intensity"
-        },
-        {
-          "id": 32,
-          "name": "Primary4X"
-        },
-        {
-          "id": 34,
-          "name": "Primary4Intensity"
         },
         {
           "id": 27,
           "name": "Primary3Intensity"
         },
         {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
           "id": 16390,
           "name": "ColorLoopStoredEnhancedHue"
         },
         {
-          "id": 4,
-          "name": "CurrentY"
+          "id": 16387,
+          "name": "ColorLoopDirection"
+        },
+        {
+          "id": 6,
+          "name": "CompensationText"
+        },
+        {
+          "id": 2,
+          "name": "RemainingTime"
+        },
+        {
+          "id": 16396,
+          "name": "ColorTempPhysicalMaxMireds"
+        },
+        {
+          "id": 37,
+          "name": "Primary5Y"
         },
         {
           "id": 16386,
           "name": "ColorLoopActive"
         },
         {
-          "id": 40,
-          "name": "Primary6X"
+          "id": 33,
+          "name": "Primary4Y"
+        },
+        {
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 8,
+          "name": "ColorMode"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
         },
         {
           "id": 16389,
           "name": "ColorLoopStartEnhancedHue"
         },
         {
-          "id": 18,
-          "name": "Primary1Y"
+          "id": 5,
+          "name": "DriftCompensation"
+        },
+        {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
         },
         {
           "id": 16397,
           "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 7,
+          "name": "ColorTemperatureMireds"
+        },
+        {
+          "id": 16395,
+          "name": "ColorTempPhysicalMinMireds"
+        },
+        {
+          "id": 16385,
+          "name": "EnhancedColorMode"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
+        },
+        {
+          "id": 16,
+          "name": "NumberOfPrimaries"
+        },
+        {
+          "id": 16394,
+          "name": "ColorCapabilities"
+        },
+        {
+          "id": 18,
+          "name": "Primary1Y"
+        },
+        {
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 19,
+          "name": "Primary1Intensity"
+        },
+        {
+          "id": 27,
+          "name": "Primary3Intensity"
+        },
+        {
+          "id": 1,
+          "name": "CurrentSaturation"
+        },
+        {
+          "id": 16388,
+          "name": "ColorLoopTime"
+        },
+        {
+          "id": 32,
+          "name": "Primary4X"
+        },
+        {
+          "id": 16390,
+          "name": "ColorLoopStoredEnhancedHue"
+        },
+        {
+          "id": 16387,
+          "name": "ColorLoopDirection"
+        },
+        {
+          "id": 37,
+          "name": "Primary5Y"
+        },
+        {
+          "id": 16386,
+          "name": "ColorLoopActive"
+        },
+        {
+          "id": 33,
+          "name": "Primary4Y"
+        },
+        {
+          "id": 36,
+          "name": "Primary5X"
+        },
+        {
+          "id": 16400,
+          "name": "StartUpColorTemperatureMireds"
+        },
+        {
+          "id": 25,
+          "name": "Primary3X"
+        },
+        {
+          "id": 16389,
+          "name": "ColorLoopStartEnhancedHue"
+        },
+        {
+          "id": 42,
+          "name": "Primary6Intensity"
+        },
+        {
+          "id": 4,
+          "name": "CurrentY"
+        },
+        {
+          "id": 16397,
+          "name": "CoupleColorTempToLevelMinMireds"
+        },
+        {
+          "id": 26,
+          "name": "Primary3Y"
+        },
+        {
+          "id": 22,
+          "name": "Primary2Y"
+        },
+        {
+          "id": 23,
+          "name": "Primary2Intensity"
+        },
+        {
+          "id": 17,
+          "name": "Primary1X"
+        },
+        {
+          "id": 40,
+          "name": "Primary6X"
+        },
+        {
+          "id": 16384,
+          "name": "EnhancedCurrentHue"
+        },
+        {
+          "id": 21,
+          "name": "Primary2X"
+        },
+        {
+          "id": 38,
+          "name": "Primary5Intensity"
+        },
+        {
+          "id": 18,
+          "name": "Primary1Y"
+        },
+        {
+          "id": 3,
+          "name": "CurrentX"
+        },
+        {
+          "id": 0,
+          "name": "CurrentHue"
+        },
+        {
+          "id": 41,
+          "name": "Primary6Y"
+        },
+        {
+          "id": 34,
+          "name": "Primary4Intensity"
+        }
+      ],
       "not_implemented_commands": [
         {
-          "id": 5,
-          "name": "StepSaturation"
-        },
-        {
-          "id": 67,
-          "name": "EnhancedMoveToHueAndSaturation"
-        },
-        {
-          "id": 64,
-          "name": "EnhancedMoveToHue"
-        },
-        {
-          "id": 68,
-          "name": "ColorLoopSet"
+          "id": 3,
+          "name": "MoveToSaturation"
         },
         {
           "id": 65,
           "name": "EnhancedMoveHue"
         },
         {
-          "id": 0,
-          "name": "MoveToHue"
+          "id": 6,
+          "name": "MoveToHueAndSaturation"
         },
         {
           "id": 8,
@@ -1031,16 +1977,20 @@
           "name": "MoveHue"
         },
         {
-          "id": 7,
-          "name": "MoveToColor"
-        },
-        {
-          "id": 4,
-          "name": "MoveSaturation"
+          "id": 0,
+          "name": "MoveToHue"
         },
         {
           "id": 66,
           "name": "EnhancedStepHue"
+        },
+        {
+          "id": 67,
+          "name": "EnhancedMoveToHueAndSaturation"
+        },
+        {
+          "id": 64,
+          "name": "EnhancedMoveToHue"
         },
         {
           "id": 2,
@@ -1051,12 +2001,20 @@
           "name": "StepColor"
         },
         {
-          "id": 3,
-          "name": "MoveToSaturation"
+          "id": 5,
+          "name": "StepSaturation"
         },
         {
-          "id": 6,
-          "name": "MoveToHueAndSaturation"
+          "id": 7,
+          "name": "MoveToColor"
+        },
+        {
+          "id": 68,
+          "name": "ColorLoopSet"
+        },
+        {
+          "id": 4,
+          "name": "MoveSaturation"
         }
       ],
       "name": "Color temperature",
@@ -1070,15 +2028,68 @@
     {
       "not_writable_attributes": [
         {
-          "id": 9,
-          "name": "WindSupport"
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
+          "id": 4,
+          "name": "SpeedMax"
         },
         {
           "id": 7,
           "name": "RockSupport"
+        },
+        {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 3,
+          "name": "PercentCurrent"
+        },
+        {
+          "id": 6,
+          "name": "SpeedCurrent"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
+        {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
+        }
+      ],
       "not_implemented_commands": [
         {
           "id": 0,
@@ -1091,8 +2102,8 @@
     {
       "not_writable_attributes": [
         {
-          "id": 9,
-          "name": "WindSupport"
+          "id": 1,
+          "name": "FanModeSequence"
         },
         {
           "id": 4,
@@ -1103,11 +2114,72 @@
           "name": "RockSupport"
         },
         {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 3,
+          "name": "PercentCurrent"
+        },
+        {
           "id": 6,
           "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
+          "id": 4,
+          "name": "SpeedMax"
+        },
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
+        {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 6,
+          "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
+        }
+      ],
       "not_implemented_commands": [
         {
           "id": 0,
@@ -1120,19 +2192,72 @@
     {
       "not_writable_attributes": [
         {
-          "id": 9,
-          "name": "WindSupport"
+          "id": 1,
+          "name": "FanModeSequence"
         },
         {
           "id": 4,
           "name": "SpeedMax"
         },
         {
+          "id": 7,
+          "name": "RockSupport"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 3,
+          "name": "PercentCurrent"
+        },
+        {
           "id": 6,
           "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
+          "id": 4,
+          "name": "SpeedMax"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 6,
+          "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
+        }
+      ],
       "not_implemented_commands": [
         {
           "id": 0,
@@ -1145,6 +2270,10 @@
     {
       "not_writable_attributes": [
         {
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
           "id": 4,
           "name": "SpeedMax"
         },
@@ -1153,11 +2282,60 @@
           "name": "RockSupport"
         },
         {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 3,
+          "name": "PercentCurrent"
+        },
+        {
           "id": 6,
           "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
+          "id": 4,
+          "name": "SpeedMax"
+        },
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
+        {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 6,
+          "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
+        }
+      ],
       "not_implemented_commands": [
         {
           "id": 0,
@@ -1170,8 +2348,8 @@
     {
       "not_writable_attributes": [
         {
-          "id": 9,
-          "name": "WindSupport"
+          "id": 1,
+          "name": "FanModeSequence"
         },
         {
           "id": 4,
@@ -1182,11 +2360,72 @@
           "name": "RockSupport"
         },
         {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 3,
+          "name": "PercentCurrent"
+        },
+        {
           "id": 6,
           "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
+          "id": 4,
+          "name": "SpeedMax"
+        },
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
+        {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 6,
+          "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        },
+        {
+          "id": 11,
+          "name": "AirflowDirection"
+        }
+      ],
       "not_implemented_commands": [],
       "name": "Step",
       "id": 4
@@ -1194,8 +2433,8 @@
     {
       "not_writable_attributes": [
         {
-          "id": 9,
-          "name": "WindSupport"
+          "id": 1,
+          "name": "FanModeSequence"
         },
         {
           "id": 4,
@@ -1206,11 +2445,64 @@
           "name": "RockSupport"
         },
         {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 3,
+          "name": "PercentCurrent"
+        },
+        {
           "id": 6,
           "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
         }
       ],
-      "not_readable_attributes": [],
+      "not_readable_attributes": [
+        {
+          "id": 1,
+          "name": "FanModeSequence"
+        },
+        {
+          "id": 4,
+          "name": "SpeedMax"
+        },
+        {
+          "id": 7,
+          "name": "RockSupport"
+        },
+        {
+          "id": 8,
+          "name": "RockSetting"
+        },
+        {
+          "id": 10,
+          "name": "WindSetting"
+        },
+        {
+          "id": 6,
+          "name": "SpeedCurrent"
+        },
+        {
+          "id": 5,
+          "name": "SpeedSetting"
+        },
+        {
+          "id": 9,
+          "name": "WindSupport"
+        }
+      ],
       "not_implemented_commands": [
         {
           "id": 0,
@@ -1228,7 +2520,16 @@
   "1293": [],
   "1292": [
     {
-      "not_writable_attributes": [],
+      "not_writable_attributes": [
+        {
+          "id": 0,
+          "name": "CatalogList"
+        },
+        {
+          "id": 1,
+          "name": "CurrentApp"
+        }
+      ],
       "not_readable_attributes": [],
       "not_implemented_commands": [],
       "name": "ApplicationPlatform",
@@ -1237,7 +2538,16 @@
   ],
   "1291": [
     {
-      "not_writable_attributes": [],
+      "not_writable_attributes": [
+        {
+          "id": 0,
+          "name": "OutputList"
+        },
+        {
+          "id": 1,
+          "name": "CurrentOutput"
+        }
+      ],
       "not_readable_attributes": [],
       "not_implemented_commands": [],
       "name": "NameUpdates",
@@ -1248,19 +2558,32 @@
     {
       "not_writable_attributes": [
         {
+          "id": 0,
+          "name": "ChannelList"
+        },
+        {
+          "id": 2,
+          "name": "CurrentChannel"
+        },
+        {
           "id": 1,
           "name": "Lineup"
         }
       ],
-      "not_readable_attributes": [],
-      "not_implemented_commands": [
+      "not_readable_attributes": [
         {
-          "id": 0,
-          "name": "ChangeChannel"
-        },
+          "id": 1,
+          "name": "Lineup"
+        }
+      ],
+      "not_implemented_commands": [
         {
           "id": 1,
           "name": "ChangeChannelResponse"
+        },
+        {
+          "id": 0,
+          "name": "ChangeChannel"
         }
       ],
       "name": "ChannelList",
@@ -1271,17 +2594,30 @@
         {
           "id": 0,
           "name": "ChannelList"
-        }
-      ],
-      "not_readable_attributes": [],
-      "not_implemented_commands": [
+        },
         {
-          "id": 0,
-          "name": "ChangeChannel"
+          "id": 2,
+          "name": "CurrentChannel"
         },
         {
           "id": 1,
+          "name": "Lineup"
+        }
+      ],
+      "not_readable_attributes": [
+        {
+          "id": 0,
+          "name": "ChannelList"
+        }
+      ],
+      "not_implemented_commands": [
+        {
+          "id": 1,
           "name": "ChangeChannelResponse"
+        },
+        {
+          "id": 0,
+          "name": "ChangeChannel"
         }
       ],
       "name": "LineupInfo",
@@ -1292,31 +2628,82 @@
     {
       "not_writable_attributes": [
         {
-          "id": 1,
-          "name": "SupportedStreamingProtocols"
+          "id": 0,
+          "name": "AcceptHeader"
         },
         {
           "id": 0,
-          "name": "AcceptHeader"
-        }
-      ],
-      "not_readable_attributes": [],
-      "not_implemented_commands": [
+          "name": "Name"
+        },
         {
           "id": 1,
-          "name": "LaunchURL"
+          "name": "Value"
         },
+        {
+          "id": 1,
+          "name": "SupportedStreamingProtocols"
+        }
+      ],
+      "not_readable_attributes": [
+        {
+          "id": 0,
+          "name": "AcceptHeader"
+        },
+        {
+          "id": 0,
+          "name": "Name"
+        },
+        {
+          "id": 1,
+          "name": "Value"
+        },
+        {
+          "id": 1,
+          "name": "SupportedStreamingProtocols"
+        }
+      ],
+      "not_implemented_commands": [
         {
           "id": 2,
           "name": "LauncherResponse"
+        },
+        {
+          "id": 1,
+          "name": "LaunchURL"
         }
       ],
       "name": "ContentSearch",
       "id": 0
     },
     {
-      "not_writable_attributes": [],
-      "not_readable_attributes": [],
+      "not_writable_attributes": [
+        {
+          "id": 0,
+          "name": "AcceptHeader"
+        },
+        {
+          "id": 0,
+          "name": "Name"
+        },
+        {
+          "id": 1,
+          "name": "Value"
+        },
+        {
+          "id": 1,
+          "name": "SupportedStreamingProtocols"
+        }
+      ],
+      "not_readable_attributes": [
+        {
+          "id": 0,
+          "name": "Name"
+        },
+        {
+          "id": 1,
+          "name": "Value"
+        }
+      ],
       "not_implemented_commands": [
         {
           "id": 0,
@@ -1356,7 +2743,16 @@
   ],
   "1287": [
     {
-      "not_writable_attributes": [],
+      "not_writable_attributes": [
+        {
+          "id": 0,
+          "name": "InputList"
+        },
+        {
+          "id": 1,
+          "name": "CurrentInput"
+        }
+      ],
       "not_readable_attributes": [],
       "not_implemented_commands": [],
       "name": "NameUpdates",
@@ -1365,7 +2761,36 @@
   ],
   "1286": [
     {
-      "not_writable_attributes": [],
+      "not_writable_attributes": [
+        {
+          "id": 4,
+          "name": "PlaybackSpeed"
+        },
+        {
+          "id": 1,
+          "name": "StartTime"
+        },
+        {
+          "id": 2,
+          "name": "Duration"
+        },
+        {
+          "id": 6,
+          "name": "SeekRangeStart"
+        },
+        {
+          "id": 3,
+          "name": "SampledPosition"
+        },
+        {
+          "id": 0,
+          "name": "CurrentState"
+        },
+        {
+          "id": 5,
+          "name": "SeekRangeEnd"
+        }
+      ],
       "not_readable_attributes": [],
       "not_implemented_commands": [
         {
@@ -1383,16 +2808,50 @@
     {
       "not_writable_attributes": [
         {
+          "id": 4,
+          "name": "PlaybackSpeed"
+        },
+        {
+          "id": 1,
+          "name": "StartTime"
+        },
+        {
+          "id": 2,
+          "name": "Duration"
+        },
+        {
           "id": 6,
           "name": "SeekRangeStart"
         },
+        {
+          "id": 3,
+          "name": "SampledPosition"
+        },
+        {
+          "id": 0,
+          "name": "CurrentState"
+        },
+        {
+          "id": 5,
+          "name": "SeekRangeEnd"
+        }
+      ],
+      "not_readable_attributes": [
         {
           "id": 4,
           "name": "PlaybackSpeed"
         },
         {
+          "id": 1,
+          "name": "StartTime"
+        },
+        {
           "id": 2,
           "name": "Duration"
+        },
+        {
+          "id": 6,
+          "name": "SeekRangeStart"
         },
         {
           "id": 3,
@@ -1401,13 +2860,8 @@
         {
           "id": 5,
           "name": "SeekRangeEnd"
-        },
-        {
-          "id": 1,
-          "name": "StartTime"
         }
       ],
-      "not_readable_attributes": [],
       "not_implemented_commands": [
         {
           "id": 11,
