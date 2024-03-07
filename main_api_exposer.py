@@ -67,7 +67,7 @@ async def main():
             context={
                 'nodes': list(nodes.keys()),
                 'server_ip': request.url.hostname,
-                'port': 8080,
+                'server_port': request.url.port,
                 'swagger_path': SWAGGER_PATH
             }
         )
@@ -90,6 +90,7 @@ async def main():
 
         content = env.get_template('swagger.yml.j2').render({
             'server_ip': request.url.hostname,
+            'server_port': request.url.port,
             'paths': cluster_paths
         })
         return Response(
