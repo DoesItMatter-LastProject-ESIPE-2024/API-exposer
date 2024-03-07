@@ -181,7 +181,6 @@ class Convertor:
             for rendered_endpoint in rendered_endpoint_list
             if rendered_endpoint is not None
         ]
-        # TODO None
         return None if len(rendered_endpoint_list) == 0 else "\n\n".join(rendered_endpoint_list)
 
     def _flat_map(self, list2d: List[List[str]]) -> List[str]:
