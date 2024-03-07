@@ -12,13 +12,21 @@ from api_exposer.feature import Features, NamedFeature, NamedId, FeatureComponen
 
 
 def _is_conform(conformance: str, feature: FeatureExtractionModel) -> bool:
-    if conformance == 'M':
-        return True
-    if conformance == 'O':
-        return True  # TODO
-
-    conformances = conformance.split('|')
-    return feature.code in conformances
+    match conformance:
+        case 'M':
+            return True
+        case 'O':
+            # TODO MAYBE
+            return True
+        case ('D' | 'X' | 'P'):
+            return False
+        case _ if conformance.startswith('M') and len(conformance) < 2:
+            # like M0, M1, M2, ...
+            # TODO MAYBE
+            return True
+        case _:
+            conformances = [code.strip() for code in conformance.split('|')]
+            return feature.code in conformances
 
 
 def _is_writable(attribute: AttributeExtractionModel) -> bool:

@@ -5,7 +5,7 @@ from json import dump
 from pdf_parser.pdf_parser import extract_from_pdf
 
 LOG_FILE = 'pdf_parser/out/log.txt'
-OUTPUT_FILE = 'pdf_parser/out/tmp.json'
+OUTPUT_FILE = 'pdf_parser/out/features.json'
 SPECIFICATION_FILE = './res/Matter-1.2-Application-Cluster-Specification.pdf'
 
 if __name__ == '__main__':
