@@ -68,6 +68,30 @@ class FeatureComponents:
     not_readable_attributes: Set[NamedId] = field(default_factory=set)
     not_implemented_commands: Set[NamedId] = field(default_factory=set)
 
+    def is_readable(self, attribute_id: int) -> bool:
+        """Returns True if the attribute is writable
+        for this specific feature component False otherwise"""
+        return not any(
+            attribute_id == v.id
+            for v in self.not_readable_attributes
+        )
+
+    def is_writable(self, attribute_id: int) -> bool:
+        """Returns True if the attribute is readable
+        for this specific feature component False otherwise"""
+        return not any(
+            attribute_id == v.id
+            for v in self.not_writable_attributes
+        )
+
+    def is_implemented(self, command_id: int) -> bool:
+        """Returns True if the command is implemented
+        for this specific feature component False otherwise"""
+        return not any(
+            command_id == v.id
+            for v in self.not_implemented_commands
+        )
+
     def intersection(self, other: FeatureComponents) -> FeatureComponents:
         """Returns an intersection of all sets"""
         return FeatureComponents(
