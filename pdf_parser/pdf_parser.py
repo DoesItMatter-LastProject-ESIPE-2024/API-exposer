@@ -63,18 +63,18 @@ def _convert_to_features(clusters: List[ClusterExtractionModel]) -> Dict[int, Fe
 
 def _process_infos(df: DataFrame) -> List[InfoExtractionModel]:
     return [
-        InfoExtractionModel(int(row.ID, 0), row.Name)
+        InfoExtractionModel(int(row[1], 0), row[2])
         for row in df.itertuples()
-        if not row.ID == 'n/a'  # means the cluster is provisional
+        if not row[1] == 'n/a'  # means the cluster is provisional
     ]
 
 
 def _process_features(df: DataFrame) -> List[FeatureExtractionModel]:
     return [
         FeatureExtractionModel(
-            int(row.Bit),
-            row.Code,
-            row.Feature)
+            int(row[1]),
+            row[2],
+            row[3])
         for row in df.itertuples()
     ]
 
@@ -82,67 +82,66 @@ def _process_features(df: DataFrame) -> List[FeatureExtractionModel]:
 def _process_attributes(df: DataFrame) -> List[AttributeExtractionModel]:
     return [
         AttributeExtractionModel(
-            int(row.ID, 0),
-            row.Name,
-            row.Conformance,
-            row.Access if isinstance(row.Access, str) else '!NoAccess')
+            int(row[1], 0),
+            row[2],
+            row[-1],
+            row[-2] if isinstance(row[-2], str) else '!NoAccess')
         for row in df.itertuples()
-        if isinstance(row.ID, str)  # MAY not be a string if not an attribute
+        if isinstance(row[1], str)  # MAY not be a string if not an attribute
     ]
 
 
 def _process_commands(df: DataFrame) -> List[AttributeExtractionModel]:
     return [
         CommandExtractionModel(
-            int(row.ID, 0),
-            row.Name,
-            row.Conformance)
+            int(row[1], 0),
+            row[2],
+            row[-1])
         for row in df.itertuples()
-        if isinstance(row.ID, str)  # MAY not be a string if not an attribute
+        if isinstance(row[1], str)  # MAY not be a string if not an attribute
     ]
 
 
 def _find_next_info_table(
         tables: Iterable[DataFrame],
-        table_visitor: Optional[Callable[[DataFrame], None]] = None) -> DataFrame:
-    if table_visitor is None:
-        for table in tables:
-            if table.columns.equals(INFO_HEADER):
-                return table
-    else:
-        for table in tables:
-            if table.columns.equals(INFO_HEADER):
-                return table
-            table_visitor(table)
+        table_visitor: Optional[Callable[[DataFrame], None]] = lambda t: None) -> Optional[DataFrame]:
+    for table in tables:
+        logging.debug('found table :\n----------\n%s\n----------', table)
+        if any(table.columns.equals(h) for h in INFO_HEADER):
+            logging.info('INFO %s', table.columns)
+            return table
+        table_visitor(table)
     return None
 
 
 def _process_cluster_content(table: DataFrame, result: ClusterExtractionModel):
     try:
-        logging.debug('found table :\n----------\n%s\n----------', table)
         if any('\u00ad' in col for col in table.columns if isinstance(col, str)):
             logging.warning(
                 'table (%s) has soft hyphens in headers, skipping it', table.columns.to_list())
         # Sadly python match case cannot support this.
         # We concatenate the lists because the tables may be on split into multiple tables
-        elif table.columns.equals(FEATURE_HEADER):
+        elif any(table.columns.equals(h) for h in FEATURE_HEADER):
             logging.info(
                 'FEATURES %s for %s',
                 table.columns,
                 result.info)
             result.features = result.features + _process_features(table)
-        elif table.columns.equals(ATTRIBUTE_HEADER):
+
+        elif any(table.columns.equals(h) for h in ATTRIBUTE_HEADER):
             logging.info(
                 'ATTRIBUTES %s for %s',
                 table.columns,
                 result.info)
             result.attributes = result.attributes + _process_attributes(table)
-        elif table.columns.equals(COMMAND_HEADER):
+
+        elif any(table.columns.equals(h) for h in COMMAND_HEADER):
             logging.info(
                 'COMMANDS %s for %s',
                 table.columns,
                 result.info)
             result.commands = result.commands + _process_commands(table)
+
         else:
             logging.info('skipping %s', table.columns)
     except Exception as e:
