@@ -10,7 +10,7 @@ from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterObjectFieldDescriptor, ClusterCommand
 
 from api_exposer.const import SWAGGER_PATHS_TEMPLATE_FOLDER
-from pdf_parser.feature import Features, NamedId
+from api_exposer.feature import Features, NamedId
 
 
 env = Environment(

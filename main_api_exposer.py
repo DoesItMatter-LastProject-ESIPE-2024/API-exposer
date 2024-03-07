@@ -21,8 +21,8 @@ from api_exposer.my_client import MyClient
 from api_exposer.convertor import Convertor
 from api_exposer.validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
 from api_exposer.argument_parser import parse_args
-from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER
-from pdf_parser.feature import Features
+from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER, FEATURES_JSON_FOLDER
+from api_exposer.feature import Features
 
 SWAGGER_PATH = 'html/swagger'
 
@@ -43,13 +43,12 @@ async def main():
         loader=FileSystemLoader(SWAGGER_TEMPLATE_FOLDER),
         autoescape=select_autoescape()
     )
-    
-    
-    with open('pdf_parser/out/features.json', 'r', encoding='utf-8') as f:
+
+    with open(FEATURES_JSON_FOLDER, 'r', encoding='utf-8') as f:
         clusters: Dict[str, Any] = json.load(f)
 
     features = {
-        int(id, 0): Features.__from_json__(json_feature)
+        int(id): Features.__from_json__(json_feature)
         for id, json_feature in clusters.items()
     }
     convertor = Convertor(features)

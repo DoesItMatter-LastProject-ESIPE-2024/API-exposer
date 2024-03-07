@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 from pdf_parser.cluster_model import CommandExtractionModel, AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
 from pdf_parser.cluster_header import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
-from pdf_parser.feature import Features, NamedFeature, NamedId, FeatureComponents
+from api_exposer.feature import Features, NamedFeature, NamedId, FeatureComponents
 
 
 def _is_conform(conformance: str, feature: FeatureExtractionModel) -> bool:

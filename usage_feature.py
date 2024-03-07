@@ -1,6 +1,6 @@
 import json
 from typing import Any, Dict
-from pdf_parser.feature import Features
+from api_exposer.feature import Features
 
 
 if __name__ == '__main__':
