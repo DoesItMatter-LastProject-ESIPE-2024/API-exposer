@@ -1,21 +1,14 @@
 """TODO"""
-import logging
 
 from json import dump
+from pdf_parser.argument_parser import parse_args
 from pdf_parser.pdf_parser import extract_from_pdf
 
-LOG_FILE = 'pdf_parser/out/log.txt'
-OUTPUT_FILE = 'pdf_parser/out/features.json'
-SPECIFICATION_FILE = './res/Matter-1.2-Application-Cluster-Specification.pdf'
-
 if __name__ == '__main__':
-    logging.basicConfig(
-        level=logging.DEBUG,
-        filename=LOG_FILE,
-        filemode='w')
+    args = parse_args()
 
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as file:
-        features = extract_from_pdf(SPECIFICATION_FILE, 'all')
+    with open(args.output_path, 'w', encoding='utf-8') as file:
+        features = extract_from_pdf(args.specification_path, 'all')
         features = {
             id: feature.__to_json__()
             for id, feature in features.items()

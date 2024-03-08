@@ -32,3 +32,6 @@ COMMAND_HEADER = [
     Index(['ID', 'Name', 'Direction', 'Response', 'Access', 'Conformance'])
 ]
 SPECIFIC_COMMAND_HEADER = [Index([])]
+
+OUTPUT_FILE = './pdf_parser/out/features.json'
+SPECIFICATION_FILE = './res/Matter-1.2-Application-Cluster-Specification.pdf'

@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 import logging
 
-from api_exposer.const import DEFAULT_SERVER_URL, DEFAULT_PORT, FEATURES_JSON_FOLDER
+from pdf_parser.cluster_header import OUTPUT_FILE, SPECIFICATION_FILE
 
 
 def get_argument_parser() -> ArgumentParser:
@@ -11,26 +11,17 @@ def get_argument_parser() -> ArgumentParser:
     parser = ArgumentParser()
 
     parser.add_argument(
-        '--server-url',
+        '--output-path',
         type=str,
-        dest='url',
-        default=DEFAULT_SERVER_URL,
-        help=f'the url of the matter server hosted by home-assistant, defaults to {
-            DEFAULT_SERVER_URL}',
+        default=OUTPUT_FILE,
+        help=f'the file path for the json output, default={OUTPUT_FILE}',
     )
     parser.add_argument(
-        '--features-file',
+        '--specification-path',
         type=str,
-        default=FEATURES_JSON_FOLDER,
-        help=f'the path to the features.json file used for filtering the api, defaults to {
-            FEATURES_JSON_FOLDER}',
-    )
-    parser.add_argument(
-        '--port',
-        type=int,
-        dest='port',
-        default=DEFAULT_PORT,
-        help=f'the listening port for this server, defaults to {DEFAULT_PORT}',
+        default=SPECIFICATION_FILE,
+        # pylint: disable=line-too-long
+        help=f'the specification pdf file path, default={SPECIFICATION_FILE}',
     )
     parser.add_argument(
         '--log-level',

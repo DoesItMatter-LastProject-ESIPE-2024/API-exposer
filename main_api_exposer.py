@@ -44,7 +44,7 @@ async def main():
         autoescape=select_autoescape()
     )
 
-    with open(FEATURES_JSON_FOLDER, 'r', encoding='utf-8') as f:
+    with open(args.features_file, 'r', encoding='utf-8') as f:
         clusters: Dict[str, Any] = json.load(f)
 
     features = {
@@ -176,7 +176,7 @@ async def main():
                 'Unexpected error while handling a matter cluster command : %s', str(err))
             raise HTTPException(500, str(err)) from err
 
-    config = Config(app, host='0.0.0.0', port=8080, log_level='info')
+    config = Config(app, host='0.0.0.0', port=args.port, log_level='info')
     server = Server(config)
     await server.serve()
 
