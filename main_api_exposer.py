@@ -44,7 +44,7 @@ async def main():
         autoescape=select_autoescape()
     )
 
-    with open(FEATURES_JSON_FOLDER, 'r', encoding='utf-8') as f:
+    with open(args.features_file, 'r', encoding='utf-8') as f:
         clusters: Dict[str, Any] = json.load(f)
 
     features = {

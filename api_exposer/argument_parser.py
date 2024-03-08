@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 import logging
 
-from api_exposer.const import DEFAULT_SERVER_URL, DEFAULT_PORT
+from api_exposer.const import DEFAULT_SERVER_URL, DEFAULT_PORT, FEATURES_JSON_FOLDER
 
 
 def get_argument_parser() -> ArgumentParser:
@@ -17,6 +17,13 @@ def get_argument_parser() -> ArgumentParser:
         default=DEFAULT_SERVER_URL,
         help=f'the url of the matter server hosted by home-assistant, defaults to {
             DEFAULT_SERVER_URL}',
+    )
+    parser.add_argument(
+        '--features-file',
+        type=str,
+        default=FEATURES_JSON_FOLDER,
+        help=f'the path to the features.json file used for filtering the api, defaults to {
+            FEATURES_JSON_FOLDER}',
     )
     parser.add_argument(
         '--port',

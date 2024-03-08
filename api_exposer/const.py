@@ -9,4 +9,4 @@ SWAGGER_TEMPLATE_FOLDER = 'api_exposer/templates/yml'
 SWAGGER_PATHS_TEMPLATE_FOLDER = 'api_exposer/templates/yml/paths'
 SWAGGER_HTML_FOLDER = 'api_exposer/templates/dynamic'
 STATIC_FOLDER = 'api_exposer/static'
-FEATURES_JSON_FOLDER = 'pdf_parser/out/features.json'  # TODO unused const
+FEATURES_JSON_FOLDER = './pdf_parser/out/features.json'
