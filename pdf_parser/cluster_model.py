@@ -3,10 +3,18 @@ from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
+class CommandExtractionModel:
+    id: int
+    name: str
+    conformance: str
+
+
+@dataclass(frozen=True)
 class AttributeExtractionModel:
     id: int
     name: str
     conformance: str
+    access: str
 
 
 @dataclass(frozen=True)
@@ -27,4 +35,4 @@ class ClusterExtractionModel:
     info: List[InfoExtractionModel] = field(default_factory=list)
     features: List[FeatureExtractionModel] = field(default_factory=list)
     attributes: List[AttributeExtractionModel] = field(default_factory=list)
-    commands: List[AttributeExtractionModel] = field(default_factory=list)
+    commands: List[CommandExtractionModel] = field(default_factory=list)

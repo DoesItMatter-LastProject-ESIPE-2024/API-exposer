@@ -6,35 +6,56 @@ from typing import Dict, Iterable, List, Optional, Callable, Tuple
 from tabula import read_pdf
 from pandas import DataFrame
 
-from pdf_parser.cluster_model import AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
+from pdf_parser.cluster_model import CommandExtractionModel, AttributeExtractionModel, FeatureExtractionModel, InfoExtractionModel, ClusterExtractionModel
 from pdf_parser.cluster_header import INFO_HEADER, FEATURE_HEADER, COMMAND_HEADER, ATTRIBUTE_HEADER, CLEANING_MAPPING
-from pdf_parser.feature import Feature, Features
+from api_exposer.feature import Features, NamedFeature, NamedId, FeatureComponents
+
 
 def _is_conform(conformance: str, feature: FeatureExtractionModel) -> bool:
-    # TODO : Lionia travail un peu stp
-    return True
+    match conformance:
+        case 'M':
+            return True
+        case 'O':
+            # FIXME
+            return True
+        case ('D' | 'X' | 'P'):
+            return False
+        case _ if conformance.startswith('M') and len(conformance) < 2:
+            # like M0, M1, M2, ...
+            # FIXME
+            return True
+        case _:
+            conformances = [code.strip() for code in conformance.split('|')]
+            return feature.code in conformances
+
 
 def _is_writable(attribute: AttributeExtractionModel) -> bool:
-    # TODO : Lionia travail un peu stp
-    return True
+    return 'W' in attribute.access.split(' ', maxsplit=1)[0]
+
 
 def _is_readable(attribute: AttributeExtractionModel) -> bool:
-    # TODO : Lionia travail un peu stp
-    return True
+    return 'R' in attribute.access.split(' ', maxsplit=1)[0]
 
-def _cluster_to_features(cluster: ClusterExtractionModel) -> List[Feature]:
+
+def _cluster_to_features(cluster: ClusterExtractionModel) -> List[NamedFeature]:
     return [
-        Feature(
-            set(
-                att.name for att in cluster.attributes
-                if _is_writable(att) and _is_conform(att.conformance, feature)),
-            set(
-                att.name for att in cluster.attributes
-                if _is_readable(att) and _is_conform(att.conformance, feature)),
-            set(
-                com.name for com in cluster.commands
-                if _is_conform(com.conformance, feature)),
-            feature.name
+        NamedFeature(
+            id=feature.id,
+            name=feature.name,
+            value=FeatureComponents(
+                not_writable_attributes=set(
+                    NamedId.of(att)
+                    for att in cluster.attributes
+                    if not (_is_writable(att) and _is_conform(att.conformance, feature))),
+                not_readable_attributes=set(
+                    NamedId.of(att)
+                    for att in cluster.attributes
+                    if not (_is_readable(att) and _is_conform(att.conformance, feature))),
+                not_implemented_commands=set(
+                    NamedId.of(com)
+                    for com in cluster.commands
+                    if not _is_conform(com.conformance, feature))
+            )
         )
         for feature in cluster.features
     ]
@@ -50,18 +71,18 @@ def _convert_to_features(clusters: List[ClusterExtractionModel]) -> Dict[int, Fe
 
 def _process_infos(df: DataFrame) -> List[InfoExtractionModel]:
     return [
-        InfoExtractionModel(int(row.ID, 0), row.Name)
+        InfoExtractionModel(int(row[1], 0), row[2])
         for row in df.itertuples()
-        if not row.ID == 'n/a'  # means the cluster is provisional
+        if not row[1] == 'n/a'  # means the cluster is provisional
     ]
 
 
 def _process_features(df: DataFrame) -> List[FeatureExtractionModel]:
     return [
         FeatureExtractionModel(
-            int(row.Bit),
-            row.Code,
-            row.Feature)
+            int(row[1]),
+            row[2],
+            row[3])
         for row in df.itertuples()
     ]
 
@@ -69,32 +90,35 @@ def _process_features(df: DataFrame) -> List[FeatureExtractionModel]:
 def _process_attributes(df: DataFrame) -> List[AttributeExtractionModel]:
     return [
         AttributeExtractionModel(
-            int(row.ID, 0),
-            row.Name,
-            row.Conformance)
+            int(row[1], 0),
+            row[2],
+            row[-1],
+            row[-2] if isinstance(row[-2], str) else '!NoAccess')
         for row in df.itertuples()
-        if isinstance(row.ID, str)  # MAY not be a string if not an attribute
+        if isinstance(row[1], str)  # MAY not be a string if not an attribute
     ]
 
 
 def _process_commands(df: DataFrame) -> List[AttributeExtractionModel]:
-    # m = re.match(const.ATTRIBUTE_PATTERN, line)
-    # return None if m is None else _FeatureExtractionModel(int(m.group(1), 0), m.group(2), m.group(3))
-    return []
+    return [
+        CommandExtractionModel(
+            int(row[1], 0),
+            row[2],
+            row[-1])
+        for row in df.itertuples()
+        if isinstance(row[1], str)  # MAY not be a string if not an attribute
+    ]
 
 
 def _find_next_info_table(
         tables: Iterable[DataFrame],
-        table_visitor: Optional[Callable[[DataFrame], None]] = None) -> DataFrame:
-    if table_visitor is None:
-        for table in tables:
-            if table.columns.equals(INFO_HEADER):
-                return table
-    else:
-        for table in tables:
-            if table.columns.equals(INFO_HEADER):
-                return table
-            table_visitor(table)
+        table_visitor: Optional[Callable[[DataFrame], None]] = lambda t: None) -> Optional[DataFrame]:
+    for table in tables:
+        logging.debug('found table :\n----------\n%s\n----------', table)
+        if any(table.columns.equals(h) for h in INFO_HEADER):
+            logging.info('INFO %s', table.columns)
+            return table
+        table_visitor(table)
     return None
 
 
@@ -105,17 +129,29 @@ def _process_cluster_content(table: DataFrame, result: ClusterExtractionModel):
                 'table (%s) has soft hyphens in headers, skipping it', table.columns.to_list())
         # Sadly python match case cannot support this.
         # We concatenate the lists because the tables may be on split into multiple tables
-        elif table.columns.equals(FEATURE_HEADER):
-            logging.info('found FEATURES for %s', result.info)
+        elif any(table.columns.equals(h) for h in FEATURE_HEADER):
+            logging.info(
+                'FEATURES %s for %s',
+                table.columns,
+                result.info)
             result.features = result.features + _process_features(table)
-        elif table.columns.equals(ATTRIBUTE_HEADER):
-            logging.info('found ATTRIBUTES for %s', result.info)
+
+        elif any(table.columns.equals(h) for h in ATTRIBUTE_HEADER):
+            logging.info(
+                'ATTRIBUTES %s for %s',
+                table.columns,
+                result.info)
             result.attributes = result.attributes + _process_attributes(table)
-        elif table.columns.equals(COMMAND_HEADER):
-            logging.info('found ATTRIBUTES for %s', result.info)
+
+        elif any(table.columns.equals(h) for h in COMMAND_HEADER):
+            logging.info(
+                'COMMANDS %s for %s',
+                table.columns,
+                result.info)
             result.commands = result.commands + _process_commands(table)
+
         else:
-            logging.debug('skipping table : %s', table.columns)
+            logging.info('skipping %s', table.columns)
     except Exception as e:
         print(table)
         raise e
@@ -165,13 +201,14 @@ def _clean_string(text: str, **options) -> str:
         raise e
     return result
 
+
 def _reset_header(df: DataFrame) -> DataFrame:
     if any('Unnamed' in col for col in df.columns):
         new_headers = df.iloc[0].to_list()
         df = df[1:]
         df.columns = new_headers
     return df
-    
+
 
 def _clean_header(df: DataFrame) -> DataFrame:
     # removes soft hyphens in headers

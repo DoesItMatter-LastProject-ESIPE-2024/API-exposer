@@ -1,6 +1,7 @@
 """This is the entry point of the server."""
 
 from asyncio import run
+import json
 import logging
 from typing import Dict, Any
 
@@ -17,10 +18,11 @@ from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
 from api_exposer.my_client import MyClient
-from api_exposer.convertor import render_node
+from api_exposer.convertor import Convertor
 from api_exposer.validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
 from api_exposer.argument_parser import parse_args
-from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER
+from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER, FEATURES_JSON_FOLDER
+from api_exposer.feature import Features
 
 SWAGGER_PATH = 'html/swagger'
 
@@ -42,6 +44,15 @@ async def main():
         autoescape=select_autoescape()
     )
 
+    with open(FEATURES_JSON_FOLDER, 'r', encoding='utf-8') as f:
+        clusters: Dict[str, Any] = json.load(f)
+
+    features = {
+        int(id): Features.__from_json__(json_feature)
+        for id, json_feature in clusters.items()
+    }
+    convertor = Convertor(features)
+
     @app.get('/')
     def redirect():
         """Redirect user to the good page"""
@@ -56,7 +67,7 @@ async def main():
             context={
                 'nodes': list(nodes.keys()),
                 'server_ip': request.url.hostname,
-                'port': 8080,
+                'server_port': request.url.port,
                 'swagger_path': SWAGGER_PATH
             }
         )
@@ -75,10 +86,11 @@ async def main():
     def node_api_documentation(request: Request, node_id: int) -> str:
         """Returns an OpenAPI documentation in yaml format for a matter node"""
         node = validate_node_id(client, node_id)
-        cluster_paths = render_node(node)
+        cluster_paths = convertor.render_node(node)
 
         content = env.get_template('swagger.yml.j2').render({
             'server_ip': request.url.hostname,
+            'server_port': request.url.port,
             'paths': cluster_paths
         })
         return Response(

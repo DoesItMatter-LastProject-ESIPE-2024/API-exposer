@@ -9,17 +9,26 @@ CLEANING_MAPPING: List[Tuple[str, str]] = [
     ('\xad\r\n', ''),  # soft hyphens
     ('\xad\r', ''),  # soft hyphens
     ('\xad\n', ''),  # soft hyphens
-    (linesep, ' '),
-    ('\r\n', ' '),
-    ('\r', ' '),
-    ('\n', ' ')
+    (linesep, ''),
+    ('\r\n', ''),
+    ('\r', ''),
+    ('\n', ''),
+    ('Identifier', 'ID'),
+    ('Description', 'Summary')
 ]
 
-INFO_HEADER = Index(['ID', 'Name'])
-# TODO ['Bit', 'Code', 'Name', 'Summary']
-FEATURE_HEADER = Index(['Bit', 'Code', 'Feature', 'Summary'])
-ATTRIBUTE_HEADER = Index(
-    ['ID', 'Name', 'Type', 'Constraint', 'Quality', 'Default', 'Access', 'Conformance'])
-COMMAND_HEADER = Index(
-    ['ID', 'Name', 'Direction', 'Response', 'Access', 'Conformance'])
-SPECIFIC_COMMAND_HEADER = Index([])
+INFO_HEADER = [Index(['ID', 'Name'])]
+FEATURE_HEADER = [
+    Index(['Bit', 'Code', 'Feature', 'Summary']),
+    Index(['ID', 'Code', 'Feature', 'Summary']),
+    Index(['Bit', 'Code', 'Name', 'Summary']),
+    # Index(['ID', 'Code', 'Name', 'Summary'])
+]
+ATTRIBUTE_HEADER = [
+    Index(['ID', 'Name', 'Type', 'Constraint',
+          'Quality', 'Default', 'Access', 'Conformance'])
+]
+COMMAND_HEADER = [
+    Index(['ID', 'Name', 'Direction', 'Response', 'Access', 'Conformance'])
+]
+SPECIFIC_COMMAND_HEADER = [Index([])]
