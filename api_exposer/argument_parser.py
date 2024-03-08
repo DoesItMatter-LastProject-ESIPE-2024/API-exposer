@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 import logging
 
-from api_exposer.const import DEFAULT_SERVER_URL
+from api_exposer.const import DEFAULT_SERVER_URL, DEFAULT_PORT
 
 
 def get_argument_parser() -> ArgumentParser:
@@ -15,7 +15,15 @@ def get_argument_parser() -> ArgumentParser:
         type=str,
         dest='url',
         default=DEFAULT_SERVER_URL,
-        help=f'Vendor ID for the Fabric, defaults to {DEFAULT_SERVER_URL}',
+        help=f'the url of the matter server hosted by home-assistant, defaults to {
+            DEFAULT_SERVER_URL}',
+    )
+    parser.add_argument(
+        '--port',
+        type=int,
+        dest='port',
+        default=DEFAULT_PORT,
+        help=f'the listening port for this server, defaults to {DEFAULT_PORT}',
     )
     parser.add_argument(
         '--log-level',
