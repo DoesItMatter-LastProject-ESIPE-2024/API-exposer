@@ -91,17 +91,35 @@ class MyClient:
             command,
         )
 
-    async def read_cluster_attribute(self, node_id: int, endpoint_id: int, cluster_id: int, attribute_id: int) -> Any:
+    async def read_cluster_attribute(
+            self,
+            node_id: int,
+            endpoint_id: int,
+            cluster_id: int,
+            attribute_id: int) -> Any:
         """TODO"""
-        return await self._client.read_attribute(
-            node_id,
-            f'{endpoint_id}/{cluster_id}/{attribute_id}'
-        )
+        path = f'{endpoint_id}/{cluster_id}/{attribute_id}'
+        value = await self._client.read_attribute(node_id, path)
+        logging.debug('READING CLUSTER ATTRIBUTE')
+        logging.debug('node : %d', node_id)
+        logging.debug('path : %s', path)
+        logging.debug('value : %s', value)
+        return value
 
-    async def write_cluster_attribute(self, node_id: int, endpoint_id: int, cluster_id: int, attribute_id: int, value: Any) -> Any:
+    async def write_cluster_attribute(
+            self,
+            node_id: int,
+            endpoint_id: int,
+            cluster_id: int,
+            attribute_id: int,
+            value: Any) -> Any:
         """TODO"""
+        path = f'{endpoint_id}/{cluster_id}/{attribute_id}'
+        logging.debug('READING CLUSTER ATTRIBUTE')
+        logging.debug('node : %d', node_id)
+        logging.debug('path : %s', path)
+        logging.debug('value : %s', value)
         return await self._client.write_attribute(
             node_id,
-            f'{endpoint_id}/{cluster_id}/{attribute_id}',
-            value
-        )
+            path,
+            value)

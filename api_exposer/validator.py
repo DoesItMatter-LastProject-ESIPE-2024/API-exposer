@@ -1,13 +1,21 @@
 """Validates arguments"""
 
 import logging
+from typing import Optional, Dict, Any
 
 from fastapi import HTTPException
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObjectFieldDescriptor
 from chip.clusters import Objects
 
+from chip.clusters.CHIPClusters import ChipClusters
+
 from api_exposer.my_client import MyClient as ClientNodes
+
+
+ClusterInfo = Dict[str, Any]
+CommandInfo = Dict[str, Any]
+AttributeInfo = Dict[str, Any]
 
 
 def not_found(msg: str) -> None:
@@ -55,9 +63,17 @@ def validate_command_name(cluster: Cluster, command_name: str) -> type[ClusterCo
     return getattr(cluster.Commands, command_name)
 
 
-def validate_attribute_name(cluster: Cluster, attribute_name: str) -> ClusterObjectFieldDescriptor:
+def validate_attribute_name(cluster_infos: ChipClusters, cluster: Cluster, attribute_name: str) -> AttributeInfo:
     """Returns the attribute if found otherwise raise HTTPException"""
-    field = cluster.descriptor.GetFieldByLabel(attribute_name)
-    if field is None:
+    # field = cluster.descriptor.GetFieldByLabel(attribute_name)
+    # if field is None:
+    #     not_found(f'cluster does not have {attribute_name}')
+
+    cluster_info: ClusterInfo = cluster_infos.ListClusterAttributes().get(
+        cluster.__class__.__name__, {})
+    attribute_info: Optional[AttributeInfo] = cluster_info.get(
+        attribute_name, None)
+
+    if attribute_info is None:
         not_found(f'cluster does not have {attribute_name}')
-    return field
+    return attribute_info

@@ -17,14 +17,18 @@ from fastapi.staticfiles import StaticFiles
 # templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
+from chip.clusters.CHIPClusters import ChipClusters
+from chip.clusters import Objects
+
 from api_exposer.my_client import MyClient
-from api_exposer.convertor import Convertor
+from api_exposer.renderer import Renderer
 from api_exposer.validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
 from api_exposer.argument_parser import parse_args
-from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER, FEATURES_JSON_FOLDER
-from api_exposer.feature import Features
+from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER
 
 SWAGGER_PATH = 'html/swagger'
+ATTRIBUTE_LIST_ID = 0x0000FFFB
+ACCEPTED_COMMAND_LIST_ID = 0x0000FFF9
 
 
 async def main():
@@ -44,14 +48,12 @@ async def main():
         autoescape=select_autoescape()
     )
 
-    with open(args.features_file, 'r', encoding='utf-8') as f:
-        clusters: Dict[str, Any] = json.load(f)
-
-    features = {
-        int(id): Features.__from_json__(json_feature)
-        for id, json_feature in clusters.items()
-    }
-    convertor = Convertor(features)
+    cluster_infos = ChipClusters(None)
+    convertor = Renderer(
+        client,
+        cluster_infos,
+        ATTRIBUTE_LIST_ID,
+        ACCEPTED_COMMAND_LIST_ID)
 
     @app.get('/')
     def redirect():
@@ -83,10 +85,10 @@ async def main():
         )
 
     @app.get('/api/doc/{node_id}')
-    def node_api_documentation(request: Request, node_id: int) -> str:
+    async def node_api_documentation(request: Request, node_id: int) -> str:
         """Returns an OpenAPI documentation in yaml format for a matter node"""
         node = validate_node_id(client, node_id)
-        cluster_paths = convertor.render_node(node)
+        cluster_paths = await convertor.render_node(node)
 
         content = env.get_template('swagger.yml.j2').render({
             'server_ip': request.url.hostname,
@@ -111,9 +113,10 @@ async def main():
         node = validate_node_id(client, node_id)
         endpoint = validate_endpoint_id(node, endpoint_id)
         cluster = validate_cluster_name(endpoint, cluster_name)
-        attribute_field = validate_attribute_name(cluster, attribute_name)
+        attribute_info = validate_attribute_name(
+            cluster_infos, cluster, attribute_name)
         attribute = await client.read_cluster_attribute(
-            node_id, endpoint_id, cluster.id, attribute_field.Tag)
+            node_id, endpoint_id, cluster.id, attribute_info.get('attributeId'))
         return JSONResponse(content={attribute_name: attribute})
 
     @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
@@ -127,15 +130,16 @@ async def main():
         node = validate_node_id(client, node_id)
         endpoint = validate_endpoint_id(node, endpoint_id)
         cluster = validate_cluster_name(endpoint, cluster_name)
-        attribute_field = validate_attribute_name(cluster, attribute_name)
+        attribute_info = validate_attribute_name(
+            cluster_infos, cluster, attribute_name)
 
         if (await request.body()) == b'':
             raise HTTPException(400, "missing POST body")
-        json: Dict[str, any] = await request.json()
-        if not isinstance(json, dict):
+        json_value: Dict[str, any] = await request.json()
+        if not isinstance(json_value, dict):
             raise HTTPException(400, "malformed json")
 
-        attribute_value = json.get(attribute_name, None)
+        attribute_value = json_value.get(attribute_name, None)
         if attribute_value is None:
             raise HTTPException(400, "missing attribute value")
 
@@ -143,7 +147,7 @@ async def main():
             node_id,
             endpoint_id,
             cluster.id,
-            attribute_field.Tag,
+            attribute_info.get('attributeId'),
             attribute_value)
         return JSONResponse(content={attribute_name: new_attribute})
 
@@ -158,8 +162,10 @@ async def main():
         to execute on the correct node/endpoint."""
         node = validate_node_id(client, node_id)
         endpoint = validate_endpoint_id(node, endpoint_id)
-        cluster = validate_cluster_name(endpoint, cluster_name)
-        command_class = validate_command_name(cluster, command_name)
+        cluster = validate_cluster_name(
+            endpoint, cluster_name)
+        command_class = validate_command_name(
+            cluster, command_name)
 
         if (await request.body()) == b'':
             command = command_class()
