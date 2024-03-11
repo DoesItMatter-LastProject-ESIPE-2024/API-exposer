@@ -1,9 +1,10 @@
 """This is the entry point of the server."""
 
 from asyncio import run
-import json
 import logging
-from typing import Dict, Any
+from typing import Callable, Dict, Any
+from dataclasses import asdict
+from httpx import AsyncClient
 
 # web python server
 from uvicorn import Server, Config
@@ -18,17 +19,25 @@ from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
 from chip.clusters.CHIPClusters import ChipClusters
-from chip.clusters import Objects
 
 from api_exposer.my_client import MyClient
 from api_exposer.renderer import Renderer
-from api_exposer.validator import validate_node_id, validate_endpoint_id, validate_cluster_name, validate_attribute_name, validate_command_name
+from api_exposer.validator import (
+    validate_node_id,
+    validate_endpoint_id,
+    validate_cluster_name,
+    validate_event_name,
+    validate_attribute_name,
+    validate_command_name,
+    validate_json_body,
+    validate_json_attribute)
 from api_exposer.argument_parser import parse_args
 from api_exposer.const import SWAGGER_TEMPLATE_FOLDER, SWAGGER_HTML_FOLDER, STATIC_FOLDER
 
 SWAGGER_PATH = 'html/swagger'
 ATTRIBUTE_LIST_ID = 0x0000FFFB
 ACCEPTED_COMMAND_LIST_ID = 0x0000FFF9
+EVENT_LIST_ID = 0x0000FFFA
 
 
 async def main():
@@ -36,7 +45,7 @@ async def main():
     args = parse_args()
 
     client = MyClient(args.url)
-    await client.start()
+    # await client.start()
     nodes = client.nodes
 
     app = FastAPI()
@@ -54,6 +63,9 @@ async def main():
         cluster_infos,
         ATTRIBUTE_LIST_ID,
         ACCEPTED_COMMAND_LIST_ID)
+
+    event_subscribers: Dict[str, Callable[[], None]] = {}
+    attribute_subscribers: Dict[str, Callable[[], None]] = {}
 
     @app.get('/')
     def redirect():
@@ -103,6 +115,62 @@ async def main():
             }
         )
 
+    def _event_path(
+            node_id: int,
+            endpoint_id: int,
+            cluster_name: str,
+            event_name: str,
+            callback_name: str) -> str:
+        return f'{node_id}/{endpoint_id}/{cluster_name}/{event_name}/{callback_name}'
+
+    @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/subscribe/event/{event_name}')
+    async def subscribe_to_event(
+            request: Request,
+            node_id: int,
+            endpoint_id: int,
+            cluster_name: str,
+            event_name: str):
+        """Adds an URL to the subscription list of the event to be called with a POST request when an event is updated."""
+        json_body = await validate_json_body(request)
+        callback_name = validate_json_attribute(json_body, 'callback_name')
+        callback_url = validate_json_attribute(json_body, 'callback_name')
+        node = validate_node_id(client, node_id)
+        endpoint = validate_endpoint_id(node, endpoint_id)
+        cluster = validate_cluster_name(endpoint, cluster_name)
+        event = validate_event_name(cluster, event_name)
+        path = _event_path(
+            node_id,
+            endpoint_id,
+            cluster_name,
+            event_name,
+            callback_name)
+
+        async def callback(_, data):
+            async with AsyncClient() as client:
+                await client.post(callback_url, json=asdict(data))
+
+        event_subscribers[path] = client.subscribe_to_event(
+            node_id, endpoint_id, cluster.id, event.event_id, callback)
+
+    @app.delete('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/subscribe/event/{event_name}/{callback_name}')
+    def unsubscribe_to_event(
+            node_id: int,
+            endpoint_id: int,
+            cluster_name: str,
+            event_name: str,
+            callback_name: str):
+        """Removes a REST Endpoint to the subscription list of the event"""
+        path = _event_path(
+            node_id,
+            endpoint_id,
+            cluster_name,
+            event_name,
+            callback_name)
+        if path not in event_subscribers:
+            logging.info('callback at %s not found', path)
+            raise HTTPException(404, f'callback {callback_name} not found')
+        del event_subscribers[path]
+
     @app.get('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
     async def get_attribute(
             node_id: int,
@@ -133,15 +201,8 @@ async def main():
         attribute_info = validate_attribute_name(
             cluster_infos, cluster, attribute_name)
 
-        if (await request.body()) == b'':
-            raise HTTPException(400, "missing POST body")
-        json_value: Dict[str, any] = await request.json()
-        if not isinstance(json_value, dict):
-            raise HTTPException(400, "malformed json")
-
-        attribute_value = json_value.get(attribute_name, None)
-        if attribute_value is None:
-            raise HTTPException(400, "missing attribute value")
+        json_body = await validate_json_body(request)
+        attribute_value = validate_json_attribute(json_body, attribute_name)
 
         new_attribute = await client.write_cluster_attribute(
             node_id,

@@ -3,19 +3,21 @@
 import logging
 from typing import Optional, Dict, Any
 
-from fastapi import HTTPException
-from matter_server.client.models.node import MatterNode, MatterEndpoint
-from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterObjectFieldDescriptor
-from chip.clusters import Objects
+from fastapi.exceptions import HTTPException
+from fastapi.requests import Request
 
 from chip.clusters.CHIPClusters import ChipClusters
+from chip.clusters.ClusterObjects import Cluster, ClusterCommand
+from chip.clusters import Objects
+from matter_server.client.models.node import MatterNode, MatterEndpoint
 
-from api_exposer.my_client import MyClient as ClientNodes
+from api_exposer.my_client import MyClient
 
 
 ClusterInfo = Dict[str, Any]
 CommandInfo = Dict[str, Any]
 AttributeInfo = Dict[str, Any]
+EventInfo = Dict[str, Any]
 
 
 def not_found(msg: str) -> None:
@@ -25,11 +27,11 @@ def not_found(msg: str) -> None:
     raise HTTPException(404, msg)
 
 
-def validate_node_id(client_node: ClientNodes, node_id: int) -> MatterNode:
+def validate_node_id(client: MyClient, node_id: int) -> MatterNode:
     """Returns the node if found otherwise raise HTTPException"""
-    if node_id not in client_node.nodes:
+    if node_id not in client.nodes:
         not_found(f'node {node_id} not found')
-    return client_node.nodes[node_id]
+    return client.nodes[node_id]
 
 
 def validate_endpoint_id(node: MatterNode, endpoint_id: int) -> MatterEndpoint:
@@ -63,6 +65,15 @@ def validate_command_name(cluster: Cluster, command_name: str) -> type[ClusterCo
     return getattr(cluster.Commands, command_name)
 
 
+def validate_event_name(cluster: Cluster, event_name: str) -> int:
+    """Returns the event if found otherwise raise HTTPException"""
+    if not hasattr(cluster, 'Events'):
+        not_found('cluster does not have events')
+    if not hasattr(cluster.Events, event_name):
+        not_found(f'command {event_name} not found')
+    return getattr(cluster.Events, event_name)
+
+
 def validate_attribute_name(cluster_infos: ChipClusters, cluster: Cluster, attribute_name: str) -> AttributeInfo:
     """Returns the attribute if found otherwise raise HTTPException"""
     # field = cluster.descriptor.GetFieldByLabel(attribute_name)
@@ -77,3 +88,22 @@ def validate_attribute_name(cluster_infos: ChipClusters, cluster: Cluster, attri
     if attribute_info is None:
         not_found(f'cluster does not have {attribute_name}')
     return attribute_info
+
+
+async def validate_json_body(request: Request) -> Dict[str, Any]:
+    """Returns the json body as a dict or raise HTTPException"""
+    if (await request.body()) == b'':
+        raise HTTPException(400, "missing POST body")
+    json_value: Dict[str, any] = await request.json()
+    if not isinstance(json_value, dict):
+        raise HTTPException(400, "malformed json")
+    return json_value
+
+
+def validate_json_attribute(json_object: Dict[str, Any], attribute_name: str) -> Any:
+    """Returns the attribute value if present or else raise HTTPException"""
+    result = json_object.get(attribute_name, None)
+    if result is None:
+        raise HTTPException(400, "malformed json")
+
+    return result

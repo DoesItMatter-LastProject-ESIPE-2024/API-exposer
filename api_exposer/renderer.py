@@ -2,13 +2,14 @@
 
 from dataclasses import dataclass
 import logging
-from asyncio import Task, create_task
-from typing import Any, Dict, Iterable, List, Optional, _GenericAlias, TypeVar
+from asyncio import TaskGroup, create_task
+from typing import Any, Dict, Iterable, List, Optional, _GenericAlias
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterObjectFieldDescriptor
 from chip.clusters.CHIPClusters import ChipClusters
 
+from api_exposer.utils import await_all, filter_not_none, flat_map
 from api_exposer.const import SWAGGER_PATHS_TEMPLATE_FOLDER
 from api_exposer.my_client import MyClient
 
@@ -17,8 +18,6 @@ env = Environment(
     loader=FileSystemLoader(SWAGGER_PATHS_TEMPLATE_FOLDER),
     autoescape=select_autoescape()
 )
-
-T = TypeVar('T')
 
 
 @dataclass
@@ -109,7 +108,7 @@ class Renderer:
                 attributes[attribute_id])
             for attribute_id in attribute_ids)
 
-        return self._filter_not_none(result)
+        return filter_not_none(result)
 
     async def _render_commands(
             self,
@@ -139,7 +138,7 @@ class Renderer:
                 commands[command_id])
             for command_id in command_ids)
 
-        return self._filter_not_none(result)
+        return filter_not_none(result)
 
     async def _render_path_by_cluster(
             self,
@@ -154,17 +153,18 @@ class Renderer:
                 cluster.__class__.__name__)
             return []
 
-        attributes = create_task(self._render_attributes(
-            node_id,
-            endpoint_id,
-            endpoint_name,
-            cluster))
+        async with TaskGroup() as tg:
+            attributes = tg.create_task(self._render_attributes(
+                node_id,
+                endpoint_id,
+                endpoint_name,
+                cluster))
+            commands = tg.create_task(self._render_commands(
+                node_id,
+                endpoint_id,
+                endpoint_name,
+                cluster))
 
-        commands = create_task(self._render_commands(
-            node_id,
-            endpoint_id,
-            endpoint_name,
-            cluster))
         return [*(await attributes), *(await commands)]
 
     def _get_endpoint_names(self, endpoint: MatterEndpoint) -> str:
@@ -182,8 +182,8 @@ class Renderer:
                 cluster=cluster))
             for cluster in endpoint.clusters.values())
 
-        clusters = await self._await_all(clusters)
-        return self._flat_map(clusters)
+        clusters = await await_all(clusters)
+        return flat_map(clusters)
 
     async def render_node(self, node: MatterNode) -> Optional[str]:
         """Renders a node into its OpenAPI yaml format"""
@@ -191,30 +191,11 @@ class Renderer:
             create_task(self._render_endpoint(endpoint))
             for endpoint in node.endpoints.values())
 
-        endpoints = await self._await_all(endpoints)
-        endpoints = self._flat_map(endpoints)
-        endpoints = self._filter_not_none(endpoints)
+        endpoints = await await_all(endpoints)
+        endpoints = flat_map(endpoints)
+        endpoints = filter_not_none(endpoints)
 
         result = '\n\n'.join(endpoints)
         if result == '':
             return None
         return result
-
-    async def _await_all(self, items: Iterable[Task[T]]) -> List[T]:
-        return [
-            await item
-            for item in items
-        ]
-
-    def _flat_map(self, list2d: Iterable[Iterable[T]]) -> Iterable[T]:
-        return (
-            item
-            for items in list2d
-            for item in items
-        )
-
-    def _filter_not_none(self, items: Iterable[Optional[T]]) -> Iterable[T]:
-        return (
-            item
-            for item in items
-            if item is not None)
