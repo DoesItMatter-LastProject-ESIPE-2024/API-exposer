@@ -196,7 +196,7 @@ async def main():
             node_id, endpoint_id, cluster.id, attribute_info.get('attributeId'))
         return JSONResponse(content={attribute_name: attribute})
 
-    @app.post('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
+    @app.patch('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
     async def set_attribute(
             request: Request,
             node_id: int,

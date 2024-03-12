@@ -15,7 +15,7 @@
                     type: {{attribute_type}}
         '404':
           description: Node, Endpoint, Cluster or Attribute not found{% endif %}{% if is_writable %}
-    post:
+    patch:
       tags:
         - endpoint {{endpoint_id}} ({{endpoint_name_list}}) - {{cluster_name}} 
       summary: Set attribute

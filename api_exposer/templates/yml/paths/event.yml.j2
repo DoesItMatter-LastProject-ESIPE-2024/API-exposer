@@ -2,7 +2,7 @@
     post:
       tags:
         - endpoint {{endpoint_id}} ({{endpoint_name_list}}) - {{cluster_name}} 
-      summary: Get attribute
+      summary: Subscribes a post endpoint to a Matter Node Event
       requestBody:
         required: true
         content:
@@ -16,7 +16,7 @@
                   type: string
       responses:
         '200':
-          description: Subscribes a post endpoint to a Matter Node Event
+          description: Successful operation
         '404':
           description: Node, Endpoint, Cluster or Attribute not found
 
