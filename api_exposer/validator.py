@@ -1,13 +1,13 @@
 """Validates arguments"""
 
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Type
 
 from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
 
 from chip.clusters.CHIPClusters import ChipClusters
-from chip.clusters.ClusterObjects import Cluster, ClusterCommand
+from chip.clusters.ClusterObjects import Cluster, ClusterCommand, ClusterEvent
 from chip.clusters import Objects
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 
@@ -65,7 +65,7 @@ def validate_command_name(cluster: Cluster, command_name: str) -> type[ClusterCo
     return getattr(cluster.Commands, command_name)
 
 
-def validate_event_name(cluster: Cluster, event_name: str) -> int:
+def validate_event_name(cluster: Cluster, event_name: str) -> Type[ClusterEvent]:
     """Returns the event if found otherwise raise HTTPException"""
     if not hasattr(cluster, 'Events'):
         not_found('cluster does not have events')

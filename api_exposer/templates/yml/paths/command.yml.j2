@@ -3,19 +3,15 @@
       tags:
         - endpoint {{endpoint_id}} ({{endpoint_name_list}}) - {{cluster_name}} 
       summary: Apply command
-      {% if has_body %}
-      requestBody:
+{% if has_body %}      requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              properties:
-              {% for label, json_type in parameters.items() %}
+              properties:{% for label, json_type in parameters.items() %}
                 {{label}}:
-                  type: {{json_type}}
-              {% endfor %}
-      {% endif %}
+                  type: {{json_type}}{% endfor %}{% endif %}
       responses:
         '200':
           description: Successful operation

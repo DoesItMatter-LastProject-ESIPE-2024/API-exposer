@@ -1,13 +1,15 @@
 """Convert matter objects into yaml"""
 
 from dataclasses import dataclass
+from inspect import getmembers, isclass
 import logging
-from asyncio import TaskGroup, gather
-from typing import Any, Dict, Iterable, List, Optional, _GenericAlias
+from asyncio import gather
+from typing import Any, Dict, Iterable, Optional, Type
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterObjectFieldDescriptor
 from chip.clusters.CHIPClusters import ChipClusters
+from chip.clusters.ClusterObjects import ClusterEvent
 
 from api_exposer.utils import filter_not_none, flat_map
 from api_exposer.const import SWAGGER_PATHS_TEMPLATE_FOLDER
@@ -44,24 +46,6 @@ class Renderer:
             case 'string': return 'string'
             case _: return 'null'
 
-    def _render_event(
-            self,
-            node_id: int,
-            endpoint_id: int,
-            endpoint_name: str,
-            cluster: Cluster,
-            event: ClusterObjectFieldDescriptor) -> Optional[str]:
-        jinja_template = env.get_template("event.yml.j2")
-        if jinja_template is None:
-            return None
-
-        return jinja_template.render(
-            node_id=node_id,
-            endpoint_id=endpoint_id,
-            endpoint_name_list=endpoint_name,
-            cluster_name=cluster.__class__.__name__,
-            event_name=event.__name__)
-
     def _render_attribute(
             self,
             node_id: int,
@@ -84,6 +68,24 @@ class Renderer:
                 attribute.get('type', 'TypeNotFound')),
             is_readable=True,
             is_writable=attribute.get('writable', False))
+
+    def _render_event(
+            self,
+            node_id: int,
+            endpoint_id: int,
+            endpoint_name: str,
+            cluster: Cluster,
+            event: Type[ClusterEvent]) -> Optional[str]:
+        jinja_template = env.get_template("event.yml.j2")
+        if jinja_template is None:
+            return None
+
+        return jinja_template.render(
+            node_id=node_id,
+            endpoint_id=endpoint_id,
+            endpoint_name_list=endpoint_name,
+            cluster_name=cluster.__class__.__name__,
+            event_name=event.__name__)
 
     def _render_command(
             self,
@@ -138,6 +140,23 @@ class Renderer:
 
         return filter_not_none(result)
 
+    async def _render_events(
+            self,
+            node_id: int,
+            endpoint_id: int,
+            endpoint_name: str,
+            cluster: Cluster) -> Iterable[str]:
+        events = self._get_events(cluster)
+        result = (
+            self._render_event(
+                node_id,
+                endpoint_id,
+                endpoint_name,
+                cluster,
+                event)
+            for event in events)
+        return filter_not_none(result)
+
     async def _render_commands(
             self,
             node_id: int,
@@ -168,7 +187,7 @@ class Renderer:
 
         return filter_not_none(result)
 
-    async def _render_path_by_cluster(
+    async def _render_cluster(
             self,
             node_id: int,
             endpoint_id: int,
@@ -186,6 +205,11 @@ class Renderer:
             endpoint_id,
             endpoint_name,
             cluster)
+        events = self._render_events(
+            node_id,
+            endpoint_id,
+            endpoint_name,
+            cluster)
         commands = self._render_commands(
             node_id,
             endpoint_id,
@@ -193,7 +217,7 @@ class Renderer:
             cluster)
 
         logging.debug('await cluster')
-        result = flat_map(await gather(attributes, commands))
+        result = flat_map(await gather(attributes, commands, events))
         logging.debug('finished waiting cluster')
         return result
 
@@ -205,7 +229,7 @@ class Renderer:
     async def _render_endpoint(self, endpoint: MatterEndpoint) -> Iterable[str]:
         """Renders an endpoint into its OpenAPI yaml format"""
         clusters = (
-            self._render_path_by_cluster(
+            self._render_cluster(
                 node_id=endpoint.node.node_id,
                 endpoint_id=endpoint.endpoint_id,
                 endpoint_name=self._get_endpoint_names(endpoint),
@@ -233,3 +257,10 @@ class Renderer:
         if result == '':
             return None
         return result
+
+    def _get_events(
+            self,
+            cluster: Cluster) -> Iterable[Type[ClusterEvent]]:
+        if not hasattr(cluster, 'Events'):
+            return []
+        return (v for _, v in getmembers(cluster.Events, lambda attr: isclass(attr) and issubclass(attr, ClusterEvent)))

@@ -1,6 +1,7 @@
 """This is the entry point of the server."""
 
 from asyncio import run
+import asyncio
 import logging
 from typing import Callable, Dict, Any
 from dataclasses import asdict
@@ -108,12 +109,17 @@ async def main():
             'paths': cluster_paths
         })
         return Response(
-            media_type='application/x-yaml',
+            media_type='application/yaml',
             content=content,
             headers={
                 'Cache-control': 'no-cache'
             }
         )
+
+    @app.post('/echo')
+    async def echo(request: Request) -> None:
+        """Prints the json body in the console"""
+        print(await validate_json_body(request))
 
     def _event_path(
             node_id: int,
@@ -133,7 +139,7 @@ async def main():
         """Adds an URL to the subscription list of the event to be called with a POST request when an event is updated."""
         json_body = await validate_json_body(request)
         callback_name = validate_json_attribute(json_body, 'callback_name')
-        callback_url = validate_json_attribute(json_body, 'callback_name')
+        callback_url = validate_json_attribute(json_body, 'callback_url')
         node = validate_node_id(client, node_id)
         endpoint = validate_endpoint_id(node, endpoint_id)
         cluster = validate_cluster_name(endpoint, cluster_name)
@@ -145,12 +151,15 @@ async def main():
             event_name,
             callback_name)
 
-        async def callback(_, data):
+        async def callback(data):
+            json_data = asdict(data)
+            logging.debug('calling %s with %s', callback_url, json_data)
             async with AsyncClient() as client:
-                await client.post(callback_url, json=asdict(data))
+                await client.post(callback_url, json=json_data)
 
         event_subscribers[path] = client.subscribe_to_event(
             node_id, endpoint_id, cluster.id, event.event_id, callback)
+        logging.debug('there is %d subscribers', len(event_subscribers))
 
     @app.delete('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/subscribe/event/{event_name}/{callback_name}')
     def unsubscribe_to_event(
