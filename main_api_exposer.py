@@ -45,7 +45,7 @@ async def main():
     args = parse_args()
 
     client = MyClient(args.url)
-    # await client.start()
+    await client.start()
     nodes = client.nodes
 
     app = FastAPI()
@@ -77,7 +77,7 @@ async def main():
         """Returns a html menu composed of device's id from list"""
         return html_template.TemplateResponse(
             request=request,
-            name='devices.html',
+            name='nodes.html',
             context={
                 'nodes': list(nodes.keys()),
                 'server_ip': request.url.hostname,

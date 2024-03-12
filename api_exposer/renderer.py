@@ -2,14 +2,14 @@
 
 from dataclasses import dataclass
 import logging
-from asyncio import TaskGroup, create_task
+from asyncio import TaskGroup, gather
 from typing import Any, Dict, Iterable, List, Optional, _GenericAlias
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from matter_server.client.models.node import MatterNode, MatterEndpoint
 from chip.clusters.ClusterObjects import Cluster, ClusterObjectFieldDescriptor
 from chip.clusters.CHIPClusters import ChipClusters
 
-from api_exposer.utils import await_all, filter_not_none, flat_map
+from api_exposer.utils import filter_not_none, flat_map
 from api_exposer.const import SWAGGER_PATHS_TEMPLATE_FOLDER
 from api_exposer.my_client import MyClient
 
@@ -28,14 +28,39 @@ class Renderer:
     attribute_list_id: int
     accepted_command_list_id: int
 
-    def _convert_type(self, class_type: type) -> str:
-        match class_type:
-            case _GenericAlias() | list() | set() | dict():
-                # FIXME
-                return 'null'
-            case integer if issubclass(integer, int): return 'integer'
-            case string if issubclass(string, str): return 'string'
+    # def _convert_type(self, class_type: type) -> str:
+    #     match class_type:
+    #         case _GenericAlias() | list() | set() | dict():
+    #             # FIXME
+    #             return 'null'
+    #         case integer if issubclass(integer, int): return 'integer'
+    #         case string if issubclass(string, str): return 'string'
+    #         case _: return 'null'
+
+    def _convert_type(self, class_name: str) -> str:
+        match class_name:
+            case 'int': return 'integer'
+            case 'float': return 'number'
+            case 'string': return 'string'
             case _: return 'null'
+
+    def _render_event(
+            self,
+            node_id: int,
+            endpoint_id: int,
+            endpoint_name: str,
+            cluster: Cluster,
+            event: ClusterObjectFieldDescriptor) -> Optional[str]:
+        jinja_template = env.get_template("event.yml.j2")
+        if jinja_template is None:
+            return None
+
+        return jinja_template.render(
+            node_id=node_id,
+            endpoint_id=endpoint_id,
+            endpoint_name_list=endpoint_name,
+            cluster_name=cluster.__class__.__name__,
+            event_name=event.__name__)
 
     def _render_attribute(
             self,
@@ -45,7 +70,7 @@ class Renderer:
             cluster: Cluster,
             attribute: ClusterObjectFieldDescriptor) -> Optional[str]:
         """Renders an attribute path into its OpenAPI yaml format"""
-        jinja_template = env.get_template("attributes.yml.j2")
+        jinja_template = env.get_template("attribute.yml.j2")
         if jinja_template is None:
             return None
 
@@ -55,7 +80,8 @@ class Renderer:
             endpoint_name_list=endpoint_name,
             cluster_name=cluster.__class__.__name__,
             attribute_name=attribute.get('attributeName', 'NameNotFound'),
-            attribute_type=attribute.get('type', 'TypeNotFound'),
+            attribute_type=self._convert_type(
+                attribute.get('type', 'TypeNotFound')),
             is_readable=True,
             is_writable=attribute.get('writable', False))
 
@@ -67,7 +93,7 @@ class Renderer:
             cluster: Cluster,
             command: Dict[str, Any]) -> Optional[str]:
         """Renders a command into its OpenAPI yaml format"""
-        jinja_template = env.get_template("commands.yml.j2")
+        jinja_template = env.get_template("command.yml.j2")
         if jinja_template is None:
             return None
 
@@ -78,7 +104,9 @@ class Renderer:
             cluster_name=cluster.__class__.__name__,
             command_name=command.get('commandName', 'NameNotFound'),
             has_body=command.get('args', False),
-            parameters=command.get('args', {}))
+            parameters={
+                k: self._convert_type(v)
+                for k, v in command.get('args', {}).items()})
 
     async def _render_attributes(
             self,
@@ -153,19 +181,21 @@ class Renderer:
                 cluster.__class__.__name__)
             return []
 
-        async with TaskGroup() as tg:
-            attributes = tg.create_task(self._render_attributes(
-                node_id,
-                endpoint_id,
-                endpoint_name,
-                cluster))
-            commands = tg.create_task(self._render_commands(
-                node_id,
-                endpoint_id,
-                endpoint_name,
-                cluster))
+        attributes = self._render_attributes(
+            node_id,
+            endpoint_id,
+            endpoint_name,
+            cluster)
+        commands = self._render_commands(
+            node_id,
+            endpoint_id,
+            endpoint_name,
+            cluster)
 
-        return [*(await attributes), *(await commands)]
+        logging.debug('await cluster')
+        result = flat_map(await gather(attributes, commands))
+        logging.debug('finished waiting cluster')
+        return result
 
     def _get_endpoint_names(self, endpoint: MatterEndpoint) -> str:
         return ", ".join(
@@ -175,23 +205,27 @@ class Renderer:
     async def _render_endpoint(self, endpoint: MatterEndpoint) -> Iterable[str]:
         """Renders an endpoint into its OpenAPI yaml format"""
         clusters = (
-            create_task(self._render_path_by_cluster(
+            self._render_path_by_cluster(
                 node_id=endpoint.node.node_id,
                 endpoint_id=endpoint.endpoint_id,
                 endpoint_name=self._get_endpoint_names(endpoint),
-                cluster=cluster))
+                cluster=cluster)
             for cluster in endpoint.clusters.values())
 
-        clusters = await await_all(clusters)
+        logging.debug('await endpoint')
+        clusters = await gather(*clusters)
+        logging.debug('finished waiting endpoint')
         return flat_map(clusters)
 
     async def render_node(self, node: MatterNode) -> Optional[str]:
         """Renders a node into its OpenAPI yaml format"""
         endpoints = (
-            create_task(self._render_endpoint(endpoint))
+            self._render_endpoint(endpoint)
             for endpoint in node.endpoints.values())
 
-        endpoints = await await_all(endpoints)
+        logging.debug('await node')
+        endpoints = await gather(*endpoints)
+        logging.debug('finished waiting node')
         endpoints = flat_map(endpoints)
         endpoints = filter_not_none(endpoints)
 
