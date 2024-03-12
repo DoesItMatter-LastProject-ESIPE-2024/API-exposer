@@ -157,6 +157,8 @@ async def main():
             async with AsyncClient() as client:
                 await client.post(callback_url, json=json_data)
 
+        if path in event_subscribers:
+            raise HTTPException(400, f'callback {callback_name} already exist')
         event_subscribers[path] = client.subscribe_to_event(
             node_id, endpoint_id, cluster.id, event.event_id, callback)
         logging.debug('there is %d subscribers', len(event_subscribers))
@@ -178,6 +180,7 @@ async def main():
         if path not in event_subscribers:
             logging.info('callback at %s not found', path)
             raise HTTPException(404, f'callback {callback_name} not found')
+        event_subscribers[path]()
         del event_subscribers[path]
 
     @app.get('/api/v1/{node_id}/{endpoint_id}/{cluster_name}/attribute/{attribute_name}')
