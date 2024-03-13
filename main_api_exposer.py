@@ -1,12 +1,13 @@
 """This is the entry point of the server."""
 
-from asyncio import run
-import asyncio
 import logging
-from typing import Callable, Dict, Any
+import tempfile
+import shutil
+from typing import AsyncGenerator, Callable, Coroutine, Dict, Any
 from dataclasses import asdict
-from httpx import AsyncClient
+from asyncio import run, sleep
 
+from httpx import AsyncClient
 # web python server
 from uvicorn import Server, Config
 from fastapi.applications import FastAPI
@@ -15,6 +16,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import Response, RedirectResponse, HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from playsound import playsound
 
 # templating
 from jinja2 import Environment, select_autoescape, FileSystemLoader
@@ -120,6 +122,16 @@ async def main():
     async def echo(request: Request) -> None:
         """Prints the json body in the console"""
         print(await validate_json_body(request))
+
+    @app.post('/dingdong')
+    def dingdong() -> None:
+        """Plays a dingdong sound"""
+        with tempfile.TemporaryDirectory() as directory:
+            filename = shutil.copy2(
+                './attention_tone_sm30-96953.mp3',
+                directory)
+            logging.info('Playing sound %s', filename)
+            playsound(filename)
 
     def _event_path(
             node_id: int,
