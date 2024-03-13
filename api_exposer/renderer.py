@@ -136,7 +136,8 @@ class Renderer:
                 endpoint_name,
                 cluster,
                 attributes[attribute_id])
-            for attribute_id in attribute_ids)
+            for attribute_id in attribute_ids
+            if attribute_id in attributes)
 
         return filter_not_none(result)
 
@@ -183,7 +184,8 @@ class Renderer:
                 endpoint_name,
                 cluster,
                 commands[command_id])
-            for command_id in command_ids)
+            for command_id in command_ids
+            if command_id in commands)
 
         return filter_not_none(result)
 
