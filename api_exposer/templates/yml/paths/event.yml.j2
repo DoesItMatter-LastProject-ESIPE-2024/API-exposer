@@ -1,0 +1,39 @@
+  /v1/{{node_id}}/{{endpoint_id}}/{{cluster_name}}/subscribe/event/{{event_name}}:
+    post:
+      tags:
+        - endpoint {{endpoint_id}} ({{endpoint_name_list}}) - {{cluster_name}} 
+      summary: Subscribes a post endpoint to a Matter Node Event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                callback_name:
+                  type: string
+                callback_url:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Node, Endpoint, Cluster or Attribute not found
+
+  /v1/{{node_id}}/{{endpoint_id}}/{{cluster_name}}/subscribe/event/{{event_name}}/{callback_name}:
+    delete:
+      tags:
+        - endpoint {{endpoint_id}} ({{endpoint_name_list}}) - {{cluster_name}} 
+      summary: Unsubscribe from a Matter Node Event
+      parameters:
+        - in: path
+          name: callback_name
+          schema:
+            type: string
+          required: true
+          description: The callback name used to define a subscription
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: callback not found

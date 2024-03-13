@@ -3,7 +3,7 @@
 import asyncio
 
 from api_exposer.const import DEFAULT_SERVER_URL
-from api_exposer.convertor import render_node
+from api_exposer.renderer import render_node
 from api_exposer.my_client import MyClient
 
 
